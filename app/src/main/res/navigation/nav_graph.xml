@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.MainFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_favouritesFragment2"
+            app:destination="@id/favouritesFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_playlistFragment2"
+            app:destination="@id/playlistFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_playerFragment2"
+            app:destination="@id/playerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment"
+        android:label="Favourites"
+        tools:layout="@layout/fragment_favourites" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment"
+        android:label="Playlists"
+        tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.PlayerFragment"
+        android:label="Play"
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_mainFragment2"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>
