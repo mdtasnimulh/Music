@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -39,6 +40,24 @@ class MainFragment : Fragment() {
         //var musicListMF: MutableList<Music> = mutableListOf()
     }
 
+    private val requestAudioPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                onPermissionGranted()
+            } else {
+                Toast.makeText(requireContext(), "Audio Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    private val requestStoragePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions: Map<String, Boolean> ->
+            if (permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true &&
+                permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true) {
+                onPermissionGranted()
+            } else {
+                Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,8 +69,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requestStoragePermission()
-        onPermissionGranted()
+        requestAudioPermission()
     }
 
     private fun onPermissionGranted() {
@@ -96,6 +114,14 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun requestAudioPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestAudioPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
+        } else {
+            requestStoragePermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        }
+    }
+
     private fun requestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_AUDIO) !=
@@ -126,30 +152,6 @@ class MainFragment : Fragment() {
                 } else {
                     ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
-                }
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
-            AUDIO_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(requireContext(), "Audio Permission Granted", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(requireContext(), "Audio Permission Denied", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-            STORAGE_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(requireContext(), "Storage Permission Granted", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT)
-                        .show()
                 }
             }
         }
