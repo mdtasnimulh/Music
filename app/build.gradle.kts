@@ -1,11 +1,11 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id ("com.android.application")
+    id ("org.jetbrains.kotlin.android")
     id ("kotlin-android")
     id ("kotlin-kapt")
     id ("androidx.navigation.safeargs")
     id ("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
+    id ("dagger.hilt.android.plugin")
 }
 
 android {

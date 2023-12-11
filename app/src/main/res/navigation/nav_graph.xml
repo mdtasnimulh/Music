@@ -11,13 +11,13 @@
         android:label="Home"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_favouritesFragment2"
+            android:id="@+id/action_mainFragment_to_favouritesFragment"
             app:destination="@id/favouritesFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_playlistFragment2"
+            android:id="@+id/action_mainFragment_to_playlistFragment"
             app:destination="@id/playlistFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_playerFragment2"
+            android:id="@+id/action_mainFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
     </fragment>
     <fragment
@@ -36,7 +36,16 @@
         android:label="Play"
         tools:layout="@layout/fragment_player" >
         <action
-            android:id="@+id/action_playerFragment_to_mainFragment2"
+            android:id="@+id/action_playerFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="tag"
+            app:argType="string" />
+        <argument
+            android:name="musicList"
+            app:argType="com.tasnim.chowdhury.music.model.MusicList" />
     </fragment>
 </navigation>
