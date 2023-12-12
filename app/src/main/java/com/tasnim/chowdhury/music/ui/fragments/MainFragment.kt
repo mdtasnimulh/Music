@@ -1,8 +1,6 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
 import android.Manifest
-import android.app.Application
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,18 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
-import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
-import com.tasnim.chowdhury.music.repository.MainRepository
-import com.tasnim.chowdhury.music.utilities.Constants.AUDIO_PERMISSION_REQUEST_CODE
-import com.tasnim.chowdhury.music.utilities.Constants.STORAGE_PERMISSION_REQUEST_CODE
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,10 +28,6 @@ class MainFragment : Fragment() {
     private val musicViewModel: MainViewModel by viewModels()
     private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
-
-    companion object {
-        //var musicListMF: MutableList<Music> = mutableListOf()
-    }
 
     private val requestAudioPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -108,7 +96,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupClicks() {
-        musicAdapter.musicItem = { position, tag, song ->
+        musicAdapter.musicItem = { position, tag, _ ->
             Log.d("chkSongList", ":::$mainMusicList:::")
             val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, tag, mainMusicList)
             findNavController().navigate(action)
@@ -131,7 +119,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun requestStoragePermission() {
+    /*private fun requestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_AUDIO) !=
                 PackageManager.PERMISSION_GRANTED){
@@ -164,7 +152,7 @@ class MainFragment : Fragment() {
                 }
             }
         }
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
