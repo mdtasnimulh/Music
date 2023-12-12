@@ -34,7 +34,8 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var musicAdapter: MusicAdapter
     private val musicViewModel: MainViewModel by viewModels()
-    private val allMusic = MusicList()
+    private val mainMusicList = MusicList()
+    private var shuffledMusicList: MusicList = MusicList()
 
     companion object {
         //var musicListMF: MutableList<Music> = mutableListOf()
@@ -83,7 +84,7 @@ class MainFragment : Fragment() {
         musicViewModel.apply {
             musicList.observe(viewLifecycleOwner) {
                 musicAdapter.addAll(it)
-                allMusic.addAll(it)
+                mainMusicList.addAll(it)
 
                 val totalSongText = "Total songs: ${it.size}"
                 binding.totalSongValue.text = totalSongText
@@ -108,9 +109,17 @@ class MainFragment : Fragment() {
 
     private fun setupClicks() {
         musicAdapter.musicItem = { position, tag, song ->
-            Log.d("chkSongList", ":::$allMusic:::")
-            val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, tag, allMusic)
+            Log.d("chkSongList", ":::$mainMusicList:::")
+            val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, tag, mainMusicList)
             findNavController().navigate(action)
+        }
+
+        binding.shuffleBtn.setOnClickListener {
+            shuffledMusicList.clear()
+            shuffledMusicList.addAll(mainMusicList)
+            shuffledMusicList.shuffle()
+            val shuffleAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(0, "ShuffleButton", shuffledMusicList)
+            findNavController().navigate(shuffleAction)
         }
     }
 
