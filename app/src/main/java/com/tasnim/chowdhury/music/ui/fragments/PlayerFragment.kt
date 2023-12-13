@@ -173,6 +173,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .load(args.musicList[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
+        binding.playerSongTitle.text = args.musicList[songPosition].title
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
         }
