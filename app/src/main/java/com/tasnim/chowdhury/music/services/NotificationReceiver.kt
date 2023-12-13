@@ -3,6 +3,7 @@ package com.tasnim.chowdhury.music.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -20,12 +21,10 @@ class NotificationReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when(intent?.action){
             PREVIOUS -> {
-                //sendMediaControlCommand(context, PREVIOUS)
                 prevNextSong(increment = false, context = context!!)
                 Toast.makeText(context, "Previous", Toast.LENGTH_SHORT).show()
             }
             PLAY -> {
-                //sendMediaControlCommand(context, PLAY)
                 if (PlayerFragment.isPlaying){
                     pauseMusic()
                 }else{
@@ -34,7 +33,6 @@ class NotificationReceiver: BroadcastReceiver() {
                 Toast.makeText(context, "play", Toast.LENGTH_SHORT).show()
             }
             NEXT -> {
-                //sendMediaControlCommand(context, NEXT)
                 prevNextSong(increment = true, context!!)
                 Toast.makeText(context, "next", Toast.LENGTH_SHORT).show()
             }
@@ -50,6 +48,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.isPlaying = true
         PlayerFragment.musicService?.mediaPlayer?.start()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+        Log.d("hello", "Exception:::hello2")
         PlayerFragment.binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
     }
 
@@ -57,6 +56,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.isPlaying = false
         PlayerFragment.musicService?.mediaPlayer?.pause()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
+        Log.d("hello", "Exception:::hello3")
         PlayerFragment.binding.playPauseBtn.setIconResource(R.drawable.ic_play)
     }
 
@@ -71,9 +71,4 @@ class NotificationReceiver: BroadcastReceiver() {
         playMusic()
     }
 
-    private fun sendMediaControlCommand(context: Context?, action: String) {
-        val controlIntent = Intent(context, MusicServices::class.java)
-        controlIntent.action = action
-        context?.startService(controlIntent)
-    }
 }
