@@ -7,7 +7,9 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -15,6 +17,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants
+import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,6 +29,7 @@ class MusicService : Service() {
     lateinit var notificationBuilder: NotificationCompat.Builder
     lateinit var notificationManager: NotificationManagerCompat
 
+    private lateinit var runnable: Runnable
 
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
@@ -92,11 +96,24 @@ class MusicService : Service() {
             PlayerFragment.musicService?.mediaPlayer?.setDataSource(PlayerFragment.musicList!![PlayerFragment.songPosition].path)
             PlayerFragment.musicService?.mediaPlayer?.prepare()
             PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+            PlayerFragment.startTimeLiveData.postValue(mediaPlayer?.currentPosition?.toLong())
+            PlayerFragment.endTimeLiveData.postValue(mediaPlayer?.duration?.toLong())
+            PlayerFragment.initialProgressLiveData.postValue(0)
+            PlayerFragment.progressMaxLiveData.postValue(mediaPlayer?.duration)
             Log.d("hello", "Exception:::hello1")
         }catch (e: Exception) {
             Log.d("chkException", "Exception:::${e.message}")
         }
         Log.d("PlayerFragment", "${PlayerFragment.songPosition} *-*")
+    }
+
+    fun seekBarSetup() {
+        runnable = Runnable {
+            PlayerFragment.startTimeLiveData.postValue(mediaPlayer?.currentPosition?.toLong())
+            PlayerFragment.initialProgressLiveData.postValue(mediaPlayer?.currentPosition)
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
     }
 
 }

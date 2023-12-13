@@ -1,6 +1,5 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
@@ -13,6 +12,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -21,11 +22,12 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PlayerFragment : Fragment(), ServiceConnection {
+class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
@@ -41,6 +43,10 @@ class PlayerFragment : Fragment(), ServiceConnection {
         val playPauseLiveData = MutableLiveData<Pair<String, Int>>()
         val playPauseIconLiveData = MutableLiveData<Int>()
         val songDetailsLiveData = MutableLiveData<Pair<String, String>>()
+        val startTimeLiveData = MutableLiveData<Long>()
+        val endTimeLiveData = MutableLiveData<Long>()
+        val initialProgressLiveData = MutableLiveData<Int>()
+        val progressMaxLiveData = MutableLiveData<Int>()
     }
 
     override fun onCreateView(
@@ -77,6 +83,22 @@ class PlayerFragment : Fragment(), ServiceConnection {
 
         playPauseIconLiveData.observe(viewLifecycleOwner) { icon ->
             binding.playPauseBtn.setIconResource(icon)
+        }
+
+        startTimeLiveData.observe(viewLifecycleOwner) { startTime ->
+            binding.startTimeSeekBar.text = formatDuration(startTime.toLong())
+        }
+
+        endTimeLiveData.observe(viewLifecycleOwner) { endTime ->
+            binding.endTimeSeekbar.text = formatDuration(endTime.toLong())
+        }
+
+        initialProgressLiveData.observe(viewLifecycleOwner) { progress ->
+            binding.seekBar.progress = progress
+        }
+
+        progressMaxLiveData.observe(viewLifecycleOwner) { max ->
+            binding.seekBar.max = max
         }
     }
 
@@ -120,6 +142,18 @@ class PlayerFragment : Fragment(), ServiceConnection {
         binding.nextSongBtn.setOnClickListener {
             prevNextSong(increment = true)
         }
+
+        binding.seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    musicService?.mediaPlayer?.seekTo(progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) { /*DO NOTHING*/ }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) { /*DO NOTHING*/ }
+        })
     }
 
     private fun setLayout(){
@@ -142,6 +176,13 @@ class PlayerFragment : Fragment(), ServiceConnection {
             isPlaying = true
             binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
             musicService?.showNotification(R.drawable.ic_pause)
+            binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.toLong()
+                ?.let { formatDuration(it) }
+            binding.endTimeSeekbar.text = musicService?.mediaPlayer?.duration?.toLong()
+                ?.let { formatDuration(it) }
+            binding.seekBar.progress = 0
+            binding.seekBar.max = musicService?.mediaPlayer?.duration!!
+            musicService?.mediaPlayer?.setOnCompletionListener(this)
         }catch (e: Exception) {
             Log.d("chkException", "Exception:::${e.message}")
         }
@@ -183,10 +224,22 @@ class PlayerFragment : Fragment(), ServiceConnection {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer()
+        musicService?.seekBarSetup()
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
         musicService = null
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        setSongPosition(increment = true)
+        createMediaPlayer()
+        try {
+            setLayout()
+        }catch (e: Exception) {
+            Log.d("catchException", ":::${e.message}:::")
+        }
     }
 
 }
