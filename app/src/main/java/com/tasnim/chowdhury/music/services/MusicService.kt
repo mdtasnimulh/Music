@@ -3,7 +3,6 @@ package com.tasnim.chowdhury.music.services
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
@@ -78,6 +77,8 @@ class MusicService : Service() {
             .addAction(R.drawable.ic_forward, "Next", nextPendingIntent)
             .addAction(R.drawable.ic_close, "Exit", exitPendingIntent)
 
+        PlayerFragment.playPauseIconLiveData.postValue(playPauseBtn)
+
         startForeground(
             13, notificationBuilder.build())
     }
@@ -90,7 +91,6 @@ class MusicService : Service() {
             PlayerFragment.musicService?.mediaPlayer?.reset()
             PlayerFragment.musicService?.mediaPlayer?.setDataSource(PlayerFragment.musicList!![PlayerFragment.songPosition].path)
             PlayerFragment.musicService?.mediaPlayer?.prepare()
-            PlayerFragment.binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
             PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
             Log.d("hello", "Exception:::hello1")
         }catch (e: Exception) {

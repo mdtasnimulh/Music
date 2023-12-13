@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -26,26 +27,27 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PlayerFragment : Fragment(), ServiceConnection {
 
-    /*private var _binding: FragmentPlayerBinding? = null
-    private val binding get() = _binding!!*/
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
     private val args by navArgs<PlayerFragmentArgs>()
     //private var songPosition: Int = 0
     //private var musicService: MusicServices? = null
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var binding: FragmentPlayerBinding
         var songPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
         var musicList: MusicList? = null
+        val playPauseLiveData = MutableLiveData<Pair<String, Int>>()
+        val playPauseIconLiveData = MutableLiveData<Int>()
+        val songDetailsLiveData = MutableLiveData<Pair<String, String>>()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -56,6 +58,26 @@ class PlayerFragment : Fragment(), ServiceConnection {
         initializeData()
         setupClicks()
 
+        setUpObservers()
+
+    }
+
+    private fun setUpObservers() {
+        playPauseLiveData.observe(viewLifecycleOwner) { (tag, icon) ->
+            binding.playPauseBtn.setIconResource(icon)
+        }
+        songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
+            // Update UI elements with song details
+            Glide.with(requireContext())
+                .load(artUri)
+                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                .into(binding.songCoverImage)
+            binding.playerSongTitle.text = songTitle
+        }
+
+        playPauseIconLiveData.observe(viewLifecycleOwner) { icon ->
+            binding.playPauseBtn.setIconResource(icon)
+        }
     }
 
     private fun startService() {
@@ -154,7 +176,7 @@ class PlayerFragment : Fragment(), ServiceConnection {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //_binding = null
+        _binding = null
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

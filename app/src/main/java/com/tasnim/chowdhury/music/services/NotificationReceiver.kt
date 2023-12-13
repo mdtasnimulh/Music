@@ -3,10 +3,7 @@ package com.tasnim.chowdhury.music.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants.EXIT
@@ -48,26 +45,24 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.isPlaying = true
         PlayerFragment.musicService?.mediaPlayer?.start()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
-        Log.d("hello", "Exception:::hello2")
-        PlayerFragment.binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
+        PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_pause))
     }
 
     private fun pauseMusic() {
         PlayerFragment.isPlaying = false
         PlayerFragment.musicService?.mediaPlayer?.pause()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
-        Log.d("hello", "Exception:::hello3")
-        PlayerFragment.binding.playPauseBtn.setIconResource(R.drawable.ic_play)
+        PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_play))
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
         setSongPosition(increment = increment)
         PlayerFragment.musicService?.createMediaPlayer()
-        Glide.with(context)
-            .load(PlayerFragment.musicList!![PlayerFragment.songPosition].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-            .into(PlayerFragment.binding.songCoverImage)
-        PlayerFragment.binding.playerSongTitle.text = PlayerFragment.musicList!![PlayerFragment.songPosition].title
+        val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
+        val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
+
+        PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
+
         playMusic()
     }
 
