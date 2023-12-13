@@ -18,10 +18,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
-import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
-import com.tasnim.chowdhury.music.services.MusicServices
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -127,22 +125,6 @@ class PlayerFragment : Fragment(), ServiceConnection {
         }
         Log.d("PlayerFragment", "$songPosition *-*")
     }
-
-    /*private fun setSongPosition(increment: Boolean) {
-        if (increment) {
-            if (args.musicList.size - 1 == songPosition) {
-                songPosition = 0
-            } else {
-                ++songPosition
-            }
-        } else {
-            if (songPosition == 0) {
-                songPosition = args.musicList.size - 1
-            } else {
-                --songPosition
-            }
-        }
-    }*/
 
     private fun playMusic() {
         binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
