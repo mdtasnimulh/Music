@@ -105,6 +105,31 @@
                 android:text="00:00" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/featureBtnLl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="32dp"
+            android:weightSum="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBarLl">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/repeatBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:height="0dp"
+                android:text="R"
+                app:icon="@drawable/ic_repeat"
+                android:backgroundTint="@android:color/holo_orange_dark"/>
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

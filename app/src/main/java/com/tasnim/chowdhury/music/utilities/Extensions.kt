@@ -18,17 +18,19 @@ fun getImageArt(path: String): ByteArray? {
 }
 
 fun setSongPosition(increment: Boolean) {
-    if (increment) {
-        if ((PlayerFragment.musicList?.size?.minus(1) ?: 0) == PlayerFragment.songPosition) {
-            PlayerFragment.songPosition = 0
+    if (!PlayerFragment.repeat) {
+        if (increment) {
+            if ((PlayerFragment.musicList?.size?.minus(1) ?: 0) == PlayerFragment.songPosition) {
+                PlayerFragment.songPosition = 0
+            } else {
+                ++PlayerFragment.songPosition
+            }
         } else {
-            ++PlayerFragment.songPosition
-        }
-    } else {
-        if (PlayerFragment.songPosition == 0) {
-            PlayerFragment.songPosition = PlayerFragment.musicList?.size?.minus(1) ?: 0
-        } else {
-            --PlayerFragment.songPosition
+            if (PlayerFragment.songPosition == 0) {
+                PlayerFragment.songPosition = PlayerFragment.musicList?.size?.minus(1) ?: 0
+            } else {
+                --PlayerFragment.songPosition
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -47,6 +48,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val endTimeLiveData = MutableLiveData<Long>()
         val initialProgressLiveData = MutableLiveData<Int>()
         val progressMaxLiveData = MutableLiveData<Int>()
+        var repeat: Boolean = false
     }
 
     override fun onCreateView(
@@ -154,6 +156,16 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
             override fun onStopTrackingTouch(p0: SeekBar?) { /*DO NOTHING*/ }
         })
+
+        binding.repeatBtn.setOnClickListener {
+            if (!repeat) {
+                repeat = true
+                binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            } else {
+                repeat = false
+                binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_orange_dark))
+            }
+        }
     }
 
     private fun setLayout(){
@@ -161,7 +173,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .load(args.musicList[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
-        binding.playerSongTitle.text = args.musicList[songPosition].title
+        if (repeat) {
+            binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+        }
     }
 
     private fun createMediaPlayer() {
