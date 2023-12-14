@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants.EXIT
@@ -62,6 +64,12 @@ class NotificationReceiver: BroadcastReceiver() {
         val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
 
         PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
+
+        /*Glide.with(context)
+            .load(PlayerFragment.musicList!![PlayerFragment.songPosition].artUri)
+            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+            .into(PlayerFragment.binding.songCoverImage)
+        PlayerFragment.binding.playerSongTitle.text = PlayerFragment.musicList!![PlayerFragment.songPosition].title*/
 
         playMusic()
     }

@@ -39,7 +39,7 @@ object AppModule {
             .setOngoing(true)
     }
 
-    @Singleton
+    /*@Singleton
     @Provides
     fun provideNotificationManager(
         @ApplicationContext context: Context
@@ -47,12 +47,12 @@ object AppModule {
         val notificationManager = NotificationManagerCompat.from(context)
         val channel = NotificationChannel(
             Constants.NOTIFICATION_CHANNEL_ID,
-            Constants.NOTIFICATION_CHANNEL_ID,
+            Constants.NOTIFICATION_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationManager.createNotificationChannel(channel)
         return notificationManager
-    }
+    }*/
 
 
 }

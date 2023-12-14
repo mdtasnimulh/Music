@@ -1,8 +1,11 @@
 package com.tasnim.chowdhury.music.services
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
@@ -13,11 +16,12 @@ import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants
-import com.tasnim.chowdhury.music.utilities.formatDuration
+import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_ID
+import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_NAME
+import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_ID
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +31,6 @@ class MusicService : Service() {
 
     @Inject
     lateinit var notificationBuilder: NotificationCompat.Builder
-    lateinit var notificationManager: NotificationManagerCompat
 
     private lateinit var runnable: Runnable
 
@@ -69,6 +72,9 @@ class MusicService : Service() {
             BitmapFactory.decodeResource(baseContext.resources, R.drawable.ic_launcher_foreground)
         }
 
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotificationChannel(notificationManager)
+
         notificationBuilder.mActions.clear()
 
         val notificationBuilder = notificationBuilder
@@ -83,8 +89,7 @@ class MusicService : Service() {
 
         PlayerFragment.playPauseIconLiveData.postValue(playPauseBtn)
 
-        startForeground(
-            13, notificationBuilder.build())
+        startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     fun createMediaPlayer() {
@@ -114,6 +119,15 @@ class MusicService : Service() {
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(channel)
     }
 
 }

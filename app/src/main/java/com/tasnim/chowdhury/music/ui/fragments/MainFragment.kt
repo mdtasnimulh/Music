@@ -33,6 +33,7 @@ class MainFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 onPermissionGranted()
+                requestNotificationPermission()
             } else {
                 Toast.makeText(requireContext(), "Audio Permission Denied", Toast.LENGTH_SHORT).show()
             }
@@ -42,8 +43,18 @@ class MainFragment : Fragment() {
             if (permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true &&
                 permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true) {
                 onPermissionGranted()
+                requestNotificationPermission()
             } else {
                 Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+
+            } else {
+
+                Toast.makeText(requireContext(), "Notification Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -116,6 +127,11 @@ class MainFragment : Fragment() {
             requestAudioPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
         } else {
             requestStoragePermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        }
+    }
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

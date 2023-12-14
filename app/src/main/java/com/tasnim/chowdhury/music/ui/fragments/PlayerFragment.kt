@@ -37,6 +37,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     //private var musicService: MusicServices? = null
 
     companion object {
+        /*@SuppressLint("StaticFieldLeak")
+        lateinit var binding: FragmentPlayerBinding*/
         var songPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
@@ -59,53 +61,84 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        postInitialValues()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         startService()
         initializeData()
         setupClicks()
-
         setUpObservers()
 
     }
 
+    private fun postInitialValues() {
+        playPauseLiveData.postValue(Pair("", 0))
+        playPauseIconLiveData.postValue(0)
+        songDetailsLiveData.postValue(Pair("", ""))
+        startTimeLiveData.postValue(0L)
+        endTimeLiveData.postValue(0L)
+        initialProgressLiveData.postValue(0)
+        progressMaxLiveData.postValue(0)
+    }
+
     private fun setUpObservers() {
         playPauseLiveData.observe(viewLifecycleOwner) { (tag, icon) ->
-            binding.playPauseBtn.setIconResource(icon)
+            Log.d("chkTitleCover", "tag:$tag, icon:$icon")
+            if (icon != 0){
+                binding.playPauseBtn.setIconResource(icon)
+            }
         }
         songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
-            // Update UI elements with song details
-            Glide.with(requireContext())
-                .load(artUri)
-                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-                .into(binding.songCoverImage)
-            binding.playerSongTitle.text = songTitle
+            Log.d("chkTitleCover", "songTitle:$songTitle, artUri:$artUri")
+            if (songTitle!="" && artUri!=""){
+                Glide.with(requireContext())
+                    .load(artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(binding.songCoverImage)
+                binding.playerSongTitle.text = songTitle
+                Log.d("chkTitleCover", "$songTitle *-*-*")
+            }
         }
 
         playPauseIconLiveData.observe(viewLifecycleOwner) { icon ->
-            binding.playPauseBtn.setIconResource(icon)
+            Log.d("chkTitleCover", "icon:$icon")
+            if (icon!=0){
+                binding.playPauseBtn.setIconResource(icon)
+            }
         }
 
         startTimeLiveData.observe(viewLifecycleOwner) { startTime ->
-            binding.startTimeSeekBar.text = formatDuration(startTime.toLong())
+            if (startTime!=0L) {
+                binding.startTimeSeekBar.text = formatDuration(startTime.toLong())
+            }
         }
 
         endTimeLiveData.observe(viewLifecycleOwner) { endTime ->
-            binding.endTimeSeekbar.text = formatDuration(endTime.toLong())
+            if (endTime!=0L) {
+                binding.endTimeSeekbar.text = formatDuration(endTime.toLong())
+            }
         }
 
         initialProgressLiveData.observe(viewLifecycleOwner) { progress ->
-            binding.seekBar.progress = progress
+            if (progress!=0) {
+                binding.seekBar.progress = progress
+            }
         }
 
         progressMaxLiveData.observe(viewLifecycleOwner) { max ->
-            binding.seekBar.max = max
+            if (max!=0) {
+                binding.seekBar.max = max
+            }
         }
     }
 
     private fun startService() {
-        // for starting the service
         val intent = Intent(requireContext(), MusicService::class.java)
         requireContext().bindService(intent, this, BIND_AUTO_CREATE)
         requireContext().startService(intent)
@@ -173,7 +206,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .load(args.musicList[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
+        Log.d("chkTitleCover", "${binding.songCoverImage}")
         binding.playerSongTitle.text = args.musicList[songPosition].title
+        Log.d("chkTitleCover", "${args.musicList[songPosition].title}")
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
         }
@@ -230,11 +265,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
@@ -255,6 +285,16 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }catch (e: Exception) {
             Log.d("catchException", ":::${e.message}:::")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        postInitialValues()
     }
 
 }
