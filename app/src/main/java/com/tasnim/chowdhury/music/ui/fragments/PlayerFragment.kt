@@ -37,8 +37,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     //private var musicService: MusicServices? = null
 
     companion object {
-        /*@SuppressLint("StaticFieldLeak")
-        lateinit var binding: FragmentPlayerBinding*/
         var songPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null

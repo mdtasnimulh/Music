@@ -65,12 +65,6 @@ class NotificationReceiver: BroadcastReceiver() {
 
         PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
 
-        /*Glide.with(context)
-            .load(PlayerFragment.musicList!![PlayerFragment.songPosition].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-            .into(PlayerFragment.binding.songCoverImage)
-        PlayerFragment.binding.playerSongTitle.text = PlayerFragment.musicList!![PlayerFragment.songPosition].title*/
-
         playMusic()
     }
 
