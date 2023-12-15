@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.utilities.closeApp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.system.exitProcess
 
@@ -38,11 +39,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null) {
-            PlayerFragment.musicService?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
-            PlayerFragment.musicService?.mediaPlayer?.release()
-            PlayerFragment.musicService = null
-            exitProcess(1)
+        if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
+            closeApp()
         }
     }
 

@@ -13,6 +13,7 @@ import com.tasnim.chowdhury.music.utilities.Constants.EXIT
 import com.tasnim.chowdhury.music.utilities.Constants.NEXT
 import com.tasnim.chowdhury.music.utilities.Constants.PLAY
 import com.tasnim.chowdhury.music.utilities.Constants.PREVIOUS
+import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import kotlin.system.exitProcess
 
@@ -37,10 +38,7 @@ class NotificationReceiver: BroadcastReceiver() {
                 Toast.makeText(context, "next", Toast.LENGTH_SHORT).show()
             }
             EXIT -> {
-                PlayerFragment.musicService?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
-                PlayerFragment.musicService?.mediaPlayer?.release()
-                PlayerFragment.musicService = null
-                exitProcess(1)
+                closeApp()
             }
         }
     }

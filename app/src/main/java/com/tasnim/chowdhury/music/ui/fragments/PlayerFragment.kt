@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -17,19 +18,26 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionListener {
@@ -53,6 +61,13 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val initialProgressLiveData = MutableLiveData<Int>()
         val progressMaxLiveData = MutableLiveData<Int>()
         var repeat: Boolean = false
+
+        var min15: Boolean = false
+        var min20: Boolean = false
+        var min25: Boolean = false
+        var min30: Boolean = false
+        var min60: Boolean = false
+        var min1: Boolean = false
     }
 
     override fun onCreateView(
@@ -219,6 +234,40 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             }
         }
 
+        binding.exitTimerBtn.setOnClickListener {
+            val sleepTimer = min1 || min15 || min20 || min25 || min30 || min60
+            if (!sleepTimer) {
+                showTimerBottomSheet()
+            } else {
+                val cancelDialog = AlertDialog.Builder(requireContext())
+                    .setTitle("Cancel Timer")
+                    .setMessage("Are you sure you want to cancel the sleep timer?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        min1 = false
+                        min15 = false
+                        min20 = false
+                        min25 = false
+                        min30 = false
+                        min60 = false
+                        binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                cancelDialog.create()
+                cancelDialog.show()
+            }
+        }
+
+        binding.shareBtn.setOnClickListener {
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.type = "audio/*"
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicList?.get(songPosition)?.path))
+            Log.d("chkMusicPath", "MusicPath::${musicList?.get(songPosition)?.path}\nTitle::${musicList?.get(songPosition)?.title}")
+            startActivity(Intent.createChooser(shareIntent, "Sharing Music File!!"))
+        }
+
         binding.backImg.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -234,6 +283,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         Log.d("chkTitleCover", "${args.musicList[songPosition].title}")
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+        }
+        if (min1 || min15 || min20 || min25 || min30 || min60) {
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+        } else {
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
         }
     }
 
@@ -307,6 +361,108 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             setLayout()
         }catch (e: Exception) {
             Log.d("catchException", ":::${e.message}:::")
+        }
+    }
+
+    private fun showTimerBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout)
+        bottomSheetDialog.show()
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer15MinLl)?.setOnClickListener {
+            min15 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(15*60000)
+                if (min15) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 15 minutes!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer20MinLl)?.setOnClickListener {
+            min20 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(20*60000)
+                if (min20) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 20 minutes!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer25MinLl)?.setOnClickListener {
+            min25 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(25*60000)
+                if (min25) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 25 minutes!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer30MinLl)?.setOnClickListener {
+            min30 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(30*60000)
+                if (min30) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 30 minutes!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer60MinLl)?.setOnClickListener {
+            min60 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(60*60000)
+                if (min60) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 60 minutes!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timerTestMinLl)?.setOnClickListener {
+            min1 = true
+            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            lifecycleScope.launch {
+                delay(5*1000)
+                if (min1) {
+                    closeApp()
+                }
+            }
+            Toast.makeText(
+                requireContext(),
+                "Music will stop after 1 minute!",
+                Toast.LENGTH_SHORT
+            ).show()
+            bottomSheetDialog.dismiss()
         }
     }
 

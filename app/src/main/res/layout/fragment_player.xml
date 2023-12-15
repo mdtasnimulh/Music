@@ -124,7 +124,8 @@
                 android:layout_weight="1"
                 android:minWidth="0dp"
                 android:height="0dp"
-                android:text="R"
+                android:text="Repeat"
+                android:padding="5dp"
                 app:icon="@drawable/ic_repeat"
                 android:backgroundTint="@android:color/holo_orange_dark"/>
 
@@ -133,12 +134,41 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:padding="2dp"
                 android:layout_weight="1"
                 android:minWidth="0dp"
                 android:height="0dp"
-                android:text="EQ"
+                android:text="Equalizer"
                 app:icon="@drawable/ic_eqalizer"
                 android:backgroundTint="@android:color/holo_purple"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/exitTimerBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="5dp"
+                app:iconGravity="start"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:height="0dp"
+                android:text="Sleep"
+                app:icon="@drawable/ic_timer"
+                android:backgroundTint="@android:color/holo_red_light"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="5dp"
+                app:iconGravity="start"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:height="0dp"
+                android:text="Share"
+                app:icon="@drawable/ic_share"
+                android:backgroundTint="@android:color/holo_blue_dark"/>
 
         </LinearLayout>
 

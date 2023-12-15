@@ -1,8 +1,10 @@
 package com.tasnim.chowdhury.music.utilities
 
+import android.app.Service
 import android.media.MediaMetadataRetriever
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 fun formatDuration(duration: Long): String {
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -33,4 +35,13 @@ fun setSongPosition(increment: Boolean) {
             }
         }
     }
+}
+
+fun closeApp(){
+    if (PlayerFragment.musicService != null) {
+        PlayerFragment.musicService?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
+        PlayerFragment.musicService?.mediaPlayer?.release()
+        PlayerFragment.musicService = null
+    }
+    exitProcess(1)
 }
