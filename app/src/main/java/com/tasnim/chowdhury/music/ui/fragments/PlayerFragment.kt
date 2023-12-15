@@ -1,10 +1,12 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.media.MediaPlayer
+import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -14,8 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -197,6 +201,27 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_orange_dark))
             }
         }
+
+        binding.equalizerBtn.setOnClickListener {
+            try {
+                val eqIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+                eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService?.mediaPlayer?.audioSessionId)
+                eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, requireContext().packageName)
+                eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                startActivityForResult(eqIntent, 641)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Equalizer Feature is not supported for your mobile, Sorry!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.d("CatchException", "Equalize::${e.message}")
+            }
+        }
+
+        binding.backImg.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setLayout(){
@@ -282,6 +307,13 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             setLayout()
         }catch (e: Exception) {
             Log.d("catchException", ":::${e.message}:::")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 641 || resultCode == RESULT_OK) {
+            return
         }
     }
 

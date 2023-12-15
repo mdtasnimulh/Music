@@ -1,5 +1,6 @@
 package com.tasnim.chowdhury.music.services
 
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -36,7 +37,8 @@ class NotificationReceiver: BroadcastReceiver() {
                 Toast.makeText(context, "next", Toast.LENGTH_SHORT).show()
             }
             EXIT -> {
-                PlayerFragment.musicService?.stopForeground(true)
+                PlayerFragment.musicService?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
+                PlayerFragment.musicService?.mediaPlayer?.release()
                 PlayerFragment.musicService = null
                 exitProcess(1)
             }

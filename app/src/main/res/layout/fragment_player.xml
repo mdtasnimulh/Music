@@ -18,11 +18,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backImg"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -128,7 +128,31 @@
                 app:icon="@drawable/ic_repeat"
                 android:backgroundTint="@android:color/holo_orange_dark"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/equalizerBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:height="0dp"
+                android:text="EQ"
+                app:icon="@drawable/ic_eqalizer"
+                android:backgroundTint="@android:color/holo_purple"/>
+
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/backImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:padding="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
