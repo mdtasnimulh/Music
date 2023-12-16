@@ -12,11 +12,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +38,8 @@ class MainFragment : Fragment() {
     companion object {
         var search: Boolean = false
         lateinit var musicListSearch: MusicList
+        val playPauseIconNP = MutableLiveData<Int>()
+        val songDetailsNP = MutableLiveData<Pair<String, String>>()
     }
 
     private val requestAudioPermissionLauncher =
@@ -78,6 +85,49 @@ class MainFragment : Fragment() {
         requestAudioPermission()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (PlayerFragment.musicService != null) {
+            binding.nowPlayingView.root.visibility = View.VISIBLE
+            setNowPlaying()
+            binding.nowPlayingView.nowPlayingTitle.isSelected = true
+        } else {
+            binding.nowPlayingView.root.visibility = View.GONE
+        }
+    }
+
+    private fun setNowPlaying() {
+        Glide.with(requireContext())
+            .load(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artUri)
+            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+            .into(binding.nowPlayingView.nowPlayingCoverImage)
+
+        binding.nowPlayingView.nowPlayingTitle.text = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title
+
+        if (PlayerFragment.isPlaying) {
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_pause)
+        } else {
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_play)
+        }
+    }
+
+    private fun playMusic() {
+        PlayerFragment.musicService?.mediaPlayer?.start()
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_pause)
+        PlayerFragment.isPlaying = true
+    }
+
+    private fun pauseMusic() {
+        PlayerFragment.musicService?.mediaPlayer?.pause()
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_play)
+        PlayerFragment.isPlaying = false
+    }
+
     private fun onPermissionGranted() {
         initData()
         setupAdapter()
@@ -93,6 +143,23 @@ class MainFragment : Fragment() {
 
                 val totalSongText = "Total songs: ${it.size}"
                 binding.totalSongValue.text = totalSongText
+            }
+        }
+
+        playPauseIconNP.observe(viewLifecycleOwner) { icon ->
+            /*if (icon!=0){
+                binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(icon)
+            }*/
+        }
+
+        songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
+            if (songTitle!="" && artUri!=""){
+                Glide.with(requireContext())
+                    .load(artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(binding.nowPlayingView.nowPlayingCoverImage)
+
+                binding.nowPlayingView.nowPlayingTitle.text = songTitle
             }
         }
     }
@@ -113,6 +180,28 @@ class MainFragment : Fragment() {
     }
 
     private fun setupClicks() {
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setOnClickListener {
+            if (PlayerFragment.isPlaying) pauseMusic() else playMusic()
+        }
+
+        binding.nowPlayingView.nowPlayingNextBtn.setOnClickListener {
+            setSongPosition(increment = true)
+            PlayerFragment.musicService?.createMediaPlayer()
+            val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
+            val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
+
+            PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
+            songDetailsNP.postValue(Pair(songTitle, artUri))
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+
+            playMusic()
+        }
+
+        binding.nowPlayingView.root.setOnClickListener {
+            val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(PlayerFragment.songPosition, "NowPlaying", mainMusicList)
+            findNavController().navigate(nowPlayingAction)
+        }
+
         musicAdapter.musicItem = { position, tag, _ ->
             when(tag) {
                 "MainAdapter" -> {
@@ -124,6 +213,10 @@ class MainFragment : Fragment() {
                     Log.d("chkSongList", "Search:::$musicListSearch:::")
                     val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, "SearchView", musicListSearch)
                     findNavController().navigate(action)
+                }
+                "NowPlaying" -> {
+                    val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(PlayerFragment.songPosition, "NowPlaying", mainMusicList)
+                    findNavController().navigate(nowPlayingAction)
                 }
             }
         }

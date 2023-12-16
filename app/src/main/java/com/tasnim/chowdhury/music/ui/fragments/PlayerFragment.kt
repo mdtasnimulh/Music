@@ -66,6 +66,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val initialProgressLiveData = MutableLiveData<Int>()
         val progressMaxLiveData = MutableLiveData<Int>()
         var repeat: Boolean = false
+        var nowPlayingId: String = ""
     }
 
     override fun onCreateView(
@@ -85,7 +86,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        startService()
+        //startService()
         initializeData()
         setupClicks()
         setUpObservers()
@@ -164,17 +165,35 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             "MainAdapter" -> {
                 musicList = args.musicList
                 songPosition = args.position
+                startService()
                 Log.d("PlayerFragment", "$songPosition main")
+            }
+            "NowPlaying" -> {
+                binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.let {
+                    formatDuration(it.toLong())
+                }
+                binding.endTimeSeekbar.text = musicService?.mediaPlayer?.duration?.let {
+                    formatDuration(it.toLong())
+                }
+                binding.seekBar.progress = musicService?.mediaPlayer?.currentPosition!!
+                binding.seekBar.max = musicService?.mediaPlayer?.duration!!
+                if (isPlaying) {
+                    binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
+                } else {
+                    binding.playPauseBtn.setIconResource(R.drawable.ic_play)
+                }
             }
             "SearchView" -> {
                 musicList = args.musicList
                 songPosition = args.position
+                startService()
                 Log.d("PlayerFragment", "$songPosition search")
             }
             "ShuffleButton" -> {
                 musicList = args.musicList
                 songPosition = 0
                 args.musicList
+                startService()
                 Log.d("PlayerFragment", "$songPosition shuffle")
             }
         }
@@ -314,6 +333,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             binding.seekBar.progress = 0
             binding.seekBar.max = musicService?.mediaPlayer?.duration!!
             musicService?.mediaPlayer?.setOnCompletionListener(this)
+            nowPlayingId = musicList?.get(songPosition)?.id.toString()
         }catch (e: Exception) {
             Log.d("chkException", "Exception:::${e.message}")
         }

@@ -105,11 +105,10 @@ class MusicService : Service() {
             PlayerFragment.endTimeLiveData.postValue(mediaPlayer?.duration?.toLong())
             PlayerFragment.initialProgressLiveData.postValue(0)
             PlayerFragment.progressMaxLiveData.postValue(mediaPlayer?.duration)
-            Log.d("hello", "Exception:::hello1")
+            PlayerFragment.nowPlayingId = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.id.toString()
         }catch (e: Exception) {
             Log.d("chkException", "Exception:::${e.message}")
         }
-        Log.d("PlayerFragment", "${PlayerFragment.songPosition} *-*")
     }
 
     fun seekBarSetup() {

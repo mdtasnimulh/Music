@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
+import com.tasnim.chowdhury.music.ui.fragments.MainFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants.EXIT
 import com.tasnim.chowdhury.music.utilities.Constants.NEXT
@@ -48,6 +49,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.musicService?.mediaPlayer?.start()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
         PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_pause))
+        MainFragment.playPauseIconNP.postValue(R.drawable.ic_pause)
     }
 
     private fun pauseMusic() {
@@ -55,6 +57,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.musicService?.mediaPlayer?.pause()
         PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
         PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_play))
+        MainFragment.playPauseIconNP.postValue(R.drawable.ic_play)
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
@@ -64,6 +67,7 @@ class NotificationReceiver: BroadcastReceiver() {
         val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
 
         PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
+        MainFragment.songDetailsNP.postValue(Pair(songTitle, artUri))
 
         playMusic()
     }

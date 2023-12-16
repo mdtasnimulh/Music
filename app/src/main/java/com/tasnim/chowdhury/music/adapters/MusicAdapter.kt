@@ -11,14 +11,15 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.ui.fragments.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
 
-class MusicAdapter(val context: Context): RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
+class MusicAdapter(val context: Context) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
 
     private var musicList: ArrayList<Music> = arrayListOf()
     var musicItem: ((position: Int, tag: String, song: Music) -> Unit)? = null
 
-    inner class MainViewHolder(private val binding: MusicListItemBinding):
+    inner class MainViewHolder(private val binding: MusicListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int, music: Music) {
             binding.songTitle.text = music.title
@@ -26,24 +27,32 @@ class MusicAdapter(val context: Context): RecyclerView.Adapter<MusicAdapter.Main
             binding.songDuration.text = formatDuration(music.duration)
             Glide.with(context)
                 .load(music.artUri)
-                .apply ( RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop() )
+                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                 .into(binding.songImage)
 
             Log.d("chkMusicListSize", "Position::$position")
 
             binding.musicListItem.setOnClickListener {
-                if (!MainFragment.search){
+                if (music.id == PlayerFragment.nowPlayingId) {
                     musicItem?.invoke(
                         position,
-                        "MainAdapter",
+                        "NowPlaying",
                         music
                     )
                 } else {
-                    musicItem?.invoke(
-                        position,
-                        "SearchView",
-                        music
-                    )
+                    if (!MainFragment.search) {
+                        musicItem?.invoke(
+                            position,
+                            "MainAdapter",
+                            music
+                        )
+                    } else {
+                        musicItem?.invoke(
+                            position,
+                            "SearchView",
+                            music
+                        )
+                    }
                 }
             }
         }
@@ -65,7 +74,7 @@ class MusicAdapter(val context: Context): RecyclerView.Adapter<MusicAdapter.Main
         holder.bind(position, musicList[position])
     }
 
-    fun addAll(list: List<Music>){
+    fun addAll(list: List<Music>) {
         musicList.clear()
         musicList.addAll(list.distinctBy { it.id })
         Log.d("chkMusicListSize", "${list.size}")
