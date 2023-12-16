@@ -45,8 +45,13 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<PlayerFragmentArgs>()
-    //private var songPosition: Int = 0
-    //private var musicService: MusicServices? = null
+
+    private var min15: Boolean = false
+    private var min20: Boolean = false
+    private var min25: Boolean = false
+    private var min30: Boolean = false
+    private var min60: Boolean = false
+    private var min1: Boolean = false
 
     companion object {
         var songPosition: Int = 0
@@ -61,13 +66,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val initialProgressLiveData = MutableLiveData<Int>()
         val progressMaxLiveData = MutableLiveData<Int>()
         var repeat: Boolean = false
-
-        var min15: Boolean = false
-        var min20: Boolean = false
-        var min25: Boolean = false
-        var min30: Boolean = false
-        var min60: Boolean = false
-        var min1: Boolean = false
     }
 
     override fun onCreateView(
@@ -167,6 +165,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 musicList = args.musicList
                 songPosition = args.position
                 Log.d("PlayerFragment", "$songPosition main")
+            }
+            "SearchView" -> {
+                musicList = args.musicList
+                songPosition = args.position
+                Log.d("PlayerFragment", "$songPosition search")
             }
             "ShuffleButton" -> {
                 musicList = args.musicList
@@ -289,6 +292,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         } else {
             binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
         }
+        Log.d("chkMusicListSize", "PlayerPosition::${songPosition}::")
     }
 
     private fun createMediaPlayer() {

@@ -9,4 +9,5 @@
     <string name="minutes_25">25 Minutes</string>
     <string name="minutes_30">30 Minutes</string>
     <string name="minutes_60">60 Minutes</string>
+    <string name="search_music">Search Music</string>
 </resources>

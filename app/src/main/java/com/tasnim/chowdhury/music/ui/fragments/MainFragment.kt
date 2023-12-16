@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,11 @@ class MainFragment : Fragment() {
     private val musicViewModel: MainViewModel by viewModels()
     private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
+
+    companion object {
+        var search: Boolean = false
+        lateinit var musicListSearch: MusicList
+    }
 
     private val requestAudioPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -73,8 +79,8 @@ class MainFragment : Fragment() {
     }
 
     private fun onPermissionGranted() {
-        setupAdapter()
         initData()
+        setupAdapter()
         setObserver()
         setupClicks()
     }
@@ -92,7 +98,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initData() {
-
+        search = false
     }
 
     private fun setupAdapter() {
@@ -108,9 +114,18 @@ class MainFragment : Fragment() {
 
     private fun setupClicks() {
         musicAdapter.musicItem = { position, tag, _ ->
-            Log.d("chkSongList", ":::$mainMusicList:::")
-            val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, tag, mainMusicList)
-            findNavController().navigate(action)
+            when(tag) {
+                "MainAdapter" -> {
+                    Log.d("chkSongList", "MainAdapter:::$mainMusicList:::")
+                    val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, "MainAdapter", mainMusicList)
+                    findNavController().navigate(action)
+                }
+                "SearchView" -> {
+                    Log.d("chkSongList", "Search:::$musicListSearch:::")
+                    val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(position, "SearchView", musicListSearch)
+                    findNavController().navigate(action)
+                }
+            }
         }
 
         binding.shuffleBtn.setOnClickListener {
@@ -120,6 +135,32 @@ class MainFragment : Fragment() {
             val shuffleAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(0, "ShuffleButton", shuffledMusicList)
             findNavController().navigate(shuffleAction)
         }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                musicListSearch = MusicList()
+                Log.d("chkSearchList", "BeforeSearch::${musicListSearch.size}::")
+                if (newText.isNullOrBlank()) {
+                    search = false
+                    musicAdapter.addAll(mainMusicList)
+                }else {
+                    val userInput = newText.lowercase()
+                    for (song in mainMusicList) {
+                        if (song.title.lowercase().contains(userInput)) {
+                            musicListSearch.add(song)
+                        }
+                    }
+                    search = true
+                    musicAdapter.addAll(musicListSearch)
+                }
+                return true
+            }
+        })
     }
 
     private fun requestAudioPermission() {
@@ -172,6 +213,7 @@ class MainFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.searchView.setQuery("", false)
         _binding = null
     }
 
