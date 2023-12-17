@@ -67,6 +67,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val progressMaxLiveData = MutableLiveData<Int>()
         var repeat: Boolean = false
         var nowPlayingId: String = ""
+        var isFavourite: Boolean = false
     }
 
     override fun onCreateView(
@@ -292,6 +293,15 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
         binding.backImg.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.favBtn.setOnClickListener {
+            isFavourite = !isFavourite
+            if (isFavourite){
+                binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
+            } else {
+                binding.favBtn.setImageResource(R.drawable.ic_fav_outline)
+            }
         }
     }
 

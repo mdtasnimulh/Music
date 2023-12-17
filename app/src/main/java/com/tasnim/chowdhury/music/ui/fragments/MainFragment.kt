@@ -254,6 +254,10 @@ class MainFragment : Fragment() {
                 return true
             }
         })
+
+        binding.favouriteBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_favouritesFragment)
+        }
     }
 
     private fun requestAudioPermission() {
