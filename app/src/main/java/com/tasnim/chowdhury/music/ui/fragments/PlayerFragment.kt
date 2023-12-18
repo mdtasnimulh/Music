@@ -111,7 +111,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         playPauseLiveData.observe(viewLifecycleOwner) { (tag, icon) ->
             Log.d("chkTitleCover", "tag:$tag, icon:$icon")
             if (icon != 0){
-                binding.playPauseBtn.setIconResource(icon)
+                binding.playPauseBtn.setImageResource(icon)
             }
         }
         songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
@@ -129,7 +129,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         playPauseIconLiveData.observe(viewLifecycleOwner) { icon ->
             Log.d("chkTitleCover", "icon:$icon")
             if (icon!=0){
-                binding.playPauseBtn.setIconResource(icon)
+                binding.playPauseBtn.setImageResource(icon)
             }
         }
 
@@ -192,9 +192,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.seekBar.progress = musicService?.mediaPlayer?.currentPosition!!
                 binding.seekBar.max = musicService?.mediaPlayer?.duration!!
                 if (isPlaying) {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
+                    binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
                 } else {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_play)
+                    binding.playPauseBtn.setImageResource(R.drawable.ic_player_play)
                 }
             }
             "SearchView" -> {
@@ -315,11 +315,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         binding.favBtn.setOnClickListener {
             if (isFavourite){
                 isFavourite = false
-                binding.favBtn.setImageResource(R.drawable.ic_fav_outline)
+                binding.favBtn.setImageResource(R.drawable.ic_favourite_outline)
                 FavouritesFragment.favouriteSongs.removeAt(fIndex)
             } else {
                 isFavourite = true
-                binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
+                binding.favBtn.setImageResource(R.drawable.ic_favourite_filled)
                 FavouritesFragment.favouriteSongs.add(musicList!![songPosition])
             }
         }
@@ -344,9 +344,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         Log.d("chkMusicListSize", "PlayerPosition::${songPosition}::")
         if (isFavourite){
-            binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
+            binding.favBtn.setImageResource(R.drawable.ic_favourite_filled)
         } else {
-            binding.favBtn.setImageResource(R.drawable.ic_fav_outline)
+            binding.favBtn.setImageResource(R.drawable.ic_favourite_outline)
         }
     }
 
@@ -360,8 +360,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             musicService?.mediaPlayer?.prepare()
             musicService?.mediaPlayer?.start()
             isPlaying = true
-            binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
-            musicService?.showNotification(R.drawable.ic_pause)
+            binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
+            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
             binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.toLong()
                 ?.let { formatDuration(it) }
             binding.endTimeSeekbar.text = musicService?.mediaPlayer?.duration?.toLong()
@@ -377,15 +377,15 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     }
 
     private fun playMusic() {
-        binding.playPauseBtn.setIconResource(R.drawable.ic_pause)
-        musicService?.showNotification(R.drawable.ic_pause)
+        binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
+        musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
         isPlaying = true
         musicService?.mediaPlayer?.start()
     }
 
     private fun pauseMusic() {
-        binding.playPauseBtn.setIconResource(R.drawable.ic_play)
-        musicService?.showNotification(R.drawable.ic_play)
+        binding.playPauseBtn.setImageResource(R.drawable.ic_player_play)
+        musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
         isPlaying = false
         musicService?.mediaPlayer?.pause()
     }

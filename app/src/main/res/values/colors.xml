@@ -2,4 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="palette1BlueDark">#2B3467</color>
+    <color name="palette1NavyBlue">#03045e</color>
+    <color name="palette1BlueMedium">#457b9d</color>
+    <color name="palette1SkyBlue">#00b4d8</color>
+    <color name="palette1BlueLight">#BAD7E9</color>
+    <color name="palette1OffWhite">#FCFFE7</color>
+    <color name="palette1Maroon">#EB455F</color>
+    <color name="palette1Red">#d90429</color>
+    <color name="palette1Green">#386641</color>
+    <color name="palette1GreenMedium">#6A994E</color>
+    <color name="palette1LimeGreen">#A7C957</color>
+    <color name="palette1Orange">#FF5400</color>
+    <color name="palette1MediumOrange">#FF4800</color>
+    <color name="palette1LiteOrange">#E28805</color>
+    <color name="palette1SeaGreen">#0C434C</color>
+    <color name="palette1MediumBlack">#212121</color>
+
+    <color name="ic_launcher_background">#2B3467</color>
 </resources>

@@ -106,25 +106,25 @@ class MainFragment : Fragment() {
         binding.nowPlayingView.nowPlayingTitle.text = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title
 
         if (PlayerFragment.isPlaying) {
-            binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_pause)
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
         } else {
-            binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_play)
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
         }
     }
 
     private fun playMusic() {
         PlayerFragment.musicService?.mediaPlayer?.start()
-        binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_pause)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
-        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_pause)
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
         PlayerFragment.isPlaying = true
     }
 
     private fun pauseMusic() {
         PlayerFragment.musicService?.mediaPlayer?.pause()
-        binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(R.drawable.ic_play)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
-        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_play)
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
         PlayerFragment.isPlaying = false
     }
 
@@ -192,7 +192,7 @@ class MainFragment : Fragment() {
 
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
             songDetailsNP.postValue(Pair(songTitle, artUri))
-            PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
 
             playMusic()
         }

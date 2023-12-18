@@ -39,18 +39,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/nowPlayingPlayPauseBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_marginEnd="8dp"
-                android:backgroundTint="@android:color/holo_red_light"
-                app:icon="@drawable/ic_play"
-                app:iconSize="40dp"
-                app:iconTint="@color/white"
+                android:elevation="16dp"
+                android:src="@drawable/ic_player_play"
+                app:cornerRadius="15dp"
+                android:background="@drawable/play_pause_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/nowPlayingNextBtn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/nowPlayingTitle"

@@ -50,7 +50,7 @@ class MusicService : Service() {
     }
 
     @SuppressLint("RestrictedApi")
-    fun showNotification(playPauseBtn: Int) {
+    fun showNotification(playPauseBtn: Int, playPauseBlack: Int) {
 
         val prevIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(Constants.PREVIOUS)
         val prevPendingIntent = PendingIntent.getBroadcast(baseContext, 0, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -83,7 +83,7 @@ class MusicService : Service() {
             .setContentText(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artist)
             .setLargeIcon(image)
             .addAction(R.drawable.ic_back, "Previous", prevPendingIntent)
-            .addAction(playPauseBtn, "Play", playPendingIntent)
+            .addAction(playPauseBlack, "Play", playPendingIntent)
             .addAction(R.drawable.ic_forward, "Next", nextPendingIntent)
             .addAction(R.drawable.ic_close, "Exit", exitPendingIntent)
 
@@ -100,7 +100,7 @@ class MusicService : Service() {
             PlayerFragment.musicService?.mediaPlayer?.reset()
             PlayerFragment.musicService?.mediaPlayer?.setDataSource(PlayerFragment.musicList!![PlayerFragment.songPosition].path)
             PlayerFragment.musicService?.mediaPlayer?.prepare()
-            PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
             PlayerFragment.startTimeLiveData.postValue(mediaPlayer?.currentPosition?.toLong())
             PlayerFragment.endTimeLiveData.postValue(mediaPlayer?.duration?.toLong())
             PlayerFragment.initialProgressLiveData.postValue(0)

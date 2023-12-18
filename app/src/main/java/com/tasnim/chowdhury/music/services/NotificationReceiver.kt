@@ -30,10 +30,11 @@ class NotificationReceiver: BroadcastReceiver() {
             PLAY -> {
                 if (PlayerFragment.isPlaying){
                     pauseMusic()
+                    Toast.makeText(context, "pause", Toast.LENGTH_SHORT).show()
                 }else{
                     playMusic()
+                    Toast.makeText(context, "play", Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(context, "play", Toast.LENGTH_SHORT).show()
             }
             NEXT -> {
                 prevNextSong(increment = true, context!!)
@@ -48,17 +49,17 @@ class NotificationReceiver: BroadcastReceiver() {
     private fun playMusic() {
         PlayerFragment.isPlaying = true
         PlayerFragment.musicService?.mediaPlayer?.start()
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_pause)
-        PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_pause))
-        MainFragment.playPauseIconNP.postValue(R.drawable.ic_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_player_pause))
+        MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_pause)
     }
 
     private fun pauseMusic() {
         PlayerFragment.isPlaying = false
         PlayerFragment.musicService?.mediaPlayer?.pause()
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_play)
-        PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_play))
-        MainFragment.playPauseIconNP.postValue(R.drawable.ic_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_player_play))
+        MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_play)
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
@@ -74,9 +75,9 @@ class NotificationReceiver: BroadcastReceiver() {
 
         PlayerFragment.fIndex = favouriteSongChecker(PlayerFragment.musicList!![PlayerFragment.songPosition].id)
         if (PlayerFragment.isFavourite) {
-            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_fav_colored)
+            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_favourite_filled)
         } else {
-            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_fav_outline)
+            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_favourite_outline)
         }
     }
 
