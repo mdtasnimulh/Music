@@ -17,10 +17,11 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/nowPlayingCoverImage"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginVertical="16dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginVertical="12dp"
                 android:layout_marginStart="4dp"
+                android:elevation="16dp"
                 android:src="@drawable/ic_launcher_background"
                 app:shapeAppearanceOverlay="@style/playlistMainImage"
                 app:layout_constraintBottom_toBottomOf="parent"
