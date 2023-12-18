@@ -71,6 +71,13 @@ class MainFragment : Fragment() {
             }
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        playPauseIconNP.postValue(0)
+        songDetailsNP.postValue(Pair("", ""))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -131,8 +138,8 @@ class MainFragment : Fragment() {
     private fun onPermissionGranted() {
         initData()
         setupAdapter()
-        setObserver()
         setupClicks()
+        setObserver()
     }
 
     private fun setObserver() {
@@ -147,9 +154,9 @@ class MainFragment : Fragment() {
         }
 
         playPauseIconNP.observe(viewLifecycleOwner) { icon ->
-            /*if (icon!=0){
-                binding.nowPlayingView.nowPlayingPlayPauseBtn.setIconResource(icon)
-            }*/
+            if (icon!=0){
+                binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(icon)
+            }
         }
 
         songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
@@ -258,6 +265,10 @@ class MainFragment : Fragment() {
         binding.favouriteBtn.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_favouritesFragment)
         }
+
+        binding.playListBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_playlistFragment)
+        }
     }
 
     private fun requestAudioPermission() {
@@ -308,9 +319,16 @@ class MainFragment : Fragment() {
         }
     }*/
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding.searchView.setQuery("", false)
+
+        playPauseIconNP.postValue(0)
+        songDetailsNP.postValue(Pair("", ""))
         _binding = null
     }
 

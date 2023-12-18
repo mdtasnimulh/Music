@@ -115,19 +115,16 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             }
         }
         songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
-            Log.d("chkTitleCover", "songTitle:$songTitle, artUri:$artUri")
             if (songTitle!="" && artUri!=""){
                 Glide.with(requireContext())
                     .load(artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.songCoverImage)
                 binding.playerSongTitle.text = songTitle
-                Log.d("chkTitleCover", "$songTitle *-*-*")
             }
         }
 
         playPauseIconLiveData.observe(viewLifecycleOwner) { icon ->
-            Log.d("chkTitleCover", "icon:$icon")
             if (icon!=0){
                 binding.playPauseBtn.setImageResource(icon)
             }
@@ -270,7 +267,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                     "Equalizer Feature is not supported for your mobile, Sorry!",
                     Toast.LENGTH_SHORT
                 ).show()
-                Log.d("CatchException", "Equalize::${e.message}")
             }
         }
 
@@ -304,7 +300,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicList?.get(songPosition)?.path))
-            Log.d("chkMusicPath", "MusicPath::${musicList?.get(songPosition)?.path}\nTitle::${musicList?.get(songPosition)?.title}")
             startActivity(Intent.createChooser(shareIntent, "Sharing Music File!!"))
         }
 
@@ -331,9 +326,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .load(args.musicList[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
-        Log.d("chkTitleCover", "${binding.songCoverImage}")
         binding.playerSongTitle.text = args.musicList[songPosition].title
-        Log.d("chkTitleCover", "${args.musicList[songPosition].title}")
+        MainFragment.songDetailsNP.postValue(Pair(args.musicList[songPosition].title, args.musicList[songPosition].artUri))
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
         }
@@ -342,7 +336,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         } else {
             binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
         }
-        Log.d("chkMusicListSize", "PlayerPosition::${songPosition}::")
         if (isFavourite){
             binding.favBtn.setImageResource(R.drawable.ic_favourite_filled)
         } else {
@@ -370,10 +363,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             binding.seekBar.max = musicService?.mediaPlayer?.duration!!
             musicService?.mediaPlayer?.setOnCompletionListener(this)
             nowPlayingId = musicList?.get(songPosition)?.id.toString()
-        }catch (e: Exception) {
-            Log.d("chkException", "Exception:::${e.message}")
-        }
-        Log.d("PlayerFragment", "$songPosition *-*")
+        }catch (_: Exception) { }
     }
 
     private fun playMusic() {
@@ -419,9 +409,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         createMediaPlayer()
         try {
             setLayout()
-        }catch (e: Exception) {
-            Log.d("catchException", ":::${e.message}:::")
-        }
+        }catch (_: Exception) {}
     }
 
     private fun showTimerBottomSheet() {
