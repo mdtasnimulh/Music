@@ -33,6 +33,7 @@ import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
 import com.tasnim.chowdhury.music.utilities.closeApp
+import com.tasnim.chowdhury.music.utilities.favouriteSongChecker
 import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +69,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         var repeat: Boolean = false
         var nowPlayingId: String = ""
         var isFavourite: Boolean = false
+        var fIndex: Int = -1
+        val favouriteIcon = MutableLiveData<Int>()
     }
 
     override fun onCreateView(
@@ -153,6 +156,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.seekBar.max = max
             }
         }
+
+        favouriteIcon.observe(viewLifecycleOwner) {
+            if (it != null){
+                binding.favBtn.setImageResource(it)
+            }
+        }
     }
 
     private fun startService() {
@@ -167,7 +176,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 musicList = args.musicList
                 songPosition = args.position
                 startService()
-                Log.d("PlayerFragment", "$songPosition main")
+            }
+            "FavouriteAdapter" -> {
+                musicList = args.musicList
+                songPosition = args.position
+                startService()
             }
             "NowPlaying" -> {
                 binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.let {
@@ -188,14 +201,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 musicList = args.musicList
                 songPosition = args.position
                 startService()
-                Log.d("PlayerFragment", "$songPosition search")
             }
             "ShuffleButton" -> {
                 musicList = args.musicList
                 songPosition = 0
                 args.musicList
                 startService()
-                Log.d("PlayerFragment", "$songPosition shuffle")
             }
         }
         setLayout()
@@ -296,16 +307,20 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
 
         binding.favBtn.setOnClickListener {
-            isFavourite = !isFavourite
             if (isFavourite){
-                binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
-            } else {
+                isFavourite = false
                 binding.favBtn.setImageResource(R.drawable.ic_fav_outline)
+                FavouritesFragment.favouriteSongs.removeAt(fIndex)
+            } else {
+                isFavourite = true
+                binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
+                FavouritesFragment.favouriteSongs.add(musicList!![songPosition])
             }
         }
     }
 
     private fun setLayout(){
+        fIndex = favouriteSongChecker(musicList!![songPosition].id)
         Glide.with(requireContext())
             .load(args.musicList[songPosition].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
@@ -322,6 +337,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
         }
         Log.d("chkMusicListSize", "PlayerPosition::${songPosition}::")
+        if (isFavourite){
+            binding.favBtn.setImageResource(R.drawable.ic_fav_colored)
+        } else {
+            binding.favBtn.setImageResource(R.drawable.ic_fav_outline)
+        }
     }
 
     private fun createMediaPlayer() {

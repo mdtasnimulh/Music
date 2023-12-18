@@ -15,6 +15,7 @@ import com.tasnim.chowdhury.music.utilities.Constants.NEXT
 import com.tasnim.chowdhury.music.utilities.Constants.PLAY
 import com.tasnim.chowdhury.music.utilities.Constants.PREVIOUS
 import com.tasnim.chowdhury.music.utilities.closeApp
+import com.tasnim.chowdhury.music.utilities.favouriteSongChecker
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import kotlin.system.exitProcess
 
@@ -70,6 +71,13 @@ class NotificationReceiver: BroadcastReceiver() {
         MainFragment.songDetailsNP.postValue(Pair(songTitle, artUri))
 
         playMusic()
+
+        PlayerFragment.fIndex = favouriteSongChecker(PlayerFragment.musicList!![PlayerFragment.songPosition].id)
+        if (PlayerFragment.isFavourite) {
+            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_fav_colored)
+        } else {
+            PlayerFragment.favouriteIcon.postValue(R.drawable.ic_fav_outline)
+        }
     }
 
 }

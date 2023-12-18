@@ -2,6 +2,7 @@ package com.tasnim.chowdhury.music.utilities
 
 import android.app.Service
 import android.media.MediaMetadataRetriever
+import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
@@ -44,4 +45,15 @@ fun closeApp(){
         PlayerFragment.musicService = null
     }
     exitProcess(1)
+}
+
+fun favouriteSongChecker(id: String): Int {
+    PlayerFragment.isFavourite = false
+    FavouritesFragment.favouriteSongs.forEachIndexed { index, music ->
+        if (id == music.id) {
+            PlayerFragment.isFavourite = true
+            return index
+        }
+    }
+    return -1
 }
