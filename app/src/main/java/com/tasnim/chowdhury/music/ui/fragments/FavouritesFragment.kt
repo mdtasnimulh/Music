@@ -21,6 +21,7 @@ class FavouritesFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var favouriteAdapter: FavouriteAdapter
     private val favouritesMusicList = MusicList()
+    private val shuffleFavouriteList = MusicList()
 
     companion object {
         var favouriteSongs: ArrayList<Music> = ArrayList()
@@ -37,12 +38,24 @@ class FavouritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initData()
         setupAdapter()
         setupClicks()
     }
 
-    private fun setupClicks() {
+    private fun initData() {
         favouritesMusicList.addAll(favouriteSongs)
+        shuffleFavouriteList.addAll(favouritesMusicList)
+        shuffleFavouriteList.shuffle()
+
+        if (shuffleFavouriteList.size > 1) {
+            binding.shuffleBtnF.visibility = View.VISIBLE
+        } else {
+            binding.shuffleBtnF.visibility = View.GONE
+        }
+    }
+
+    private fun setupClicks() {
         favouriteAdapter.musicItem = { position, tag, _ ->
             when(tag) {
                 "FavouriteAdapter" -> {
@@ -50,6 +63,11 @@ class FavouritesFragment : Fragment() {
                     findNavController().navigate(action)
                 }
             }
+        }
+
+        binding.shuffleBtnF.setOnClickListener {
+            val action = FavouritesFragmentDirections.actionFavouritesFragmentToPlayerFragment(0, "ShuffleFavourites", shuffleFavouriteList)
+            findNavController().navigate(action)
         }
     }
 

@@ -13,8 +13,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.ActivityMainBinding
+import com.tasnim.chowdhury.music.model.Music
+import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.closeApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,10 +41,24 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener{ _, _, _ ->
 
         }
+
+        FavouritesFragment.favouriteSongs = ArrayList()
+        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+        val jsonString = editor.getString("FavouriteSongs", null)
+        val typeToken = object : TypeToken<ArrayList<Music>>(){}.type
+        if (jsonString != null) {
+            val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
+            FavouritesFragment.favouriteSongs.addAll(data)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
+        editor.putString("FavouriteSongs", jsonString)
+        editor.apply()
 
         if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
             closeApp()

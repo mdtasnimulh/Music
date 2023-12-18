@@ -87,4 +87,6 @@ dependencies {
     kapt ("androidx.hilt:hilt-compiler:1.1.0")
 
     implementation("androidx.media:media:1.7.0")
+
+    implementation ("com.google.code.gson:gson:2.10")
 }

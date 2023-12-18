@@ -208,6 +208,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 args.musicList
                 startService()
             }
+            "ShuffleFavourites" -> {
+                musicList = args.musicList
+                songPosition = 0
+                args.musicList
+                startService()
+            }
         }
         setLayout()
     }
