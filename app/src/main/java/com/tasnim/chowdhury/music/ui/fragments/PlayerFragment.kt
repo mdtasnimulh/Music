@@ -327,7 +327,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
         binding.playerSongTitle.text = args.musicList[songPosition].title
-        MainFragment.songDetailsNP.postValue(Pair(args.musicList[songPosition].title, args.musicList[songPosition].artUri))
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
         }
@@ -407,6 +406,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     override fun onCompletion(mp: MediaPlayer?) {
         setSongPosition(increment = true)
         createMediaPlayer()
+        MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.artUri) })
         try {
             setLayout()
         }catch (_: Exception) {}
