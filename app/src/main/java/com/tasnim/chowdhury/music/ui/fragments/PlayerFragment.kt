@@ -407,6 +407,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         setSongPosition(increment = true)
         createMediaPlayer()
         MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.artUri) })
+        if (isPlaying) {
+            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        }
         try {
             setLayout()
         }catch (_: Exception) {}
