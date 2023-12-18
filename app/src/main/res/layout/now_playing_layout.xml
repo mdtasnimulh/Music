@@ -12,15 +12,14 @@
             android:id="@+id/nowPlayingMainCl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_blue_dark"
-            android:paddingHorizontal="8dp">
+            android:background="@android:color/holo_blue_dark">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/nowPlayingCoverImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginVertical="12dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="12dp"
                 android:elevation="16dp"
                 android:src="@drawable/ic_launcher_background"
                 app:shapeAppearanceOverlay="@style/playlistMainImage"
@@ -32,7 +31,7 @@
                 android:id="@+id/nowPlayingNextBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="12dp"
                 android:backgroundTint="@android:color/holo_red_light"
                 app:icon="@drawable/ic_forward"
                 app:iconSize="32dp"
