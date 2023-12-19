@@ -1,20 +1,12 @@
 package com.tasnim.chowdhury.music.ui
 
-import android.app.Service
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
-import androidx.core.app.ServiceCompat.STOP_FOREGROUND_REMOVE
-import androidx.core.app.ServiceCompat.StopForegroundFlags
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
@@ -24,10 +16,8 @@ import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.MusicPlaylist
-import com.tasnim.chowdhury.music.utilities.Playlist
 import com.tasnim.chowdhury.music.utilities.closeApp
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

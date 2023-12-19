@@ -2,26 +2,21 @@ package com.tasnim.chowdhury.music.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentPlaylistDetailsBinding
 import com.tasnim.chowdhury.music.model.MusicList
-import com.tasnim.chowdhury.music.utilities.MusicPlaylist
 
 class PlaylistDetailsFragment : Fragment() {
 
@@ -130,17 +125,6 @@ class PlaylistDetailsFragment : Fragment() {
             cancelDialog.create()
             cancelDialog.show()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        /*val editorPlaylist = activity?.getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)?.edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
-        editorPlaylist?.putString("MusicPlaylist", jsonStringPlaylist)
-
-        Log.d("chkPlaylist", "${jsonStringPlaylist} :::::")
-        editorPlaylist?.apply()*/
     }
 
     override fun onDestroyView() {

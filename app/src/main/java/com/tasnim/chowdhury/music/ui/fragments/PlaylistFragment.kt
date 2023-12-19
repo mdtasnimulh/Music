@@ -1,15 +1,11 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatTextView
@@ -18,8 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.PlaylistAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentPlaylistBinding
@@ -37,21 +31,6 @@ class PlaylistFragment : Fragment() {
 
     companion object{
         var musicPlaylist: MusicPlaylist = MusicPlaylist()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        /*PlaylistFragment.musicPlaylist = MusicPlaylist()
-        val editorPlaylist = activity?.getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)
-        val jsonStringPlaylist = editorPlaylist?.getString("MusicPlaylist", null)
-        val typeTokenPlaylist = object : TypeToken<MusicPlaylist>(){}.type
-        if (jsonStringPlaylist != null) {
-            val dataPlaylist: MusicPlaylist = GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
-            PlaylistFragment.musicPlaylist = dataPlaylist
-        }
-
-        Log.d("chkPlaylist", "${PlaylistFragment.musicPlaylist}")*/
     }
 
     override fun onCreateView(
