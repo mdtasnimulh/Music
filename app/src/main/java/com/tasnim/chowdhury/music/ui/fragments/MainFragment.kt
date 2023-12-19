@@ -204,7 +204,7 @@ class MainFragment : Fragment() {
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
             songDetailsNP.postValue(Pair(songTitle, artUri))
             PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
-            PlayerFragment.animateDisk.postValue("Other")
+            PlayerFragment.animateDisk.postValue("")
 
             playMusic()
         }

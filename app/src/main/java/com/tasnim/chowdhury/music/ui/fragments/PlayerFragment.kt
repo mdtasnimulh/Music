@@ -1,6 +1,5 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
-import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
@@ -11,15 +10,13 @@ import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -51,8 +48,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
-    private var _binding: FragmentPlayerBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentPlayerBinding
+    //private val binding get() = _binding!!
     private val args by navArgs<PlayerFragmentArgs>()
 
     private var min15: Boolean = false
@@ -62,7 +59,10 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     private var min60: Boolean = false
     private var min1: Boolean = false
 
-    private var rotationAnimator: ObjectAnimator? = null
+    private val rotationHandler = Handler()
+    private var isRotationRunning = false
+    private var currentRotation: Float = 0f
+    private val rotationUpdateInterval = 16L
 
     companion object {
         var songPosition: Int = 0
@@ -88,7 +88,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -176,8 +176,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             when(it) {
                 "Start" -> {
                     binding.musicPlayerHandler.apply {
-                        animateElevation(25.dpToPx().toFloat(), 500)
-                        animateRotation(35f, 500)
                         animateMargins(
                             startMarginEnd = 16.dpToPx(),
                             endMarginEnd = 58.dpToPx(),
@@ -185,6 +183,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                             endMarginTop = (-34).dpToPx(),
                             duration = 500
                         )
+                        animateElevation(25.dpToPx().toFloat(), 500)
+                        animateRotation(35f, 500)
                     }
                     startRotationAnimation()
                 }
@@ -202,29 +202,17 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                     }
                     stopRotationAnimation()
                 }
-                else -> {
+                "" -> {
                     binding.musicPlayerHandler.apply {
-                        if (isPlaying){
-                            animateElevation(25.dpToPx().toFloat(), 0)
-                            animateRotation(35f, 0)
-                            animateMargins(
-                                startMarginEnd = 58.dpToPx(),
-                                endMarginEnd = 58.dpToPx(),
-                                startMarginTop = (-34).dpToPx(),
-                                endMarginTop = (-34).dpToPx(),
-                                duration = 0
-                            )
-                        } else {
-                            animateMargins(
-                                startMarginEnd = 58.dpToPx(),
-                                endMarginEnd = 58.dpToPx(),
-                                startMarginTop = (-34).dpToPx(),
-                                endMarginTop = (-34).dpToPx(),
-                                duration = 500
-                            )
-                            animateElevation(25.dpToPx().toFloat(), 500)
-                            animateRotation(35f, 500)
-                        }
+                        animateMargins(
+                            startMarginEnd = 58.dpToPx(),
+                            endMarginEnd = 58.dpToPx(),
+                            startMarginTop = (-34).dpToPx(),
+                            endMarginTop = (-34).dpToPx(),
+                            duration = 0
+                        )
+                        animateElevation(25.dpToPx().toFloat(), 500)
+                        animateRotation(35f, 500)
                     }
                     startRotationAnimation()
                 }
@@ -424,27 +412,15 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
 
         binding.musicPlayerHandler.apply {
-            if (isPlaying){
-                animateMargins(
-                    startMarginEnd = 58.dpToPx(),
-                    endMarginEnd = 58.dpToPx(),
-                    startMarginTop = (-34).dpToPx(),
-                    endMarginTop = (-34).dpToPx(),
-                    duration = 0
-                )
-                animateElevation(25.dpToPx().toFloat(), 0)
-                animateRotation(35f, 0)
-            } else {
-                animateMargins(
-                    startMarginEnd = 58.dpToPx(),
-                    endMarginEnd = 58.dpToPx(),
-                    startMarginTop = (-34).dpToPx(),
-                    endMarginTop = (-34).dpToPx(),
-                    duration = 500
-                )
-                animateElevation(25.dpToPx().toFloat(), 500)
-                animateRotation(35f, 500)
-            }
+            animateMargins(
+                startMarginEnd = 58.dpToPx(),
+                endMarginEnd = 58.dpToPx(),
+                startMarginTop = (-34).dpToPx(),
+                endMarginTop = (-34).dpToPx(),
+                duration = 0
+            )
+            animateElevation(25.dpToPx().toFloat(), 500)
+            animateRotation(35f, 500)
         }
         startRotationAnimation()
     }
@@ -519,28 +495,30 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         return (this * density).toInt()
     }
 
-    private fun startRotationAnimation() {
-        rotationAnimator?.let {
-            // Calculate the remaining time in the rotation
-            val remainingTime = it.duration - it.currentPlayTime
-            it.cancel()
-            rotationAnimator = ObjectAnimator.ofFloat(binding.songCoverImage, "rotation", it.animatedValue as Float, 360f)
-            rotationAnimator?.repeatCount = ObjectAnimator.INFINITE
-            rotationAnimator?.interpolator = LinearInterpolator()
-            rotationAnimator?.duration = remainingTime
-        } ?: run {
-            rotationAnimator = ObjectAnimator.ofFloat(binding.songCoverImage, "rotation", 0f, 360f)
-            rotationAnimator?.repeatCount = ObjectAnimator.INFINITE
-            rotationAnimator?.interpolator = LinearInterpolator()
-            rotationAnimator?.duration = 10000
+    private val rotationRunnable = object : Runnable {
+        override fun run() {
+            currentRotation += 1f
+            if (currentRotation >= 360f) {
+                currentRotation = 0f
+            }
+            binding.songCoverImage.rotation = currentRotation
+            if (isRotationRunning) {
+                rotationHandler.postDelayed(this, rotationUpdateInterval)
+            }
         }
-        rotationAnimator?.start()
+    }
+
+    private fun startRotationAnimation() {
+        if (!isRotationRunning) {
+            isRotationRunning = true
+            rotationHandler.post(rotationRunnable)
+        }
     }
 
     private fun stopRotationAnimation() {
-        rotationAnimator?.cancel()
+        isRotationRunning = false
+        rotationHandler.removeCallbacks(rotationRunnable)
     }
-
 
     private fun prevNextSong(increment: Boolean) {
         if (increment) {
@@ -689,7 +667,10 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        if (isPlaying) {
+            animateDisk.postValue("")
+        }
+        //_binding = null
     }
 
     override fun onDestroy() {
