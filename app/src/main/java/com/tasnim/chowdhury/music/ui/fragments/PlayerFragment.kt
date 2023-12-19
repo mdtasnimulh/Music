@@ -532,7 +532,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             rotationAnimator = ObjectAnimator.ofFloat(binding.songCoverImage, "rotation", 0f, 360f)
             rotationAnimator?.repeatCount = ObjectAnimator.INFINITE
             rotationAnimator?.interpolator = LinearInterpolator()
-            rotationAnimator?.duration = 8000
+            rotationAnimator?.duration = 10000
         }
         rotationAnimator?.start()
     }

@@ -76,13 +76,45 @@
             app:strokeColor="#FF5400"
             app:strokeWidth="5dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/songCoverImage"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="225dp"
-                android:layout_height="225dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/music_img"
-                app:shapeAppearanceOverlay="@style/playlistSubImage" />
+                android:layout_height="225dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/songCoverImage"
+                    android:layout_width="225dp"
+                    android:layout_height="225dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/music_img"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/playlistSubImage" />
+
+                <View
+                    android:id="@+id/playlistSubImageView"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/playlist_round_view"
+                    android:elevation="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                    app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                    app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                    app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+
+                <View
+                    android:id="@+id/playlistSubImageView2"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/playlist_round_view_2"
+                    android:elevation="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                    app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                    app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                    app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
