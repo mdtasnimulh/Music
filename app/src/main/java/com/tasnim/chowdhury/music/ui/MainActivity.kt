@@ -68,32 +68,15 @@ class MainActivity : AppCompatActivity() {
         Log.d("chkPlaylist", "${PlaylistFragment.musicPlaylist}")
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        /*val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
-        editor.putString("FavouriteSongs", jsonString)
-        editor.apply()*/
-
-        /*val editorPlaylist = getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)?.edit()
-        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
-        editorPlaylist?.putString("MusicPlaylist", jsonStringPlaylist)
-
-        Log.d("chkPlaylist", "${jsonStringPlaylist} :::::")
-        editorPlaylist?.apply()*/
-
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
         val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
         editor.putString("FavouriteSongs", jsonString)
-        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
-        editor?.putString("MusicPlaylist", jsonStringPlaylist)
         editor.apply()
+        /*val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
+        editor?.putString("MusicPlaylist", jsonStringPlaylist)*/
 
         if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
             closeApp()

@@ -76,8 +76,6 @@ class PlaylistDetailsFragment : Fragment() {
         val editorPlaylist = activity?.getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)?.edit()
         val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
         editorPlaylist?.putString("MusicPlaylist", jsonStringPlaylist)
-
-        Log.d("chkPlaylist", "${jsonStringPlaylist} :::::")
         editorPlaylist?.apply()
     }
 
