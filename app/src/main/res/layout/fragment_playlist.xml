@@ -59,8 +59,10 @@
             android:paddingVertical="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playlistToolbar">
+            app:layout_constraintTop_toBottomOf="@+id/playlistToolbar"
+            app:layout_constraintVertical_bias="0.0">
 
             <TextView
                 android:id="@+id/playlistTextView"
@@ -99,6 +101,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/playlistTextView"
                 tools:itemCount="3"
                 tools:listitem="@layout/playlist_rv_layout" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/createPlaylistBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="11dp"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_close"
+                android:contentDescription="@string/create_new_playlist" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
