@@ -176,7 +176,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        musicAdapter = MusicAdapter(requireContext())
+        musicAdapter = MusicAdapter(requireContext(), false)
         binding.musicListRv.adapter = musicAdapter
         binding.musicListRv.setHasFixedSize(true)
         binding.musicListRv.setItemViewCacheSize(15)

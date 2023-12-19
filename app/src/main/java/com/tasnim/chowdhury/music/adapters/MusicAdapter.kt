@@ -14,7 +14,7 @@ import com.tasnim.chowdhury.music.ui.fragments.MainFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
 
-class MusicAdapter(val context: Context) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
+class MusicAdapter(val context: Context, val playlistDetails: Boolean = false) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
 
     private var musicList: ArrayList<Music> = arrayListOf()
     var musicItem: ((position: Int, tag: String, song: Music) -> Unit)? = null

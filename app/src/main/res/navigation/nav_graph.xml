@@ -33,7 +33,11 @@
         android:id="@+id/playlistFragment"
         android:name="com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment"
         android:label="Playlists"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_playlistFragment_to_playlistDetailsFragment"
+            app:destination="@id/playlistDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.tasnim.chowdhury.music.ui.fragments.PlayerFragment"
@@ -51,5 +55,16 @@
         <argument
             android:name="musicList"
             app:argType="com.tasnim.chowdhury.music.model.MusicList" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistDetailsFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment"
+        android:label="PlaylistDetailsFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
     </fragment>
 </navigation>
