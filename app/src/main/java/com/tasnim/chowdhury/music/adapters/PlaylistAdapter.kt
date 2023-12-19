@@ -45,12 +45,17 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
                 playlistItem?.invoke(position, playlist)
             }
 
-            /*if (PlaylistFragment.musicPlaylist.ref[position].playlist.size > 0) {
+            if (playlist.playlist.size > 0) {
                 Glide.with(itemView.context)
-                    .load(PlaylistFragment.musicPlaylist.ref[PlaylistDetailsFragment.currentPlaylistPosition].playlist[0].artUri)
+                    .load(playlist.playlist[0].artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumMainImage)
-            }*/
+
+                Glide.with(itemView.context)
+                    .load(playlist.playlist[0].artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(binding.playlistAlbumSubImage)
+            }
         }
     }
 
