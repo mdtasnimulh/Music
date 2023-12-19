@@ -106,6 +106,7 @@ class MusicService : Service() {
             PlayerFragment.initialProgressLiveData.postValue(0)
             PlayerFragment.progressMaxLiveData.postValue(mediaPlayer?.duration)
             PlayerFragment.nowPlayingId = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.id.toString()
+            PlayerFragment.animateDisk.postValue("Other")
         }catch (e: Exception) {
             Log.d("chkException", "Exception:::${e.message}")
         }

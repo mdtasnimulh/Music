@@ -1,8 +1,10 @@
 package com.tasnim.chowdhury.music.adapters
 
+import android.animation.ObjectAnimator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -55,6 +57,13 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
                     .load(playlist.playlist[0].artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumSubImage)
+
+                // Rotate the playlistAlbumSubImage
+                val rotation = ObjectAnimator.ofFloat(binding.playlistAlbumSubImage, "rotation", 0f, 360f)
+                rotation.repeatCount = ObjectAnimator.INFINITE
+                rotation.interpolator = LinearInterpolator()
+                rotation.duration = 4000 // Set the rotation duration in milliseconds (adjust as needed)
+                rotation.start()
             }
         }
     }

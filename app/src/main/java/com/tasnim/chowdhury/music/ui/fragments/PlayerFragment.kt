@@ -1,10 +1,12 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
+import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Resources
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -15,6 +17,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -32,6 +37,9 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.utilities.animateElevation
+import com.tasnim.chowdhury.music.utilities.animateMargins
+import com.tasnim.chowdhury.music.utilities.animateRotation
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.favouriteSongChecker
 import com.tasnim.chowdhury.music.utilities.formatDuration
@@ -54,6 +62,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     private var min60: Boolean = false
     private var min1: Boolean = false
 
+    private var rotationAnimator: ObjectAnimator? = null
+
     companion object {
         var songPosition: Int = 0
         var isPlaying: Boolean = false
@@ -71,6 +81,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         var isFavourite: Boolean = false
         var fIndex: Int = -1
         val favouriteIcon = MutableLiveData<Int>()
+        val animateDisk = MutableLiveData<String>()
     }
 
     override fun onCreateView(
@@ -105,6 +116,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         endTimeLiveData.postValue(0L)
         initialProgressLiveData.postValue(0)
         progressMaxLiveData.postValue(0)
+        //animateDisk.postValue("")
     }
 
     private fun setUpObservers() {
@@ -157,6 +169,65 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         favouriteIcon.observe(viewLifecycleOwner) {
             if (it != null){
                 binding.favBtn.setImageResource(it)
+            }
+        }
+
+        animateDisk.observe(viewLifecycleOwner) {
+            when(it) {
+                "Start" -> {
+                    binding.musicPlayerHandler.apply {
+                        animateElevation(25.dpToPx().toFloat(), 500)
+                        animateRotation(35f, 500)
+                        animateMargins(
+                            startMarginEnd = 16.dpToPx(),
+                            endMarginEnd = 58.dpToPx(),
+                            startMarginTop = (-11).dpToPx(),
+                            endMarginTop = (-34).dpToPx(),
+                            duration = 500
+                        )
+                    }
+                    startRotationAnimation()
+                }
+                "Stop" -> {
+                    binding.musicPlayerHandler.apply {
+                        animateMargins(
+                            startMarginEnd = 58.dpToPx(),
+                            endMarginEnd = 16.dpToPx(),
+                            startMarginTop = (-34).dpToPx(),
+                            endMarginTop = (-11).dpToPx(),
+                            duration = 500
+                        )
+                        animateElevation(0.dpToPx().toFloat(), 500)
+                        animateRotation(0f, 500)
+                    }
+                    stopRotationAnimation()
+                }
+                else -> {
+                    binding.musicPlayerHandler.apply {
+                        if (isPlaying){
+                            animateElevation(25.dpToPx().toFloat(), 0)
+                            animateRotation(35f, 0)
+                            animateMargins(
+                                startMarginEnd = 58.dpToPx(),
+                                endMarginEnd = 58.dpToPx(),
+                                startMarginTop = (-34).dpToPx(),
+                                endMarginTop = (-34).dpToPx(),
+                                duration = 0
+                            )
+                        } else {
+                            animateMargins(
+                                startMarginEnd = 58.dpToPx(),
+                                endMarginEnd = 58.dpToPx(),
+                                startMarginTop = (-34).dpToPx(),
+                                endMarginTop = (-34).dpToPx(),
+                                duration = 500
+                            )
+                            animateElevation(25.dpToPx().toFloat(), 500)
+                            animateRotation(35f, 500)
+                        }
+                    }
+                    startRotationAnimation()
+                }
             }
         }
     }
@@ -351,6 +422,31 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         } else {
             binding.favBtn.setImageResource(R.drawable.ic_favourite_outline)
         }
+
+        binding.musicPlayerHandler.apply {
+            if (isPlaying){
+                animateMargins(
+                    startMarginEnd = 58.dpToPx(),
+                    endMarginEnd = 58.dpToPx(),
+                    startMarginTop = (-34).dpToPx(),
+                    endMarginTop = (-34).dpToPx(),
+                    duration = 0
+                )
+                animateElevation(25.dpToPx().toFloat(), 0)
+                animateRotation(35f, 0)
+            } else {
+                animateMargins(
+                    startMarginEnd = 58.dpToPx(),
+                    endMarginEnd = 58.dpToPx(),
+                    startMarginTop = (-34).dpToPx(),
+                    endMarginTop = (-34).dpToPx(),
+                    duration = 500
+                )
+                animateElevation(25.dpToPx().toFloat(), 500)
+                animateRotation(35f, 500)
+            }
+        }
+        startRotationAnimation()
     }
 
     private fun createMediaPlayer() {
@@ -381,6 +477,20 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
         isPlaying = true
         musicService?.mediaPlayer?.start()
+
+        binding.musicPlayerHandler.apply {
+            animateMargins(
+                startMarginEnd = 16.dpToPx(),
+                endMarginEnd = 58.dpToPx(),
+                startMarginTop = (-11).dpToPx(),
+                endMarginTop = (-34).dpToPx(),
+                duration = 500
+            )
+            animateElevation(25.dpToPx().toFloat(), 500)
+            animateRotation(35f, 500)
+            animateDisk.postValue("Start")
+        }
+        startRotationAnimation()
     }
 
     private fun pauseMusic() {
@@ -388,7 +498,49 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
         isPlaying = false
         musicService?.mediaPlayer?.pause()
+
+        binding.musicPlayerHandler.apply {
+            animateMargins(
+                startMarginEnd = 58.dpToPx(),
+                endMarginEnd = 16.dpToPx(),
+                startMarginTop = (-34).dpToPx(),
+                endMarginTop = (-11).dpToPx(),
+                duration = 500
+            )
+            animateElevation(0.dpToPx().toFloat(), 500)
+            animateRotation(0f, 500)
+            animateDisk.postValue("Stop")
+        }
+        stopRotationAnimation()
     }
+
+    private fun Int.dpToPx(): Int {
+        val density = Resources.getSystem().displayMetrics.density
+        return (this * density).toInt()
+    }
+
+    private fun startRotationAnimation() {
+        rotationAnimator?.let {
+            // Calculate the remaining time in the rotation
+            val remainingTime = it.duration - it.currentPlayTime
+            it.cancel()
+            rotationAnimator = ObjectAnimator.ofFloat(binding.songCoverImage, "rotation", it.animatedValue as Float, 360f)
+            rotationAnimator?.repeatCount = ObjectAnimator.INFINITE
+            rotationAnimator?.interpolator = LinearInterpolator()
+            rotationAnimator?.duration = remainingTime
+        } ?: run {
+            rotationAnimator = ObjectAnimator.ofFloat(binding.songCoverImage, "rotation", 0f, 360f)
+            rotationAnimator?.repeatCount = ObjectAnimator.INFINITE
+            rotationAnimator?.interpolator = LinearInterpolator()
+            rotationAnimator?.duration = 8000
+        }
+        rotationAnimator?.start()
+    }
+
+    private fun stopRotationAnimation() {
+        rotationAnimator?.cancel()
+    }
+
 
     private fun prevNextSong(increment: Boolean) {
         if (increment) {

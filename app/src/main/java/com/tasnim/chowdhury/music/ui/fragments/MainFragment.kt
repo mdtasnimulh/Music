@@ -127,6 +127,7 @@ class MainFragment : Fragment() {
         PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
         PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
         PlayerFragment.isPlaying = true
+        PlayerFragment.animateDisk.postValue("Start")
     }
 
     private fun pauseMusic() {
@@ -135,6 +136,7 @@ class MainFragment : Fragment() {
         PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
         PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
         PlayerFragment.isPlaying = false
+        PlayerFragment.animateDisk.postValue("Stop")
     }
 
     private fun onPermissionGranted() {
@@ -202,6 +204,7 @@ class MainFragment : Fragment() {
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
             songDetailsNP.postValue(Pair(songTitle, artUri))
             PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+            PlayerFragment.animateDisk.postValue("Other")
 
             playMusic()
         }

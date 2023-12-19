@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:shadowColor="@color/palette1Orange"
-            app:cardCornerRadius="50dp"
+            app:cardCornerRadius="1000dp"
             app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,9 +82,31 @@
                 android:layout_height="225dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/music_img"
-                app:shapeAppearanceOverlay="@style/playerImageShape" />
+                app:shapeAppearanceOverlay="@style/playlistSubImage" />
 
         </com.google.android.material.card.MaterialCardView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/musicPlayerWheel"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/wheel"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/playerCV" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/musicPlayerHandler"
+            android:layout_width="50dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="58dp"
+            android:layout_marginTop="-34dp"
+            android:elevation="25dp"
+            android:rotation="35"
+            android:src="@drawable/handler"
+            app:layout_constraintEnd_toEndOf="@+id/musicPlayerWheel"
+            app:layout_constraintTop_toBottomOf="@+id/musicPlayerWheel" />
 
         <TextView
             android:id="@+id/playerSongTitle"

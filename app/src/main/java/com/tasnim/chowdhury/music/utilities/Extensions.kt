@@ -1,7 +1,11 @@
 package com.tasnim.chowdhury.music.utilities
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Service
 import android.media.MediaMetadataRetriever
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import java.util.concurrent.TimeUnit
@@ -56,4 +60,35 @@ fun favouriteSongChecker(id: String): Int {
         }
     }
     return -1
+}
+
+
+
+fun View.animateRotation(rotation: Float, duration: Long) {
+    val rotateAnimator = ObjectAnimator.ofFloat(this, View.ROTATION, rotation)
+    rotateAnimator.duration = duration
+    rotateAnimator.start()
+}
+
+fun View.animateElevation(elevation: Float, duration: Long) {
+    val elevateAnimator = ObjectAnimator.ofFloat(this, View.TRANSLATION_Z, elevation)
+    elevateAnimator.duration = duration
+    elevateAnimator.start()
+}
+
+fun View.animateMargins(
+    startMarginEnd: Int, endMarginEnd: Int,
+    startMarginTop: Int, endMarginTop: Int,
+    duration: Long
+) {
+    val marginAnimator = ValueAnimator.ofFloat(0f, 1f)
+    marginAnimator.duration = duration
+    marginAnimator.addUpdateListener { valueAnimator ->
+        val fraction = valueAnimator.animatedValue as Float
+        val layoutParams = this.layoutParams as ConstraintLayout.LayoutParams
+        layoutParams.marginEnd = (startMarginEnd + fraction * (endMarginEnd - startMarginEnd)).toInt()
+        layoutParams.topMargin = (startMarginTop + fraction * (endMarginTop - startMarginTop)).toInt()
+        this.layoutParams = layoutParams
+    }
+    marginAnimator.start()
 }

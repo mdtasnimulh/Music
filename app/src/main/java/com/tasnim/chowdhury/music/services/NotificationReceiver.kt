@@ -52,6 +52,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
         PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_player_pause))
         MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_pause)
+        PlayerFragment.animateDisk.postValue("Start")
     }
 
     private fun pauseMusic() {
@@ -60,6 +61,7 @@ class NotificationReceiver: BroadcastReceiver() {
         PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
         PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_player_play))
         MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_play)
+        PlayerFragment.animateDisk.postValue("Stop")
     }
 
     private fun prevNextSong(increment: Boolean, context: Context) {
