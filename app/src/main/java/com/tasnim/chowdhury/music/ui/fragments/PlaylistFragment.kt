@@ -1,5 +1,7 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.PlaylistAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentPlaylistBinding
@@ -35,6 +39,21 @@ class PlaylistFragment : Fragment() {
         var musicPlaylist: MusicPlaylist = MusicPlaylist()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        /*PlaylistFragment.musicPlaylist = MusicPlaylist()
+        val editorPlaylist = activity?.getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)
+        val jsonStringPlaylist = editorPlaylist?.getString("MusicPlaylist", null)
+        val typeTokenPlaylist = object : TypeToken<MusicPlaylist>(){}.type
+        if (jsonStringPlaylist != null) {
+            val dataPlaylist: MusicPlaylist = GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
+            PlaylistFragment.musicPlaylist = dataPlaylist
+        }
+
+        Log.d("chkPlaylist", "${PlaylistFragment.musicPlaylist}")*/
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,11 +69,17 @@ class PlaylistFragment : Fragment() {
         setupClicks()
     }
 
+    override fun onResume() {
+        super.onResume()
+        playlistAdapter.notifyDataSetChanged()
+    }
+
     private fun setupAdapter() {
         playlistAdapter = PlaylistAdapter()
         binding.playlistRV.adapter = playlistAdapter
         binding.playlistRV.layoutManager = LinearLayoutManager(requireContext())
         playlistAdapter.addPlaylist(musicPlaylist.ref)
+        Log.d("chkPlaylist", "${musicPlaylist.ref.size}")
     }
 
     private fun setupClicks() {

@@ -4,11 +4,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.PlaylistRvLayoutBinding
-import com.tasnim.chowdhury.music.model.Music
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.Playlist
 
@@ -43,6 +44,13 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
             binding.root.setOnClickListener {
                 playlistItem?.invoke(position, playlist)
             }
+
+            /*if (PlaylistFragment.musicPlaylist.ref[position].playlist.size > 0) {
+                Glide.with(itemView.context)
+                    .load(PlaylistFragment.musicPlaylist.ref[PlaylistDetailsFragment.currentPlaylistPosition].playlist[0].artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(binding.playlistAlbumMainImage)
+            }*/
         }
     }
 
@@ -63,8 +71,7 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
     }
 
     fun addPlaylist(playlistList: ArrayList<Playlist>) {
-        playlistList.clear()
-        playlistList.addAll(playlistList)
+        this.playlistList.addAll(playlistList)
         notifyDataSetChanged()
     }
 

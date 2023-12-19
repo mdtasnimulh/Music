@@ -66,5 +66,12 @@
         <action
             android:id="@+id/action_playlistDetailsFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistDetailsFragment_to_selectSongsFragment2"
+            app:destination="@id/selectSongsFragment2" />
     </fragment>
+    <fragment
+        android:id="@+id/selectSongsFragment2"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.SelectSongsFragment"
+        android:label="SelectSongsFragment" />
 </navigation>

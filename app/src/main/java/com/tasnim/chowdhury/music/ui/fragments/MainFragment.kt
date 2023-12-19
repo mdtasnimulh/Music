@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
+import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
@@ -32,12 +33,13 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var musicAdapter: MusicAdapter
     private val musicViewModel: MainViewModel by viewModels()
-    private val mainMusicList = MusicList()
+    //private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
 
     companion object {
         var search: Boolean = false
         lateinit var musicListSearch: MusicList
+        var mainMusicList: MusicList = MusicList()
         val playPauseIconNP = MutableLiveData<Int>()
         val songDetailsNP = MutableLiveData<Pair<String, String>>()
     }

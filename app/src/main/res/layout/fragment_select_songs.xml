@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/selectSongsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragments.SelectSongsFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/playlistToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#212121"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/selectSongBack"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back_music"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/playerTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:fontFamily="@font/fjalla_one"
+                android:text="@string/select_songs"
+                android:textAlignment="center"
+                android:textColor="@color/palette1Orange"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="@+id/selectSongBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/selectSongBack"
+                app:layout_constraintTop_toTopOf="@+id/selectSongBack" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/selectSearchView"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/search_bg"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="16dp"
+            app:queryHint="Search Music..."
+            app:iconifiedByDefault="false"
+            android:imeOptions="actionSearch"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlistToolbar"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/selectSongsRv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:scrollbarThumbVertical="@drawable/ic_scrollbar"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectSearchView"
+            tools:itemCount="4"
+            tools:listitem="@layout/music_list_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

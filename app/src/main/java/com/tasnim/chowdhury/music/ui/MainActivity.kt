@@ -1,8 +1,10 @@
 package com.tasnim.chowdhury.music.ui
 
 import android.app.Service
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -20,6 +22,9 @@ import com.tasnim.chowdhury.music.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
+import com.tasnim.chowdhury.music.utilities.MusicPlaylist
+import com.tasnim.chowdhury.music.utilities.Playlist
 import com.tasnim.chowdhury.music.utilities.closeApp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.system.exitProcess
@@ -50,6 +55,34 @@ class MainActivity : AppCompatActivity() {
             val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
             FavouritesFragment.favouriteSongs.addAll(data)
         }
+
+        PlaylistFragment.musicPlaylist = MusicPlaylist()
+        val editorPlaylist = getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)
+        val jsonStringPlaylist = editorPlaylist?.getString("MusicPlaylist", null)
+        val typeTokenPlaylist = object : TypeToken<MusicPlaylist>(){}.type
+        if (jsonStringPlaylist != null) {
+            val dataPlaylist: MusicPlaylist = GsonBuilder().create().fromJson(jsonStringPlaylist, typeTokenPlaylist)
+            PlaylistFragment.musicPlaylist = dataPlaylist
+        }
+
+        Log.d("chkPlaylist", "${PlaylistFragment.musicPlaylist}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        /*val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
+        editor.putString("FavouriteSongs", jsonString)
+        editor.apply()*/
+
+        /*val editorPlaylist = getSharedPreferences("PLAYLIST", Context.MODE_PRIVATE)?.edit()
+        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
+        editorPlaylist?.putString("MusicPlaylist", jsonStringPlaylist)
+
+        Log.d("chkPlaylist", "${jsonStringPlaylist} :::::")
+        editorPlaylist?.apply()*/
+
     }
 
     override fun onDestroy() {
@@ -58,6 +91,8 @@ class MainActivity : AppCompatActivity() {
         val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
         editor.putString("FavouriteSongs", jsonString)
+        val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
+        editor?.putString("MusicPlaylist", jsonStringPlaylist)
         editor.apply()
 
         if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
