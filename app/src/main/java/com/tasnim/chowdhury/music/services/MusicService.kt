@@ -17,6 +17,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.tasnim.chowdhury.music.R
+import com.tasnim.chowdhury.music.ui.MainActivity
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants
 import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_ID
@@ -52,9 +53,11 @@ class MusicService : Service() {
     @SuppressLint("RestrictedApi")
     fun showNotification(playPauseBtn: Int, playPauseBlack: Int) {
 
+        val intent = Intent(baseContext, MainActivity::class.java)
+        val playerIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
         val prevIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(Constants.PREVIOUS)
         val prevPendingIntent = PendingIntent.getBroadcast(baseContext, 0, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        Log.d("hello", "showNotification: hello $prevIntent")
 
         val nextIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(Constants.NEXT)
         val nextPendingIntent = PendingIntent.getBroadcast(baseContext, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -86,6 +89,7 @@ class MusicService : Service() {
             .addAction(playPauseBlack, "Play", playPendingIntent)
             .addAction(R.drawable.ic_forward, "Next", nextPendingIntent)
             .addAction(R.drawable.ic_close, "Exit", exitPendingIntent)
+            .setContentIntent(playerIntent)
 
         PlayerFragment.playPauseIconLiveData.postValue(playPauseBtn)
 
