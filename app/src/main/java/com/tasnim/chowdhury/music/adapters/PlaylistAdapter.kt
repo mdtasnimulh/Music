@@ -1,6 +1,7 @@
 package com.tasnim.chowdhury.music.adapters
 
 import android.animation.ObjectAnimator
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.tasnim.chowdhury.music.databinding.PlaylistRvLayoutBinding
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.Playlist
+import com.tasnim.chowdhury.music.utilities.getImageArt
 
 class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
@@ -48,13 +50,19 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
             }
 
             if (playlist.playlist.size > 0) {
+                val imageArt = getImageArt(playlist.playlist[0].path)
+                val image = if (imageArt != null) {
+                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+                } else {
+                    BitmapFactory.decodeResource(itemView.context.resources, R.drawable.ic_launcher_foreground)
+                }
                 Glide.with(itemView.context)
-                    .load(playlist.playlist[0].artUri)
+                    .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumMainImage)
 
                 Glide.with(itemView.context)
-                    .load(playlist.playlist[0].artUri)
+                    .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumSubImage)
 

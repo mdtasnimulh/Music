@@ -1,6 +1,7 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
 import android.Manifest
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -107,8 +109,18 @@ class MainFragment : Fragment() {
     }
 
     private fun setNowPlaying() {
+        val imageArt = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.path?.let {
+            getImageArt(
+                it
+            )
+        }
+        val image = if (imageArt != null) {
+            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+        } else {
+            BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+        }
         Glide.with(requireContext())
-            .load(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artUri)
+            .load(image)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.nowPlayingView.nowPlayingCoverImage)
 
@@ -165,8 +177,14 @@ class MainFragment : Fragment() {
 
         songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
             if (songTitle!="" && artUri!=""){
+                val imageArt = getImageArt(artUri)
+                val image = if (imageArt != null) {
+                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+                } else {
+                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+                }
                 Glide.with(requireContext())
-                    .load(artUri)
+                    .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.nowPlayingView.nowPlayingCoverImage)
 
@@ -199,7 +217,7 @@ class MainFragment : Fragment() {
             setSongPosition(increment = true)
             PlayerFragment.musicService?.createMediaPlayer()
             val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
-            val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
+            val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
 
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
             songDetailsNP.postValue(Pair(songTitle, artUri))

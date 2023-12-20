@@ -68,7 +68,7 @@ class NotificationReceiver: BroadcastReceiver() {
         setSongPosition(increment = increment)
         PlayerFragment.musicService?.createMediaPlayer()
         val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
-        val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
+        val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
 
         PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
         MainFragment.songDetailsNP.postValue(Pair(songTitle, artUri))

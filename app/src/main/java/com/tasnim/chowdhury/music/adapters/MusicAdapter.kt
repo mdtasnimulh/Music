@@ -1,6 +1,7 @@
 package com.tasnim.chowdhury.music.adapters
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
+import com.tasnim.chowdhury.music.utilities.getImageArt
 
 class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
     val selectionFragment: Boolean = false) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
@@ -29,8 +31,16 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
             binding.songTitle.text = music.title
             binding.artistName.text = music.artist
             binding.songDuration.text = formatDuration(music.duration)
+
+            val imageArt = getImageArt(music.path)
+            val image = if (imageArt != null) {
+                BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+            } else {
+                BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground)
+            }
+
             Glide.with(context)
-                .load(music.artUri)
+                .load(image)
                 .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                 .into(binding.songImage)
 

@@ -6,6 +6,7 @@ import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -42,6 +43,7 @@ import com.tasnim.chowdhury.music.utilities.animateRotation
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.favouriteSongChecker
 import com.tasnim.chowdhury.music.utilities.formatDuration
+import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -139,8 +141,14 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
             if (songTitle!="" && artUri!=""){
+                val imageArt = getImageArt(artUri)
+                val image = if (imageArt != null) {
+                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+                } else {
+                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+                }
                 Glide.with(requireContext())
-                    .load(artUri)
+                    .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.songCoverImage)
                 binding.playerSongTitle.text = songTitle
@@ -403,8 +411,14 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     private fun setLayout(){
         fIndex = favouriteSongChecker(musicList!![songPosition].id)
+        val imageArt = getImageArt(args.musicList[songPosition].path)
+        val image = if (imageArt != null) {
+            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+        } else {
+            BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+        }
         Glide.with(requireContext())
-            .load(args.musicList[songPosition].artUri)
+            .load(image)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)
         binding.playerSongTitle.text = args.musicList[songPosition].title
@@ -558,7 +572,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     override fun onCompletion(mp: MediaPlayer?) {
         setSongPosition(increment = true)
         createMediaPlayer()
-        MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.artUri) })
+        MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.path) })
         if (isPlaying) {
             musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
         }
