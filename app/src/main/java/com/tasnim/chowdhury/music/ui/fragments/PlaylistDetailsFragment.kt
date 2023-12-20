@@ -44,10 +44,10 @@ class PlaylistDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        currentPlaylistPosition = args.position
         PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist = checkPlaylist(
             playlist = PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist
         )
-        currentPlaylistPosition = args.position
         setupAdapter()
         setupClicks()
     }

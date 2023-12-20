@@ -21,6 +21,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -30,6 +31,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.GsonBuilder
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
@@ -106,6 +108,15 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         setupClicks()
         setUpObservers()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val editor = activity?.getSharedPreferences("FAVOURITES", AppCompatActivity.MODE_PRIVATE)?.edit()
+        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
+        editor?.putString("FavouriteSongs", jsonString)
+        editor?.apply()
     }
 
     private fun postInitialValues() {

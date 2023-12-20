@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+        /*val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
         editor.putString("FavouriteSongs", jsonString)
-        editor.apply()
+        editor.apply()*/
         /*val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
         editor?.putString("MusicPlaylist", jsonStringPlaylist)*/
 
