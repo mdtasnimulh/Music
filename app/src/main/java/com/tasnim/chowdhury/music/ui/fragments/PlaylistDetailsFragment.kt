@@ -17,6 +17,7 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentPlaylistDetailsBinding
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.utilities.checkPlaylist
 
 class PlaylistDetailsFragment : Fragment() {
 
@@ -43,6 +44,9 @@ class PlaylistDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist = checkPlaylist(
+            playlist = PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist
+        )
         currentPlaylistPosition = args.position
         setupAdapter()
         setupClicks()

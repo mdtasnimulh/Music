@@ -14,6 +14,7 @@ import com.tasnim.chowdhury.music.adapters.FavouriteAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentFavouritesBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.utilities.checkPlaylist
 
 class FavouritesFragment : Fragment() {
 
@@ -37,6 +38,7 @@ class FavouritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        favouriteSongs = checkPlaylist(favouriteSongs)
 
         initData()
         setupAdapter()

@@ -6,8 +6,10 @@ import android.app.Service
 import android.media.MediaMetadataRetriever
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
@@ -62,6 +64,15 @@ fun favouriteSongChecker(id: String): Int {
     return -1
 }
 
+fun checkPlaylist(playlist: ArrayList<Music>): ArrayList<Music> {
+    playlist.forEachIndexed{ index, music ->
+        val file = File(music.path)
+        if (!file.exists()) {
+            playlist.removeAt(index)
+        }
+    }
+    return playlist
+}
 
 
 fun View.animateRotation(rotation: Float, duration: Long) {
