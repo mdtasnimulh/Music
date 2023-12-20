@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -18,6 +19,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.MainActivity
+import com.tasnim.chowdhury.music.ui.fragments.MainFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants
 import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_ID
@@ -28,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MusicService : Service() {
+class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     @Inject
     lateinit var notificationBuilder: NotificationCompat.Builder
@@ -38,6 +40,7 @@ class MusicService : Service() {
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
     private lateinit var mediaSession: MediaSessionCompat
+    lateinit var audioManager: AudioManager
 
     override fun onBind(p0: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -132,6 +135,24 @@ class MusicService : Service() {
             NotificationManager.IMPORTANCE_HIGH
         )
         notificationManager.createNotificationChannel(channel)
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        if (focusChange <= 0){
+            //pause music
+            PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
+            MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_play)
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+            PlayerFragment.isPlaying = false
+            PlayerFragment.musicService?.mediaPlayer?.pause()
+        } else {
+            //play music
+            PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
+            MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_pause)
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+            PlayerFragment.isPlaying = true
+            PlayerFragment.musicService?.mediaPlayer?.start()
+        }
     }
 
 }
