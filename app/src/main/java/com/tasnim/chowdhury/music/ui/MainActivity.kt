@@ -27,16 +27,19 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var themeIndex: Int = 0
+        val currentTheme = arrayOf(R.style.colorRed, R.style.colorGreen, R.style.colorOrange, R.style.colorBlue, R.style.colorBlack, R.style.colorPurple)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val themeEditor = getSharedPreferences("THEME", MODE_PRIVATE)
-        themeEditor.getInt("themeIndex", 0)
+        themeIndex = themeEditor.getInt("themeIndex", 0)
+        setTheme(currentTheme[themeIndex])
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.findNavController()

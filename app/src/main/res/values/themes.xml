@@ -1,11 +1,44 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Music" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!--<style name="Base.Theme.Music" parent="Theme.Material3.DayNight.NoActionBar">
+        &lt;!&ndash; Customize your light theme here. &ndash;&gt;
+        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;
     </style>
 
-    <style name="Theme.Music" parent="Base.Theme.Music" />
+    <style name="Theme.Music" parent="Base.Theme.Music" />-->
+
+    <attr name="themeColor" format="color"/>
+
+    <!--red theme-->
+    <style name="colorRed" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1Red</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
+    <!--green theme-->
+    <style name="colorGreen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1Green</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
+    <!--orange theme-->
+    <style name="colorOrange" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1Orange</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
+    <!--blue theme-->
+    <style name="colorBlue" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1BlueDark</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
+    <!--black theme-->
+    <style name="colorBlack" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1MediumBlack</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
+    <!--purple theme-->
+    <style name="colorPurple" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/palette1SeaGreen</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+    </style>
 
     <style name="albumShape">
         <item name="cornerSize">5dp</item>

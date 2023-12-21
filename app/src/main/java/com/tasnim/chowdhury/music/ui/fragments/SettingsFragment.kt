@@ -1,17 +1,16 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import com.tasnim.chowdhury.music.R
+import androidx.fragment.app.Fragment
 import com.tasnim.chowdhury.music.databinding.FragmentSettingsBinding
 import com.tasnim.chowdhury.music.ui.MainActivity
-import com.tasnim.chowdhury.music.utilities.closeApp
+
 
 class SettingsFragment : Fragment() {
 
@@ -28,6 +27,27 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        when(MainActivity.themeIndex){
+            0 -> {
+                binding.colorRedDot.visibility = View.VISIBLE
+            }
+            1 -> {
+                binding.colorGreenDot.visibility = View.VISIBLE
+            }
+            2 -> {
+                binding.colorOrangeDot.visibility = View.VISIBLE
+            }
+            3 -> {
+                binding.colorBlueDot.visibility = View.VISIBLE
+            }
+            4 -> {
+                binding.colorBlackDot.visibility = View.VISIBLE
+            }
+            5 -> {
+                binding.colorPurpleDot.visibility = View.VISIBLE
+            }
+        }
 
         setupClicks()
     }
@@ -55,15 +75,19 @@ class SettingsFragment : Fragment() {
 
     private fun saveTheme(index: Int) {
         if (MainActivity.themeIndex != index){
+            val editor = activity?.getSharedPreferences("THEME", MODE_PRIVATE)?.edit()
+            editor?.putInt("themeIndex", index)
+            editor?.apply()
+
             val themeDialog = AlertDialog.Builder(requireContext())
                 .setTitle("Apply Theme")
                 .setMessage("Are you sure you want to apply this theme?")
                 .setPositiveButton("Yes") { dialog, _ ->
-                    val editor = activity?.getSharedPreferences("THEME", MODE_PRIVATE)?.edit()
-                    editor?.putInt("themeIndex", index)
-                    editor?.apply()
-
-                    closeApp()
+                    val i = requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)
+                    i?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    i?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    requireActivity().finish()
+                    startActivity(i!!)
                 }
                 .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()

@@ -45,9 +45,11 @@ class PlaylistDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currentPlaylistPosition = args.position
-        PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist = checkPlaylist(
-            playlist = PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist
-        )
+        try {
+            PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist = checkPlaylist(
+                playlist = PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist
+            )
+        } catch (_: Exception) {}
         setupAdapter()
         setupClicks()
     }
