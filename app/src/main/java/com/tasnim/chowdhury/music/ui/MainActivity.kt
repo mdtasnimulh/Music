@@ -25,8 +25,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
+    companion object{
+        var themeIndex: Int = 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val themeEditor = getSharedPreferences("THEME", MODE_PRIVATE)
+        themeEditor.getInt("themeIndex", 0)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
