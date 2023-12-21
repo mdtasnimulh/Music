@@ -27,10 +27,10 @@ class MainViewModel @Inject constructor(
     private val _dataLoading = MutableLiveData<Boolean>().apply { value = true }
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    fun getAllSongs() {
+    fun getAllSongs(sortList: ArrayList<String>, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val musicList = repository.getAllSongs(application)
+                val musicList = repository.getAllSongs(application, sortList, position)
                 withContext(Dispatchers.Main) {
                     _dataLoading.value = false
                     _musicList.value = musicList

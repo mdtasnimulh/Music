@@ -8,8 +8,8 @@ import java.io.File
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
-
-    fun getAllSongs(application: Application): ArrayList<Music>{
+    /*MediaStore.Audio.Media.DATE_ADDED + " DESC"*/
+    fun getAllSongs(application: Application, sortList: ArrayList<String>, position: Int): ArrayList<Music>{
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
@@ -27,7 +27,7 @@ class MainRepository @Inject constructor() {
             projection,
             selection,
             null,
-            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            sortList[position],
             null
         )
         if (cursor != null) {

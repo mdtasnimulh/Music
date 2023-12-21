@@ -1,9 +1,11 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
 import android.Manifest
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,6 +39,7 @@ class MainFragment : Fragment() {
     private val musicViewModel: MainViewModel by viewModels()
     //private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
+    private var sortValue = 0
 
     companion object {
         var search: Boolean = false
@@ -44,6 +47,12 @@ class MainFragment : Fragment() {
         var mainMusicList: MusicList = MusicList()
         val playPauseIconNP = MutableLiveData<Int>()
         val songDetailsNP = MutableLiveData<Pair<String, String>>()
+        var sortOrder: Int = 0
+        val sortingList: ArrayList<String> = arrayListOf(
+            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC"
+        )
     }
 
     private val requestAudioPermissionLauncher =
@@ -93,6 +102,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
+        sortValue = sortEditor?.getInt("sortOrder", 0)!!
         requestAudioPermission()
     }
 
@@ -108,93 +119,31 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setNowPlaying() {
-        val imageArt = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.path?.let {
-            getImageArt(
-                it
-            )
-        }
-        val image = if (imageArt != null) {
-            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+    private fun requestAudioPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestAudioPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
         } else {
-            BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
-        }
-        Glide.with(requireContext())
-            .load(image)
-            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-            .into(binding.nowPlayingView.nowPlayingCoverImage)
-
-        binding.nowPlayingView.nowPlayingTitle.text = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title
-
-        if (PlayerFragment.isPlaying) {
-            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
-        } else {
-            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
+            requestStoragePermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }
     }
 
-    private fun playMusic() {
-        PlayerFragment.musicService?.mediaPlayer?.start()
-        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
-        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
-        PlayerFragment.isPlaying = true
-        PlayerFragment.animateDisk.postValue("Start")
-    }
-
-    private fun pauseMusic() {
-        PlayerFragment.musicService?.mediaPlayer?.pause()
-        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
-        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
-        PlayerFragment.isPlaying = false
-        PlayerFragment.animateDisk.postValue("Stop")
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun onPermissionGranted() {
         initData()
         setupAdapter()
-        setupClicks()
         setObserver()
-    }
-
-    private fun setObserver() {
-        musicViewModel.apply {
-            musicList.observe(viewLifecycleOwner) {
-                musicAdapter.addAll(it)
-                mainMusicList.addAll(it)
-
-                val totalSongText = "Total songs: ${it.size}"
-                binding.totalSongValue.text = totalSongText
-            }
-        }
-
-        playPauseIconNP.observe(viewLifecycleOwner) { icon ->
-            if (icon!=0){
-                binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(icon)
-            }
-        }
-
-        songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
-            if (songTitle!="" && artUri!=""){
-                val imageArt = getImageArt(artUri)
-                val image = if (imageArt != null) {
-                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
-                } else {
-                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
-                }
-                Glide.with(requireContext())
-                    .load(image)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-                    .into(binding.nowPlayingView.nowPlayingCoverImage)
-
-                binding.nowPlayingView.nowPlayingTitle.text = songTitle
-            }
-        }
+        setupClicks()
     }
 
     private fun initData() {
         search = false
+        val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
+        sortValue = sortEditor?.getInt("sortOrder", 0)!!
     }
 
     private fun setupAdapter() {
@@ -205,7 +154,12 @@ class MainFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.musicListRv.layoutManager = layoutManager
 
-        musicViewModel.getAllSongs()
+        if (sortOrder != sortValue) {
+            sortOrder = sortValue
+            musicViewModel.getAllSongs(sortingList, sortOrder)
+        }else {
+            musicViewModel.getAllSongs(sortingList, sortOrder)
+        }
     }
 
     private fun setupClicks() {
@@ -307,17 +261,83 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun requestAudioPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestAudioPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
-        } else {
-            requestStoragePermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+    private fun setObserver() {
+        musicViewModel.apply {
+            musicList.observe(viewLifecycleOwner) {
+                musicAdapter.addAll(it)
+                mainMusicList.clear()
+                mainMusicList.addAll(it)
+
+                val totalSongText = "Total songs: ${it.size}"
+                binding.totalSongValue.text = totalSongText
+            }
+        }
+
+        playPauseIconNP.observe(viewLifecycleOwner) { icon ->
+            if (icon!=0){
+                binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(icon)
+            }
+        }
+
+        songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
+            if (songTitle!="" && artUri!=""){
+                val imageArt = getImageArt(artUri)
+                val image = if (imageArt != null) {
+                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+                } else {
+                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+                }
+                Glide.with(requireContext())
+                    .load(image)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(binding.nowPlayingView.nowPlayingCoverImage)
+
+                binding.nowPlayingView.nowPlayingTitle.text = songTitle
+            }
         }
     }
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+
+    private fun setNowPlaying() {
+        val imageArt = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.path?.let {
+            getImageArt(
+                it
+            )
         }
+        val image = if (imageArt != null) {
+            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+        } else {
+            BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+        }
+        Glide.with(requireContext())
+            .load(image)
+            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+            .into(binding.nowPlayingView.nowPlayingCoverImage)
+
+        binding.nowPlayingView.nowPlayingTitle.text = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title
+
+        if (PlayerFragment.isPlaying) {
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
+        } else {
+            binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
+        }
+    }
+
+    private fun playMusic() {
+        PlayerFragment.musicService?.mediaPlayer?.start()
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
+        PlayerFragment.isPlaying = true
+        PlayerFragment.animateDisk.postValue("Start")
+    }
+
+    private fun pauseMusic() {
+        PlayerFragment.musicService?.mediaPlayer?.pause()
+        binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
+        PlayerFragment.isPlaying = false
+        PlayerFragment.animateDisk.postValue("Stop")
     }
 
     /*private fun requestStoragePermission() {
@@ -354,10 +374,6 @@ class MainFragment : Fragment() {
             }
         }
     }*/
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
