@@ -48,7 +48,8 @@
                 android:hint="@string/topic_feedback"
                 android:inputType="textEmailSubject"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:imeOptions="actionDone" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,7 +72,8 @@
                 android:inputType="textEmailAddress"
                 android:hint="@string/email_address_optional"
                 android:singleLine="false"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:imeOptions="actionDone" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +97,8 @@
                 android:inputType="textMultiLine"
                 android:hint="@string/feedback_description_hint"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:imeOptions="actionNext"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

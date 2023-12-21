@@ -292,6 +292,19 @@ class MainFragment : Fragment() {
         binding.playListBtn.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_playlistFragment)
         }
+
+        binding.feedbackBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_feedbackFragment)
+        }
+
+        binding.aboutBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
+        }
+
+        binding.settingsBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+        }
+
     }
 
     private fun requestAudioPermission() {
