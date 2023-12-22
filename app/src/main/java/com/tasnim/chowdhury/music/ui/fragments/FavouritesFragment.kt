@@ -74,7 +74,7 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        favouriteAdapter = FavouriteAdapter()
+        favouriteAdapter = FavouriteAdapter("Favourite")
         binding.favouriteRv.adapter = favouriteAdapter
         binding.favouriteRv.setHasFixedSize(true)
         binding.favouriteRv.itemAnimator = DefaultItemAnimator()

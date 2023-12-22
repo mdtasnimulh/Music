@@ -2,17 +2,28 @@ package com.tasnim.chowdhury.music.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.text.SpannableStringBuilder
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
+import com.tasnim.chowdhury.music.databinding.DetailsViewBinding
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
+import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.ui.fragments.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.PlayNextFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
@@ -86,6 +97,55 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                                 )
                             }
                         }
+                    }
+
+                    // long press
+                    binding.musicListItem.setOnLongClickListener {
+                        val view = LayoutInflater.from(context).inflate(R.layout.long_press_layout, null)
+                        val createDialog = MaterialAlertDialogBuilder(context).setView(view)
+                            .create()
+                        createDialog.show()
+
+                        val addToNextBtn = view.findViewById<Button>(R.id.addToNextBtn)
+                        val songInfoBtn = view.findViewById<Button>(R.id.songInfoBtn)
+
+                        addToNextBtn.setOnClickListener {
+                            try {
+                                if (PlayNextFragment.playNextList.isEmpty()) {
+                                    PlayNextFragment.playNextList.add(PlayerFragment.musicList?.get(PlayerFragment.songPosition)!!)
+                                    PlayerFragment.songPosition = 0
+                                }
+                                PlayNextFragment.playNextList.add(music)
+                                PlayerFragment.musicList = MusicList()
+                                PlayerFragment.musicList?.addAll(PlayNextFragment.playNextList)
+                            }catch (e: Exception){
+                                Log.d("CatchException", "${e.message}")
+                            }
+                            createDialog.dismiss()
+                        }
+
+                        songInfoBtn.setOnClickListener {
+                            createDialog.dismiss()
+                            val detailsDialog = LayoutInflater.from(context).inflate(R.layout.details_view, null)
+                            val binder = DetailsViewBinding.bind(detailsDialog)
+                            binder.detailsTV.setTextColor(Color.WHITE)
+                            binder.root.setBackgroundColor(Color.TRANSPARENT)
+                            val dDialog = MaterialAlertDialogBuilder(context)
+                                .setView(detailsDialog)
+                                .setPositiveButton("OK"){self, _ -> self.dismiss()}
+                                .setCancelable(false)
+                                .create()
+                            dDialog.show()
+                            dDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                            dDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+                            val str = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
+                                .append(music.title)
+                                .bold { append("\n\nDuration: ") }.append(DateUtils.formatElapsedTime(music.duration/1000))
+                                .bold { append("\n\nLocation: ") }.append(music.path)
+                            binder.detailsTV.text = str
+                        }
+
+                        return@setOnLongClickListener true
                     }
                 }
             }

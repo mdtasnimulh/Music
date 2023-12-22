@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_playNextFragment"
+            app:destination="@id/playNextFragment" />
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
@@ -99,4 +102,12 @@
         android:id="@+id/settingsFragment"
         android:name="com.tasnim.chowdhury.music.ui.fragments.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/playNextFragment"
+        android:name="com.tasnim.chowdhury.music.ui.fragments.PlayNextFragment"
+        android:label="PlayNextFragment" >
+        <action
+            android:id="@+id/action_playNextFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>

@@ -75,7 +75,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         var songPosition: Int = 0
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
-        var musicList: MusicList? = null
+        var musicList: MusicList? = MusicList()
         val playPauseLiveData = MutableLiveData<Pair<String, Int>>()
         val playPauseIconLiveData = MutableLiveData<Int>()
         val songDetailsLiveData = MutableLiveData<Pair<String, String>>()
@@ -262,6 +262,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 startService()
             }
             "FavouriteAdapter" -> {
+                musicList = args.musicList
+                songPosition = args.position
+                startService()
+            }
+            "PlayNextAdapter" -> {
                 musicList = args.musicList
                 songPosition = args.position
                 startService()
@@ -710,6 +715,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     override fun onDestroy() {
         super.onDestroy()
+
+        val editor = activity?.getSharedPreferences("FAVOURITES", AppCompatActivity.MODE_PRIVATE)?.edit()
+        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
+        editor?.putString("FavouriteSongs", jsonString)
+        editor?.apply()
+
         postInitialValues()
         if ((musicList?.get(songPosition)?.id ?: 0) == "UnKnown") {
             closeApp()
