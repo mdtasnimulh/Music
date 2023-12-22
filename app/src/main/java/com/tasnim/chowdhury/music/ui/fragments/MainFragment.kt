@@ -2,7 +2,10 @@ package com.tasnim.chowdhury.music.ui.fragments
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.database.Cursor
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -24,7 +27,9 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
+import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.services.MusicService
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
@@ -39,6 +44,7 @@ class MainFragment : Fragment() {
     private val musicViewModel: MainViewModel by viewModels()
     //private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
+    private var storageList: MusicList = MusicList()
     private var sortValue = 0
 
     companion object {
@@ -101,6 +107,13 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //startService()
+        if (activity?.intent?.data?.scheme.contentEquals("content")) {
+            storageList = MusicList()
+            storageList.add(getMusicDetails(activity?.intent?.data!!))
+            val action = MainFragmentDirections.actionMainFragmentToPlayerFragment(0, "Storage", storageList)
+            findNavController().navigate(action)
+        }
 
         val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
         sortValue = sortEditor?.getInt("sortOrder", 0)!!
@@ -338,6 +351,23 @@ class MainFragment : Fragment() {
         PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
         PlayerFragment.isPlaying = false
         PlayerFragment.animateDisk.postValue("Stop")
+    }
+
+    private fun getMusicDetails(contentUri: Uri): Music {
+        var cursor: Cursor? = null
+        try {
+            val projection = arrayOf(MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION)
+            cursor = requireContext().contentResolver.query(contentUri, projection, null, null, null)
+            val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+            val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+            cursor?.moveToFirst()
+            val path = dataColumn?.let { cursor?.getString(it) }
+            val duration = durationColumn?.let { cursor?.getLong(it) }!!
+            return Music(id = "UnKnown", title = path.toString(), album = "UnKnown", artist = "UnKnown",
+                duration = duration, artUri = "UnKnown", path = path.toString())
+        } finally {
+            cursor?.close()
+        }
     }
 
     /*private fun requestStoragePermission() {

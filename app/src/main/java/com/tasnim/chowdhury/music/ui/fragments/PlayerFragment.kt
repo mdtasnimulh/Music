@@ -250,6 +250,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     private fun initializeData() {
         when(args.tag) {
+            "Storage" -> {
+                musicList = args.musicList
+                songPosition = args.position
+                Log.d("chkStorageMusic", "${musicList}:::\n${args.position}")
+                startService()
+            }
             "MainAdapter" -> {
                 musicList = args.musicList
                 songPosition = args.position
@@ -705,6 +711,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     override fun onDestroy() {
         super.onDestroy()
         postInitialValues()
+        if ((musicList?.get(songPosition)?.id ?: 0) == "UnKnown") {
+            closeApp()
+        }
     }
 
 }
