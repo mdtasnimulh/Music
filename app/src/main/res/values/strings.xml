@@ -2,7 +2,8 @@
     <string name="app_name">Music</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="app_motive_one">Explore Your Musics \n Easy And Fast Way</string>
+    <string name="owner_name_text">by Md. Tasnimul Hasan</string>
     <string name="test_minute">1 Minute Test</string>
     <string name="minutes_15">15 Minutes</string>
     <string name="minutes_20">20 Minutes</string>

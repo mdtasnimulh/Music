@@ -85,4 +85,7 @@ dependencies {
     implementation("androidx.media:media:1.7.0")
 
     implementation ("com.google.code.gson:gson:2.10")
+
+    // Lottie Animation Implementation
+    implementation("com.airbnb.android:lottie:3.7.0")
 }
