@@ -248,7 +248,7 @@
             android:orientation="horizontal"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="32dp"
-            android:weightSum="4"
+            android:weightSum="5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBarLl">
@@ -305,6 +305,20 @@
                 android:text="Share"
                 app:icon="@drawable/ic_share"
                 android:backgroundTint="@android:color/holo_blue_dark"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/vBoosterBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:padding="5dp"
+                app:iconGravity="start"
+                android:layout_weight="1"
+                android:minWidth="0dp"
+                android:height="0dp"
+                android:text="Booster"
+                app:icon="@drawable/ic_share"
+                android:backgroundTint="@color/palette1GreenMedium"/>
 
         </LinearLayout>
 

@@ -88,4 +88,6 @@ dependencies {
 
     // Lottie Animation Implementation
     implementation("com.airbnb.android:lottie:3.7.0")
+    //for circular seekbar --> volume controls
+    implementation ("com.github.lukelorusso:VerticalSeekBar:1.2.7")
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/audioBoosterLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.lukelorusso.verticalseekbar.VerticalSeekBar
+            android:id="@+id/verticalBar"
+            android:layout_width="50dp"
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vsb_bar_corner_radius="15dp"
+            app:vsb_max_value="15"
+            app:vsb_progress="0"
+            app:vsb_thumb_container_tint="@android:color/transparent"
+            app:vsb_thumb_placeholder_src="@drawable/booster_icon"
+            app:vsb_use_thumb_to_set_progress="true" />
+
+        <TextView
+            android:id="@+id/progressText"
+            android:layout_width="175dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="Treble Trone"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/verticalBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/verticalBar"
+            app:layout_constraintTop_toTopOf="@+id/verticalBar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

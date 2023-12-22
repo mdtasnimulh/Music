@@ -8,9 +8,11 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
+import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -35,8 +37,10 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.tasnim.chowdhury.music.R
+import com.tasnim.chowdhury.music.databinding.AudioBoosterBinding
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
@@ -89,6 +93,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         var fIndex: Int = -1
         val favouriteIcon = MutableLiveData<Int>()
         val animateDisk = MutableLiveData<String>()
+        lateinit var loudnessEnhancer: LoudnessEnhancer
     }
 
     override fun onCreateView(
@@ -421,6 +426,26 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 FavouritesFragment.favouriteSongs.add(musicList!![songPosition])
             }
         }
+
+        binding.vBoosterBtn.setOnClickListener {
+            val view = LayoutInflater.from(requireContext()).inflate(R.layout.audio_booster, binding.playerFragment, false)
+            val boosterBinding = AudioBoosterBinding.bind(view)
+            val boosterDialog = MaterialAlertDialogBuilder(requireContext()).setView(view)
+                .setOnCancelListener { playMusic() }
+                .setPositiveButton("OK"){ self, _ ->
+                    loudnessEnhancer.setTargetGain(boosterBinding.verticalBar.progress * 100)
+                    //playMusic()
+                    self.dismiss()
+                }
+                .create()
+            boosterDialog.show()
+
+            boosterBinding.verticalBar.progress = loudnessEnhancer.targetGain.toInt()/100
+            boosterBinding.progressText.text = "Audio Boos\n\n${loudnessEnhancer.targetGain.toInt()/10}%"
+            boosterBinding.verticalBar.setOnProgressChangeListener {
+                boosterBinding.progressText.text = "Audio Boos\n\n${it*10}%"
+            }
+        }
     }
 
     private fun setLayout(){
@@ -484,6 +509,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             binding.seekBar.max = musicService?.mediaPlayer?.duration!!
             musicService?.mediaPlayer?.setOnCompletionListener(this)
             nowPlayingId = musicList?.get(songPosition)?.id.toString()
+            loudnessEnhancer = LoudnessEnhancer(musicService?.mediaPlayer?.audioSessionId!!)
+            loudnessEnhancer.enabled = true
         }catch (_: Exception) { }
     }
 
