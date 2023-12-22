@@ -470,7 +470,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             musicService?.mediaPlayer?.start()
             isPlaying = true
             binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
-            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
             binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.toLong()
                 ?.let { formatDuration(it) }
             binding.endTimeSeekbar.text = musicService?.mediaPlayer?.duration?.toLong()
@@ -484,7 +484,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     private fun playMusic() {
         binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
-        musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
         isPlaying = true
         musicService?.mediaPlayer?.start()
 
@@ -505,7 +505,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
     private fun pauseMusic() {
         binding.playPauseBtn.setImageResource(R.drawable.ic_player_play)
-        musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play, 0F)
         isPlaying = false
         musicService?.mediaPlayer?.pause()
 
@@ -584,7 +584,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         createMediaPlayer()
         MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.path) })
         if (isPlaying) {
-            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
         }
         try {
             setLayout()

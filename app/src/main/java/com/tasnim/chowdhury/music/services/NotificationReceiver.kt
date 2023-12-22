@@ -49,7 +49,7 @@ class NotificationReceiver: BroadcastReceiver() {
     private fun playMusic() {
         PlayerFragment.isPlaying = true
         PlayerFragment.musicService?.mediaPlayer?.start()
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
         PlayerFragment.playPauseLiveData.postValue(Pair("play", R.drawable.ic_player_pause))
         MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_pause)
         PlayerFragment.animateDisk.postValue("Start")
@@ -58,7 +58,7 @@ class NotificationReceiver: BroadcastReceiver() {
     private fun pauseMusic() {
         PlayerFragment.isPlaying = false
         PlayerFragment.musicService?.mediaPlayer?.pause()
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play, 0F)
         PlayerFragment.playPauseLiveData.postValue(Pair("pause", R.drawable.ic_player_play))
         MainFragment.playPauseIconNP.postValue(R.drawable.ic_player_play)
         PlayerFragment.animateDisk.postValue("Stop")

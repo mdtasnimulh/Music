@@ -188,7 +188,7 @@ class MainFragment : Fragment() {
 
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
             songDetailsNP.postValue(Pair(songTitle, artUri))
-            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+            PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
             PlayerFragment.animateDisk.postValue("")
 
             playMusic()
@@ -338,7 +338,7 @@ class MainFragment : Fragment() {
     private fun playMusic() {
         PlayerFragment.musicService?.mediaPlayer?.start()
         binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_pause)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
         PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_pause)
         PlayerFragment.isPlaying = true
         PlayerFragment.animateDisk.postValue("Start")
@@ -347,7 +347,7 @@ class MainFragment : Fragment() {
     private fun pauseMusic() {
         PlayerFragment.musicService?.mediaPlayer?.pause()
         binding.nowPlayingView.nowPlayingPlayPauseBtn.setImageResource(R.drawable.ic_player_play)
-        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play)
+        PlayerFragment.musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play, 0F)
         PlayerFragment.playPauseIconLiveData.postValue(R.drawable.ic_player_play)
         PlayerFragment.isPlaying = false
         PlayerFragment.animateDisk.postValue("Stop")
