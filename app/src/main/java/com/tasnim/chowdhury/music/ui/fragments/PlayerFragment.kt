@@ -7,8 +7,10 @@ import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
@@ -22,6 +24,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -29,11 +34,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -155,10 +160,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 } else {
                     BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
                 }
-                Glide.with(requireContext())
+                /*Glide.with(requireContext())
                     .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-                    .into(binding.songCoverImage)
+                    .into(binding.songCoverImage)*/
+                imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
                 binding.playerSongTitle.text = songTitle
             }
         }
@@ -394,6 +400,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                         min30 = false
                         min60 = false
                         binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
+                        Toast.makeText(requireContext(), "Sleep Timer Stop!", Toast.LENGTH_SHORT).show()
                     }
                     .setNegativeButton("No") { dialog, _ ->
                         dialog.dismiss()
@@ -456,11 +463,37 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         } else {
             BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
         }
-        Glide.with(requireContext())
+        /*Glide.with(requireContext())
             .load(image)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-            .into(binding.songCoverImage)
+            .into(binding.songCoverImage)*/
+        imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
         binding.playerSongTitle.text = args.musicList[songPosition].title
+
+
+        Palette.from(image).generate { palette ->
+            val swatch = palette?.dominantSwatch
+            if (swatch != null) {
+                val colorBg = binding.songCoverImage
+                val containerBg = binding.playerFragment
+                val swatchArray: IntArray = intArrayOf(swatch.rgb, 0x00000000)
+                val fullBg: IntArray = intArrayOf(swatch.rgb, 0x00000000)
+                val toolbarBg: IntArray = intArrayOf(swatch.rgb, swatch.rgb)
+                colorBg.setBackgroundResource(R.drawable.player_gradient_bg)
+                containerBg.setBackgroundResource(R.drawable.player_solid_bg)
+                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, swatchArray)
+                colorBg.background = gradientDrawable
+                val fullDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, fullBg)
+                containerBg.background = fullDrawableBg
+                val toolbarDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, toolbarBg)
+                binding.playerToolbar.background = toolbarDrawableBg
+                binding.playerSongTitle.setTextColor(swatch.titleTextColor)
+                binding.startTimeSeekBar.setTextColor(swatch.titleTextColor)
+                binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
+            }
+        }
+
+
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
         }
@@ -723,6 +756,33 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             ).show()
             bottomSheetDialog.dismiss()
         }
+    }
+
+    private fun imageAnimation(context: Context, imageView: ImageView, bitmap: Bitmap) {
+        val animOut = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
+        val animIn = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+
+        animOut.setAnimationListener(object : Animation.AnimationListener{
+            override fun onAnimationStart(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                Glide.with(context)
+                    .load(bitmap)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .into(imageView)
+                animIn.setAnimationListener(object : Animation.AnimationListener{
+                    override fun onAnimationStart(p0: Animation?) {}
+
+                    override fun onAnimationEnd(p0: Animation?) {}
+
+                    override fun onAnimationRepeat(p0: Animation?) {}
+                })
+                imageView.startAnimation(animIn)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+        imageView.startAnimation(animOut)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
