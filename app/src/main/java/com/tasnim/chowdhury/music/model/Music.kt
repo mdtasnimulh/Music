@@ -12,6 +12,7 @@ data class Music(
     val duration: Long = 0,
     val path: String,
     val artUri: String,
+    val albumId: String
 ): Parcelable
 
 @Parcelize

@@ -20,7 +20,7 @@ class MainRepository @Inject constructor() {
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.ALBUM_ID
         )
         val cursor = application.applicationContext.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -49,7 +49,8 @@ class MainRepository @Inject constructor() {
                         artist = artistC,
                         duration = durationC,
                         path = pathC,
-                        artUri = artUriC
+                        artUri = artUriC,
+                        albumId = albumIdC
                     )
                     val file = File(music.path)
                     if (file.exists()) {

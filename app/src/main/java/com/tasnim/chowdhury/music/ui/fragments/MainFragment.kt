@@ -368,7 +368,7 @@ class MainFragment : Fragment() {
             val path = dataColumn?.let { cursor?.getString(it) }
             val duration = durationColumn?.let { cursor?.getLong(it) }!!
             return Music(id = "UnKnown", title = path.toString(), album = "UnKnown", artist = "UnKnown",
-                duration = duration, artUri = "UnKnown", path = path.toString())
+                duration = duration, artUri = "UnKnown", path = path.toString(), albumId = "UnKnown")
         } finally {
             cursor?.close()
         }

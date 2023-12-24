@@ -470,7 +470,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
         binding.playerSongTitle.text = args.musicList[songPosition].title
 
-
         Palette.from(image).generate { palette ->
             val swatch = palette?.dominantSwatch
             if (swatch != null) {
@@ -492,7 +491,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
             }
         }
-
 
         if (repeat) {
             binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
