@@ -530,7 +530,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             animateRotation(35f, 500)
         }
         startRotationAnimation()
-        startVisualEffect(args.musicList[songPosition].path)
+        startVisualEffect(musicList!![songPosition].path)
     }
 
     private fun createMediaPlayer() {
@@ -577,7 +577,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             animateDisk.postValue("Start")
         }
         startRotationAnimation()
-        startVisualEffect(args.musicList[songPosition].path)
+        startVisualEffect(musicList!![songPosition].path)
     }
 
     private fun pauseMusic() {
@@ -835,8 +835,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         Palette.from(image).generate { palette ->
             val swatch = palette?.dominantSwatch
             if (swatch != null) {
-                val titleTextColor = swatch.titleTextColor
-
                 // Start continuous color change loop
                 colorChangeHandler = Handler(Looper.getMainLooper())
                 val delayBetweenColorChanges = blinkDuration * views.size
@@ -846,33 +844,40 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                         views.forEachIndexed { index, view ->
                             val delay = index * blinkDuration
 
-                            // Transition to title text color
+                            // Gradient transition to swatch.rgb
                             val colorFrom = view.backgroundTintList?.defaultColor ?: 0
-                            val colorTo = titleTextColor
+                            val colorTo = swatch.rgb
 
-                            val colorChangeToTitleText = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-                            colorChangeToTitleText.addUpdateListener { animator ->
-                                view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                            val colorAnimator = ValueAnimator.ofFloat(0f, 1f)
+                            colorAnimator.addUpdateListener { animator ->
+                                val ratio = animator.animatedValue as Float
+                                val blendedColor = blendColors(colorFrom, colorTo, ratio)
+                                view.backgroundTintList = ColorStateList.valueOf(blendedColor)
                             }
 
-                            colorChangeToTitleText.apply {
-                                duration = blinkDuration / 2 // Adjust the duration as needed
+                            colorAnimator.apply {
+                                duration = blinkDuration // Adjust the duration as needed
                                 startDelay = delay
                                 interpolator = AccelerateDecelerateInterpolator()
                                 start()
-                            }
 
-                            // Transition back to black
-                            val colorChangeToBlack = ValueAnimator.ofObject(ArgbEvaluator(), colorTo, Color.BLACK)
-                            colorChangeToBlack.addUpdateListener { animator ->
-                                view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
-                            }
+                                // Transition back to @color/palette1Grey
+                                val palette1Grey = ContextCompat.getColor(requireContext(), R.color.palette1Grey)
+                                val colorChangeToPalette1Grey = ValueAnimator.ofObject(
+                                    ArgbEvaluator(),
+                                    swatch.rgb,
+                                    palette1Grey
+                                )
+                                colorChangeToPalette1Grey.addUpdateListener { animator ->
+                                    view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                                }
 
-                            colorChangeToBlack.apply {
-                                duration = blinkDuration / 2 // Adjust the duration as needed
-                                startDelay = delay + (blinkDuration / 2) // Ensure a delay between color changes
-                                interpolator = AccelerateDecelerateInterpolator()
-                                start()
+                                colorChangeToPalette1Grey.apply {
+                                    duration = blinkDuration / 2 // Adjust the duration as needed
+                                    startDelay = delay + blinkDuration // Ensure a delay between color changes
+                                    interpolator = AccelerateDecelerateInterpolator()
+                                    start()
+                                }
                             }
                         }
 
@@ -882,6 +887,14 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 }, 0)
             }
         }
+    }
+
+    private fun blendColors(from: Int, to: Int, ratio: Float): Int {
+        val inverseRatio = 1f - ratio
+        val r = Color.red(to) * ratio + Color.red(from) * inverseRatio
+        val g = Color.green(to) * ratio + Color.green(from) * inverseRatio
+        val b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio
+        return Color.rgb(r.toInt(), g.toInt(), b.toInt())
     }
 
     private fun stopBlink(view: View, bgColorResId: Int) {
