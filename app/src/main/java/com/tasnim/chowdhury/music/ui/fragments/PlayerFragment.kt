@@ -1,11 +1,14 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.app.Activity.RESULT_OK
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -19,11 +22,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -79,6 +84,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     private var isRotationRunning = false
     private var currentRotation: Float = 0f
     private val rotationUpdateInterval = 16L
+    private val blinkDuration = 400L
+    private var colorChangeHandler: Handler? = null
 
     companion object {
         var songPosition: Int = 0
@@ -486,6 +493,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 containerBg.background = fullDrawableBg
                 val toolbarDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, toolbarBg)
                 binding.playerToolbar.background = toolbarDrawableBg
+                binding.playlistSubImageView.setBackgroundResource(R.drawable.sub_disk_bg)
+                binding.playlistSubImageView.background = toolbarDrawableBg
+                binding.playerCV.strokeColor = swatch.titleTextColor
+                binding.playerCV.outlineAmbientShadowColor = swatch.rgb
+                binding.playerCV.outlineSpotShadowColor = swatch.rgb
                 binding.playerSongTitle.setTextColor(swatch.titleTextColor)
                 binding.startTimeSeekBar.setTextColor(swatch.titleTextColor)
                 binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
@@ -518,6 +530,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             animateRotation(35f, 500)
         }
         startRotationAnimation()
+        startVisualEffect(args.musicList[songPosition].path)
     }
 
     private fun createMediaPlayer() {
@@ -564,6 +577,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             animateDisk.postValue("Start")
         }
         startRotationAnimation()
+        startVisualEffect(args.musicList[songPosition].path)
     }
 
     private fun pauseMusic() {
@@ -585,6 +599,18 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             animateDisk.postValue("Stop")
         }
         stopRotationAnimation()
+
+        val views = listOf(
+            binding.viewDot1,
+            binding.viewDot2,
+            binding.viewDot3,
+            binding.viewDot4,
+            binding.viewDot5
+        )
+        views.forEach { view ->
+            stopBlink(view, R.color.palette1Red)
+        }
+        colorChangeHandler?.removeCallbacksAndMessages(null)
     }
 
     private fun Int.dpToPx(): Int {
@@ -788,6 +814,83 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         if (requestCode == 641 || resultCode == RESULT_OK) {
             return
         }
+    }
+
+    private fun startVisualEffect(path: String) {
+        val views = listOf(
+            binding.viewDot1,
+            binding.viewDot2,
+            binding.viewDot3,
+            binding.viewDot4,
+            binding.viewDot5
+        )
+
+        val imageArt = getImageArt(path)
+        val image = if (imageArt != null) {
+            BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+        } else {
+            BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
+        }
+
+        Palette.from(image).generate { palette ->
+            val swatch = palette?.dominantSwatch
+            if (swatch != null) {
+                val titleTextColor = swatch.titleTextColor
+
+                // Start continuous color change loop
+                colorChangeHandler = Handler(Looper.getMainLooper())
+                val delayBetweenColorChanges = blinkDuration * views.size
+
+                colorChangeHandler?.postDelayed(object : Runnable {
+                    override fun run() {
+                        views.forEachIndexed { index, view ->
+                            val delay = index * blinkDuration
+
+                            // Transition to title text color
+                            val colorFrom = view.backgroundTintList?.defaultColor ?: 0
+                            val colorTo = titleTextColor
+
+                            val colorChangeToTitleText = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+                            colorChangeToTitleText.addUpdateListener { animator ->
+                                view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                            }
+
+                            colorChangeToTitleText.apply {
+                                duration = blinkDuration / 2 // Adjust the duration as needed
+                                startDelay = delay
+                                interpolator = AccelerateDecelerateInterpolator()
+                                start()
+                            }
+
+                            // Transition back to black
+                            val colorChangeToBlack = ValueAnimator.ofObject(ArgbEvaluator(), colorTo, Color.BLACK)
+                            colorChangeToBlack.addUpdateListener { animator ->
+                                view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                            }
+
+                            colorChangeToBlack.apply {
+                                duration = blinkDuration / 2 // Adjust the duration as needed
+                                startDelay = delay + (blinkDuration / 2) // Ensure a delay between color changes
+                                interpolator = AccelerateDecelerateInterpolator()
+                                start()
+                            }
+                        }
+
+                        // Schedule the next color change loop
+                        colorChangeHandler?.postDelayed(this, delayBetweenColorChanges)
+                    }
+                }, 0)
+            }
+        }
+    }
+
+    private fun stopBlink(view: View, bgColorResId: Int) {
+        // Stop the blink animation
+        val blinkAnimator = view.getTag(R.id.blinkAnimatorTag) as? ValueAnimator
+        blinkAnimator?.cancel()
+
+        // Set the background tint to red
+        view.backgroundTintList = ColorStateList.valueOf(resources.getColor(bgColorResId))
     }
 
     override fun onDestroyView() {

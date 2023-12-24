@@ -19,6 +19,7 @@
     <color name="palette1LiteOrange">#E28805</color>
     <color name="palette1SeaGreen">#0C434C</color>
     <color name="palette1MediumBlack">#212121</color>
+    <color name="palette1Grey">#757575</color>
 
     <color name="ic_launcher_background">#2B3467</color>
 </resources>

@@ -62,4 +62,5 @@
     <style name="playlistSubImage">
         <item name="cornerSize">50%</item>
     </style>
+    <item name="blinkAnimatorTag" type="id"/>
 </resources>

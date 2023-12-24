@@ -62,83 +62,147 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/playerCV"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/coverImageCl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:shadowColor="@color/palette1Orange"
-            app:cardCornerRadius="1000dp"
-            app:cardElevation="8dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/music_cover_rect_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerToolbar"
-            app:strokeColor="#FF5400"
-            app:strokeWidth="5dp">
+            app:layout_constraintTop_toBottomOf="@+id/playerToolbar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="225dp"
-                android:layout_height="225dp">
+            <LinearLayout
+                android:id="@+id/viewDotLl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/playerCV"
+                app:layout_constraintEnd_toStartOf="@+id/playerCV"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/playerCV">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/songCoverImage"
+                <View
+                    android:id="@+id/viewDot5"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:background="@drawable/sub_disk_bg"
+                    android:backgroundTint="@color/palette1Grey" />
+
+                <View
+                    android:id="@+id/viewDot4"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/sub_disk_bg"
+                    android:backgroundTint="@color/palette1Grey" />
+
+                <View
+                    android:id="@+id/viewDot3"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/sub_disk_bg"
+                    android:backgroundTint="@color/palette1Grey" />
+
+                <View
+                    android:id="@+id/viewDot2"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/sub_disk_bg"
+                    android:backgroundTint="@color/palette1Grey" />
+
+                <View
+                    android:id="@+id/viewDot1"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/sub_disk_bg"
+                    android:backgroundTint="@color/palette1Grey" />
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/playerCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="15dp"
+                app:cardCornerRadius="1000dp"
+                app:cardElevation="13dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:strokeColor="#FF5400"
+                app:strokeWidth="5dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="225dp"
-                    android:layout_height="225dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/music_img"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/playlistSubImage" />
+                    android:layout_height="225dp">
 
-                <View
-                    android:id="@+id/playlistSubImageView"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:background="@drawable/playlist_round_view"
-                    android:elevation="15dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
-                    app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
-                    app:layout_constraintStart_toStartOf="@+id/songCoverImage"
-                    app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/songCoverImage"
+                        android:layout_width="225dp"
+                        android:layout_height="225dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/music_img"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/playlistSubImage" />
 
-                <View
-                    android:id="@+id/playlistSubImageView2"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:background="@drawable/playlist_round_view_2"
-                    android:elevation="15dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
-                    app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
-                    app:layout_constraintStart_toStartOf="@+id/songCoverImage"
-                    app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/playlistSubImageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:elevation="15dp"
+                        app:shapeAppearanceOverlay="@style/playlistSubImage"
+                        app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                        app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                        app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                        app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:id="@+id/playlistSubImageView2"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/playlist_round_view_2"
+                        android:elevation="15dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                        app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                        app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                        app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
 
-        </com.google.android.material.card.MaterialCardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/musicPlayerWheel"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/wheel"
-            android:layout_marginEnd="28dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/playerCV" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/musicPlayerHandler"
-            android:layout_width="50dp"
-            android:layout_height="150dp"
-            android:layout_marginEnd="58dp"
-            android:layout_marginTop="-34dp"
-            android:elevation="25dp"
-            android:rotation="35"
-            android:src="@drawable/handler"
-            app:layout_constraintEnd_toEndOf="@+id/musicPlayerWheel"
-            app:layout_constraintTop_toBottomOf="@+id/musicPlayerWheel" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/musicPlayerWheel"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/wheel"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/playerCV" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/musicPlayerHandler"
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:layout_marginEnd="58dp"
+                android:layout_marginTop="-34dp"
+                android:elevation="25dp"
+                android:rotation="35"
+                android:src="@drawable/handler"
+                app:layout_constraintEnd_toEndOf="@+id/musicPlayerWheel"
+                app:layout_constraintTop_toBottomOf="@+id/musicPlayerWheel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/playerSongTitle"
@@ -153,7 +217,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerCV" />
+            app:layout_constraintTop_toBottomOf="@+id/coverImageCl" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/prevSongBtn"
