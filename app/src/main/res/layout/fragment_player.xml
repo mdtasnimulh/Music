@@ -262,7 +262,6 @@
                 android:id="@+id/playPauseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/palette1Orange"
                 android:contentDescription="@string/play_pause_button"
                 android:elevation="25dp"
                 android:src="@drawable/pause_icon"
