@@ -27,7 +27,16 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var themeIndex: Int = 0
-        val currentTheme = arrayOf(R.style.colorRed, R.style.colorGreen, R.style.colorOrange, R.style.colorBlue, R.style.colorBlack, R.style.colorPurple)
+        val currentTheme = arrayOf(
+            R.style.defaultTheme,
+            R.style.colorGreen,
+            R.style.colorOrange,
+            R.style.colorBlue,
+            R.style.colorBlack,
+            R.style.colorPurple,
+            R.style.colorRed,
+            R.style.imageTheme
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

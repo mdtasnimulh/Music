@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentSettingsBinding
 import com.tasnim.chowdhury.music.ui.MainActivity
 import com.tasnim.chowdhury.music.utilities.closeApp
@@ -37,7 +39,8 @@ class SettingsFragment : Fragment() {
 
         when(MainActivity.themeIndex){
             0 -> {
-                binding.colorRedDot.visibility = View.VISIBLE
+                binding.systemDefaultTheme.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                binding.systemDefaultTheme.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             }
             1 -> {
                 binding.colorGreenDot.visibility = View.VISIBLE
@@ -54,6 +57,13 @@ class SettingsFragment : Fragment() {
             5 -> {
                 binding.colorPurpleDot.visibility = View.VISIBLE
             }
+            6 -> {
+                binding.colorRedDot.visibility = View.VISIBLE
+            }
+            7 -> {
+                binding.musicImageColor.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                binding.musicImageColor.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
+            }
         }
 
         setupClicks()
@@ -61,7 +71,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupClicks() {
         binding.colorRed.setOnClickListener {
-            saveTheme(0)
+            saveTheme(6)
         }
         binding.colorGreen.setOnClickListener {
             saveTheme(1)
@@ -77,6 +87,12 @@ class SettingsFragment : Fragment() {
         }
         binding.colorPurple.setOnClickListener {
             saveTheme(5)
+        }
+        binding.systemDefaultTheme.setOnClickListener {
+            saveTheme(0)
+        }
+        binding.musicImageColor.setOnClickListener {
+            saveTheme(7)
         }
 
         binding.sortBtn.setOnClickListener {

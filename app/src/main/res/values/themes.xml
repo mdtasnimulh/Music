@@ -1,12 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <!--<style name="Base.Theme.Music" parent="Theme.Material3.DayNight.NoActionBar">
-        &lt;!&ndash; Customize your light theme here. &ndash;&gt;
-        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;
-    </style>
-
-    <style name="Theme.Music" parent="Base.Theme.Music" />-->
-
     <attr name="themeColor" format="color"/>
     <attr name="dialogBtnBackground" format="color"/>
 
@@ -43,6 +35,18 @@
     <!--purple theme-->
     <style name="colorPurple" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="themeColor">@color/palette1SeaGreen</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--default theme-->
+    <style name="defaultTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/seed</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--image theme-->
+    <style name="imageTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="themeColor">@color/md_theme_dark_error</item>
         <item name="android:statusBarColor">?attr/themeColor</item>
         <item name="dialogBtnBackground">?attr/themeColor</item>
     </style>

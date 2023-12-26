@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/colorRed"
+        android:theme="@style/defaultTheme"
         tools:targetApi="31">
 
         <service android:name=".services.MusicService"

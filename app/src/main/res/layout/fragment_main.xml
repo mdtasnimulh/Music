@@ -69,8 +69,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:tint="@color/palette1Orange"
-                            android:src="@drawable/ic_launcher_foreground" />
+                            android:tint="?attr/themeColor"
+                            android:src="@drawable/feedback_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/fjalla_one"
                             android:text="Feedback"
-                            android:textColor="@color/palette1Orange"
+                            android:textColor="?attr/themeColor"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -101,8 +101,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:tint="@color/palette1GreenMedium"
-                            android:src="@drawable/ic_launcher_foreground" />
+                            android:tint="?attr/themeColor"
+                            android:src="@drawable/about_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/fjalla_one"
                             android:text="About"
-                            android:textColor="@color/palette1GreenMedium"
+                            android:textColor="?attr/themeColor"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -132,8 +132,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:tint="@color/ic_launcher_background"
-                            android:src="@drawable/ic_launcher_foreground" />
+                            android:tint="?attr/themeColor"
+                            android:src="@drawable/settings_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/fjalla_one"
                             android:text="Settings"
-                            android:textColor="@color/ic_launcher_background"
+                            android:textColor="?attr/themeColor"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -178,7 +178,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_shuffle_music"/>
+                            android:src="@drawable/shuffle_icon"
+                            android:tint="?attr/themeColor"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -209,7 +210,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_favourites_music" />
+                            android:src="@drawable/favourite_icon_fill"
+                            android:tint="?attr/themeColor" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -239,7 +241,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_playlist_music" />
+                            android:src="@drawable/playlist_icon"
+                            android:tint="?attr/themeColor" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -269,7 +272,8 @@
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_playlist_music" />
+                            android:src="@drawable/play_next_queue_icon"
+                            android:tint="?attr/themeColor" />
 
                         <TextView
                             android:layout_width="wrap_content"

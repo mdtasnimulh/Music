@@ -33,25 +33,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:backgroundTint="@android:color/holo_red_light"
-                app:icon="@drawable/ic_forward"
+                app:icon="@drawable/play_next_icon"
                 app:iconSize="32dp"
                 app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/nowPlayingPlayPauseBtn"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginEnd="8dp"
                 android:elevation="16dp"
-                android:src="@drawable/ic_player_play"
-                app:cornerRadius="15dp"
-                android:background="@drawable/play_pause_bg"
+                android:backgroundTint="@color/palette1Orange"
+                android:contentDescription="@string/play_pause_button"
+                android:src="@drawable/pause_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/nowPlayingNextBtn"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/playlistSubImage"
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/nowPlayingTitle"

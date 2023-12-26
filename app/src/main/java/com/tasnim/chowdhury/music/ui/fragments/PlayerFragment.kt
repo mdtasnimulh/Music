@@ -54,6 +54,7 @@ import com.tasnim.chowdhury.music.databinding.AudioBoosterBinding
 import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.ui.MainActivity
 import com.tasnim.chowdhury.music.utilities.animateElevation
 import com.tasnim.chowdhury.music.utilities.animateMargins
 import com.tasnim.chowdhury.music.utilities.animateRotation
@@ -299,9 +300,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.seekBar.progress = musicService?.mediaPlayer?.currentPosition!!
                 binding.seekBar.max = musicService?.mediaPlayer?.duration!!
                 if (isPlaying) {
-                    binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
+                    binding.playPauseBtn.setImageResource(R.drawable.pause_icon)
                 } else {
-                    binding.playPauseBtn.setImageResource(R.drawable.ic_player_play)
+                    binding.playPauseBtn.setImageResource(R.drawable.play_icon)
                 }
             }
             "SearchView" -> {
@@ -366,12 +367,22 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         })
 
         binding.repeatBtn.setOnClickListener {
-            if (!repeat) {
-                repeat = true
-                binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            if (MainActivity.themeIndex == 7){
+                if (!repeat) {
+                    repeat = true
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                } else {
+                    repeat = false
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.white)
+                }
             } else {
-                repeat = false
-                binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_orange_dark))
+                if (!repeat) {
+                    repeat = true
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                } else {
+                    repeat = false
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
             }
         }
 
@@ -406,7 +417,9 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                         min25 = false
                         min30 = false
                         min60 = false
-                        binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
+                        if (MainActivity.themeIndex != 7){
+                            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                        }
                         Toast.makeText(requireContext(), "Sleep Timer Stop!", Toast.LENGTH_SHORT).show()
                     }
                     .setNegativeButton("No") { dialog, _ ->
@@ -477,41 +490,157 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
         binding.playerSongTitle.text = args.musicList[songPosition].title
 
-        Palette.from(image).generate { palette ->
-            val swatch = palette?.dominantSwatch
-            if (swatch != null) {
-                val colorBg = binding.songCoverImage
-                val containerBg = binding.playerFragment
-                val swatchArray: IntArray = intArrayOf(swatch.rgb, 0x00000000)
-                val fullBg: IntArray = intArrayOf(swatch.rgb, 0x00000000)
-                val toolbarBg: IntArray = intArrayOf(swatch.rgb, swatch.rgb)
-                colorBg.setBackgroundResource(R.drawable.player_gradient_bg)
-                containerBg.setBackgroundResource(R.drawable.player_solid_bg)
-                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, swatchArray)
-                colorBg.background = gradientDrawable
-                val fullDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, fullBg)
-                containerBg.background = fullDrawableBg
-                val toolbarDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, toolbarBg)
-                binding.playerToolbar.background = toolbarDrawableBg
-                binding.playlistSubImageView.setBackgroundResource(R.drawable.sub_disk_bg)
-                binding.playlistSubImageView.background = toolbarDrawableBg
-                binding.playerCV.strokeColor = swatch.titleTextColor
-                binding.playerCV.outlineAmbientShadowColor = swatch.rgb
-                binding.playerCV.outlineSpotShadowColor = swatch.rgb
-                binding.playerSongTitle.setTextColor(swatch.titleTextColor)
-                binding.startTimeSeekBar.setTextColor(swatch.titleTextColor)
-                binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
+        Log.d("chkThemeIndex", ":::${MainActivity.themeIndex}:::")
+        when(MainActivity.themeIndex){
+            0 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.md_theme_light_primary)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.md_theme_light_primary)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            1 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Green)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Green)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            2 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            3 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1BlueDark)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1BlueDark)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            4 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.md_theme_light_primary)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.md_theme_light_primary)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            5 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1SeaGreen)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1SeaGreen)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            6 -> {
+                if (min1 || min15 || min20 || min25 || min30 || min60) {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Red)
+                } else {
+                    binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
+                }
+                if (repeat) {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Red)
+                } else {
+                    binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                }
+                binding.equalizerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+                binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+            }
+            7 -> {
+                Palette.from(image).generate { palette ->
+                    val swatch = palette?.dominantSwatch
+                    if (swatch != null) {
+                        val colorBg = binding.songCoverImage
+                        val containerBg = binding.playerFragment
+                        val swatchArray: IntArray = intArrayOf(swatch.rgb, 0x00000000)
+                        val fullBg: IntArray = intArrayOf(swatch.rgb, 0x00000000)
+                        val toolbarBg: IntArray = intArrayOf(swatch.rgb, swatch.rgb)
+                        colorBg.setBackgroundResource(R.drawable.player_gradient_bg)
+                        containerBg.setBackgroundResource(R.drawable.player_solid_bg)
+                        val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, swatchArray)
+                        colorBg.background = gradientDrawable
+                        val fullDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, fullBg)
+                        containerBg.background = fullDrawableBg
+                        val toolbarDrawableBg = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, toolbarBg)
+                        binding.playerToolbar.background = toolbarDrawableBg
+                        binding.playlistSubImageView.setBackgroundResource(R.drawable.sub_disk_bg)
+                        binding.playlistSubImageView.background = toolbarDrawableBg
+                        binding.playerCV.strokeColor = swatch.titleTextColor
+                        binding.playerCV.outlineAmbientShadowColor = swatch.rgb
+                        binding.playerCV.outlineSpotShadowColor = swatch.rgb
+                        binding.playerSongTitle.setTextColor(swatch.titleTextColor)
+                        binding.startTimeSeekBar.setTextColor(swatch.titleTextColor)
+                        binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
+                        val blendedColor = blendColors(swatch.rgb, swatch.rgb, 1f)
+                        binding.prevSongBtn.imageTintList = ColorStateList.valueOf(swatch.titleTextColor)
+                        binding.nextSongBtn.imageTintList = ColorStateList.valueOf(swatch.titleTextColor)
+                        binding.fiveSecBackward.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                        binding.fiveSecForward.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                        binding.mediaControlInsideCl.backgroundTintList = ColorStateList.valueOf(blendedColor)
+
+                        if (min1 || min15 || min20 || min25 || min30 || min60) {
+                            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
+                        } else {
+                            binding.exitTimerBtn.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                        }
+
+                        if (repeat) {
+                            binding.repeatBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
+                        } else {
+                            binding.repeatBtn.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                        }
+
+                        binding.equalizerBtn.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                        binding.shareBtn.imageTintList = ColorStateList.valueOf(swatch.bodyTextColor)
+                    }
+                }
             }
         }
 
-        if (repeat) {
-            binding.repeatBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
-        }
-        if (min1 || min15 || min20 || min25 || min30 || min60) {
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
-        } else {
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
-        }
         if (isFavourite){
             binding.favBtn.setImageResource(R.drawable.ic_favourite_filled)
         } else {
@@ -543,8 +672,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             musicService?.mediaPlayer?.prepare()
             musicService?.mediaPlayer?.start()
             isPlaying = true
-            binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
-            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
+            binding.playPauseBtn.setImageResource(R.drawable.pause_icon)
+            musicService?.showNotification(R.drawable.pause_icon, R.drawable.pause_icon, 1F)
             binding.startTimeSeekBar.text = musicService?.mediaPlayer?.currentPosition?.toLong()
                 ?.let { formatDuration(it) }
             binding.endTimeSeekbar.text = musicService?.mediaPlayer?.duration?.toLong()
@@ -559,8 +688,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     }
 
     private fun playMusic() {
-        binding.playPauseBtn.setImageResource(R.drawable.ic_player_pause)
-        musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
+        binding.playPauseBtn.setImageResource(R.drawable.pause_icon)
+        musicService?.showNotification(R.drawable.pause_icon, R.drawable.pause_icon, 1F)
         isPlaying = true
         musicService?.mediaPlayer?.start()
 
@@ -581,8 +710,8 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     }
 
     private fun pauseMusic() {
-        binding.playPauseBtn.setImageResource(R.drawable.ic_player_play)
-        musicService?.showNotification(R.drawable.ic_player_play, R.drawable.ic_play, 0F)
+        binding.playPauseBtn.setImageResource(R.drawable.play_icon)
+        musicService?.showNotification(R.drawable.play_icon, R.drawable.play_icon, 0F)
         isPlaying = false
         musicService?.mediaPlayer?.pause()
 
@@ -673,7 +802,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         createMediaPlayer()
         MainFragment.songDetailsNP.postValue(musicList?.get(songPosition)?.let { Pair(it.title, it.path) })
         if (isPlaying) {
-            musicService?.showNotification(R.drawable.ic_player_pause, R.drawable.ic_pause, 1F)
+            musicService?.showNotification(R.drawable.pause_icon, R.drawable.pause_icon, 1F)
         }
         try {
             setLayout()
@@ -686,7 +815,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         bottomSheetDialog.show()
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer15MinLl)?.setOnClickListener {
             min15 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(15*60000)
                 if (min15) {
@@ -702,7 +831,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer20MinLl)?.setOnClickListener {
             min20 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(20*60000)
                 if (min20) {
@@ -718,7 +847,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer25MinLl)?.setOnClickListener {
             min25 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(25*60000)
                 if (min25) {
@@ -734,7 +863,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer30MinLl)?.setOnClickListener {
             min30 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(30*60000)
                 if (min30) {
@@ -750,7 +879,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timer60MinLl)?.setOnClickListener {
             min60 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(60*60000)
                 if (min60) {
@@ -766,7 +895,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         bottomSheetDialog.findViewById<LinearLayoutCompat>(R.id.timerTestMinLl)?.setOnClickListener {
             min1 = true
-            binding.exitTimerBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark))
+            binding.exitTimerBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.holo_green_dark)
             lifecycleScope.launch {
                 delay(5*1000)
                 if (min1) {

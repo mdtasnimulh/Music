@@ -91,9 +91,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             .setContentTitle(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title)
             .setContentText(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artist)
             .setLargeIcon(image)
-            .addAction(R.drawable.ic_back, "Previous", prevPendingIntent)
+            .addAction(R.drawable.play_previous_icon, "Previous", prevPendingIntent)
             .addAction(playPauseBlack, "Play", playPendingIntent)
-            .addAction(R.drawable.ic_forward, "Next", nextPendingIntent)
+            .addAction(R.drawable.play_next_icon, "Next", nextPendingIntent)
             .addAction(R.drawable.ic_close, "Exit", exitPendingIntent)
             .setContentIntent(playerIntent)
 
