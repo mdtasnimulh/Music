@@ -185,8 +185,10 @@ class MainFragment : Fragment() {
             PlayerFragment.musicService?.createMediaPlayer()
             val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
             val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
+            val artist = PlayerFragment.musicList!![PlayerFragment.songPosition].artist
 
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
+            PlayerFragment.musicArtist.postValue(artist)
             songDetailsNP.postValue(Pair(songTitle, artUri))
             PlayerFragment.musicService?.showNotification(R.drawable.pause_icon, R.drawable.pause_icon, 1F)
             PlayerFragment.animateDisk.postValue("")

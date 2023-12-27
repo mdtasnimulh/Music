@@ -64,382 +64,414 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/coverImageCl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="28dp"
-            android:background="@drawable/music_cover_rect_bg"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/playerNestedSv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/playerToolbar">
 
-            <LinearLayout
-                android:id="@+id/viewDotLl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/playerCV"
-                app:layout_constraintEnd_toStartOf="@+id/playerCV"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/playerCV">
-
-                <View
-                    android:id="@+id/viewDot5"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:background="@drawable/sub_disk_bg"
-                    android:backgroundTint="@color/palette1Grey" />
-
-                <View
-                    android:id="@+id/viewDot4"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/sub_disk_bg"
-                    android:backgroundTint="@color/palette1Grey" />
-
-                <View
-                    android:id="@+id/viewDot3"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/sub_disk_bg"
-                    android:backgroundTint="@color/palette1Grey" />
-
-                <View
-                    android:id="@+id/viewDot2"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/sub_disk_bg"
-                    android:backgroundTint="@color/palette1Grey" />
-
-                <View
-                    android:id="@+id/viewDot1"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/sub_disk_bg"
-                    android:backgroundTint="@color/palette1Grey" />
-
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/playerCV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="15dp"
-                app:cardCornerRadius="1000dp"
-                app:cardElevation="13dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:strokeColor="#FF5400"
-                app:strokeWidth="5dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="225dp"
-                    android:layout_height="225dp">
+                    android:id="@+id/coverImageCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="28dp"
+                    android:background="@drawable/music_cover_rect_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/songCoverImage"
-                        android:layout_width="225dp"
-                        android:layout_height="225dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/music_img"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                    <LinearLayout
+                        android:id="@+id/viewDotLl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="@+id/playerCV"
+                        app:layout_constraintEnd_toStartOf="@+id/playerCV"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/playerCV">
+
+                        <View
+                            android:id="@+id/viewDot5"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:background="@drawable/sub_disk_bg"
+                            android:backgroundTint="@color/palette1Grey" />
+
+                        <View
+                            android:id="@+id/viewDot4"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/sub_disk_bg"
+                            android:backgroundTint="@color/palette1Grey" />
+
+                        <View
+                            android:id="@+id/viewDot3"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/sub_disk_bg"
+                            android:backgroundTint="@color/palette1Grey" />
+
+                        <View
+                            android:id="@+id/viewDot2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/sub_disk_bg"
+                            android:backgroundTint="@color/palette1Grey" />
+
+                        <View
+                            android:id="@+id/viewDot1"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/sub_disk_bg"
+                            android:backgroundTint="@color/palette1Grey" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/playerCV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="15dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="13dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/playlistSubImage" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:strokeColor="#FF5400"
+                        app:strokeWidth="5dp">
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/playlistSubImageView"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:elevation="15dp"
-                        app:shapeAppearanceOverlay="@style/playlistSubImage"
-                        app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
-                        app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
-                        app:layout_constraintStart_toStartOf="@+id/songCoverImage"
-                        app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="225dp"
+                            android:layout_height="225dp">
 
-                    <View
-                        android:id="@+id/playlistSubImageView2"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:background="@drawable/playlist_round_view_2"
-                        android:elevation="15dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
-                        app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
-                        app:layout_constraintStart_toStartOf="@+id/songCoverImage"
-                        app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/songCoverImage"
+                                android:layout_width="225dp"
+                                android:layout_height="225dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/music_img"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:shapeAppearanceOverlay="@style/playlistSubImage" />
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/playlistSubImageView"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:elevation="15dp"
+                                app:shapeAppearanceOverlay="@style/playlistSubImage"
+                                app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                                app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                                app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                                app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+
+                            <View
+                                android:id="@+id/playlistSubImageView2"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:background="@drawable/playlist_round_view_2"
+                                android:elevation="15dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/songCoverImage"
+                                app:layout_constraintEnd_toEndOf="@+id/songCoverImage"
+                                app:layout_constraintStart_toStartOf="@+id/songCoverImage"
+                                app:layout_constraintTop_toTopOf="@+id/songCoverImage" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/musicPlayerWheel"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/wheel"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/playerCV" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/musicPlayerHandler"
+                        android:layout_width="50dp"
+                        android:layout_height="150dp"
+                        android:layout_marginEnd="58dp"
+                        android:layout_marginTop="-34dp"
+                        android:elevation="25dp"
+                        android:rotation="35"
+                        android:src="@drawable/handler"
+                        app:layout_constraintEnd_toEndOf="@+id/musicPlayerWheel"
+                        app:layout_constraintTop_toBottomOf="@+id/musicPlayerWheel" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/vBoosterBtn"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_gravity="bottom"
+                        android:background="?attr/selectableItemBackground"
+                        android:backgroundTint="@null"
+                        android:layout_weight="1"
+                        android:src="@drawable/voume_boost_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/musicPlayerWheel"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/wheel"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/playerCV" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/musicPlayerHandler"
-                android:layout_width="50dp"
-                android:layout_height="150dp"
-                android:layout_marginEnd="58dp"
-                android:layout_marginTop="-34dp"
-                android:elevation="25dp"
-                android:rotation="35"
-                android:src="@drawable/handler"
-                app:layout_constraintEnd_toEndOf="@+id/musicPlayerWheel"
-                app:layout_constraintTop_toBottomOf="@+id/musicPlayerWheel" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/vBoosterBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="bottom"
-                android:background="?attr/selectableItemBackground"
-                android:backgroundTint="@null"
-                android:layout_weight="1"
-                android:src="@drawable/voume_boost_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/playerSongTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="50dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/fjalla_one"
-            android:text="Music Name"
-            android:textAlignment="center"
-            android:textColor="?attr/themeColor"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/coverImageCl" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/mediaControlCl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerSongTitle">
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/fiveSecBackward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:backgroundTint="@null"
-                android:padding="5dp"
-                android:src="@drawable/five_sec_backward"
-                app:layout_constraintBottom_toBottomOf="@+id/mediaControlInsideCl"
-                app:layout_constraintEnd_toStartOf="@+id/mediaControlInsideCl"
-                app:layout_constraintTop_toTopOf="@+id/mediaControlInsideCl" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/playPauseBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/play_pause_button"
-                android:elevation="25dp"
-                android:src="@drawable/pause_icon"
-                app:layout_constraintEnd_toEndOf="@+id/mediaControlInsideCl"
-                app:layout_constraintStart_toStartOf="@+id/mediaControlInsideCl"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/playlistSubImage"
-                app:tint="@color/white" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/mediaControlInsideCl"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="horizontal"
-                android:background="@drawable/player_controll_bg"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/prevSongBtn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginVertical="3dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:backgroundTint="@null"
-                    android:src="@drawable/play_previous_icon"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/nextSongBtn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginVertical="3dp"
-                    android:layout_gravity="bottom"
-                    android:background="?attr/selectableItemBackground"
-                    android:backgroundTint="@null"
-                    android:src="@drawable/play_next_icon"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <TextView
+                    android:id="@+id/playerSongTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/fjalla_one"
+                    android:text="Music Name"
+                    android:textAlignment="center"
+                    android:textColor="?attr/themeColor"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/coverImageCl" />
+
+                <TextView
+                    android:id="@+id/playerSongArtistName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/fjalla_one"
+                    android:text="Artist Name"
+                    android:textAlignment="center"
+                    android:textColor="?attr/themeColor"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/playerSongTitle" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/mediaControlCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/playerSongArtistName">
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/fiveSecBackward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:backgroundTint="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/five_sec_backward"
+                        app:layout_constraintBottom_toBottomOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintEnd_toStartOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintTop_toTopOf="@+id/mediaControlInsideCl" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/playPauseBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/play_pause_button"
+                        android:elevation="25dp"
+                        android:src="@drawable/pause_icon"
+                        app:layout_constraintEnd_toEndOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintStart_toStartOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/playlistSubImage"
+                        app:tint="@color/white" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/mediaControlInsideCl"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/player_controll_bg"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/prevSongBtn"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginVertical="3dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:backgroundTint="@null"
+                            android:src="@drawable/play_previous_icon"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/nextSongBtn"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginVertical="3dp"
+                            android:layout_gravity="bottom"
+                            android:background="?attr/selectableItemBackground"
+                            android:backgroundTint="@null"
+                            android:src="@drawable/play_next_icon"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/fiveSecForward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:backgroundTint="@null"
+                        android:padding="5dp"
+                        android:src="@drawable/five_sec_forward"
+                        app:layout_constraintBottom_toBottomOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintStart_toEndOf="@+id/mediaControlInsideCl"
+                        app:layout_constraintTop_toTopOf="@+id/mediaControlInsideCl" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/seekBarLl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:weightSum="6"
+                    android:gravity="center_vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/mediaControlCl">
+
+                    <TextView
+                        android:id="@+id/startTimeSeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/fjalla_one"
+                        android:padding="1dp"
+                        android:text="00:00"
+                        android:textAlignment="textEnd"
+                        android:textColor="?attr/themeColor"
+                        android:textSize="15sp" />
+
+                    <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/seekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/custom_seekbar"
+                        android:thumb="@drawable/thumb" />
+
+                    <TextView
+                        android:id="@+id/endTimeSeekbar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/fjalla_one"
+                        android:padding="1dp"
+                        android:textAlignment="textStart"
+                        android:text="00:00"
+                        android:textColor="?attr/themeColor"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/featureBtnLl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="32dp"
+                    android:weightSum="4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/seekBarLl">
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/repeatBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginVertical="3dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_weight="1"
+                        android:src="@drawable/repeat_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/equalizerBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginVertical="3dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_weight="1"
+                        android:src="@drawable/equalizer_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/exitTimerBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginVertical="3dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_weight="1"
+                        android:src="@drawable/sleep_timer_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/shareBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginVertical="3dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_weight="1"
+                        android:src="@drawable/music_share_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/fiveSecForward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:backgroundTint="@null"
-                android:padding="5dp"
-                android:src="@drawable/five_sec_forward"
-                app:layout_constraintBottom_toBottomOf="@+id/mediaControlInsideCl"
-                app:layout_constraintStart_toEndOf="@+id/mediaControlInsideCl"
-                app:layout_constraintTop_toTopOf="@+id/mediaControlInsideCl" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/seekBarLl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:weightSum="6"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mediaControlCl">
-
-            <TextView
-                android:id="@+id/startTimeSeekBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/fjalla_one"
-                android:padding="1dp"
-                android:text="00:00"
-                android:textAlignment="textEnd"
-                android:textColor="?attr/themeColor"
-                android:textSize="15sp" />
-
-            <androidx.appcompat.widget.AppCompatSeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:max="100"
-                android:progress="25"
-                android:progressDrawable="@drawable/custom_seekbar"
-                android:thumb="@drawable/thumb" />
-
-            <TextView
-                android:id="@+id/endTimeSeekbar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/fjalla_one"
-                android:padding="1dp"
-                android:textAlignment="textStart"
-                android:text="00:00"
-                android:textColor="?attr/themeColor"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/featureBtnLl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="32dp"
-            android:weightSum="4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBarLl">
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/repeatBtn"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_marginVertical="3dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:src="@drawable/repeat_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/equalizerBtn"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_marginVertical="3dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:src="@drawable/equalizer_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/exitTimerBtn"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_marginVertical="3dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:src="@drawable/sleep_timer_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/shareBtn"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_marginVertical="3dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_weight="1"
-                android:src="@drawable/music_share_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

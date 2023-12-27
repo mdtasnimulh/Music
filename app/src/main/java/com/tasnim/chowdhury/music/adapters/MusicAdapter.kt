@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.alpha
 import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -148,6 +149,12 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                         return@setOnLongClickListener true
                     }
                 }
+            }
+
+            if (music.id == PlayerFragment.nowPlayingId) {
+                binding.musicListItem.setCardBackgroundColor(Color.parseColor("#33757575"))
+            } else {
+                binding.musicListItem.setCardBackgroundColor(Color.parseColor("#00FFFFFF"))
             }
         }
     }

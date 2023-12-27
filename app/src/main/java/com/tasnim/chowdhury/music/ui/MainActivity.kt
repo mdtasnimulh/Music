@@ -88,9 +88,9 @@ class MainActivity : AppCompatActivity() {
         /*val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
         editor?.putString("MusicPlaylist", jsonStringPlaylist)*/
 
-        if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
+        /*if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
             closeApp()
-        }
+        }*/
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {

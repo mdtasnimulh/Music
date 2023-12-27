@@ -96,6 +96,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         val playPauseLiveData = MutableLiveData<Pair<String, Int>>()
         val playPauseIconLiveData = MutableLiveData<Int>()
         val songDetailsLiveData = MutableLiveData<Pair<String, String>>()
+        val musicArtist = MutableLiveData<String>()
         val startTimeLiveData = MutableLiveData<Long>()
         val endTimeLiveData = MutableLiveData<Long>()
         val initialProgressLiveData = MutableLiveData<Int>()
@@ -146,6 +147,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         playPauseLiveData.postValue(Pair("", 0))
         playPauseIconLiveData.postValue(0)
         songDetailsLiveData.postValue(Pair("", ""))
+        musicArtist.postValue("")
         startTimeLiveData.postValue(0L)
         endTimeLiveData.postValue(0L)
         initialProgressLiveData.postValue(0)
@@ -174,6 +176,12 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                     .into(binding.songCoverImage)*/
                 imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
                 binding.playerSongTitle.text = songTitle
+            }
+        }
+
+        musicArtist.observe(viewLifecycleOwner) {
+            if (it != ""){
+                binding.playerSongArtistName.text = it
             }
         }
 
@@ -493,6 +501,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .into(binding.songCoverImage)*/
         imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
         binding.playerSongTitle.text = args.musicList[songPosition].title
+        binding.playerSongArtistName.text = args.musicList[songPosition].artist
 
         Log.d("chkThemeIndex", ":::${MainActivity.themeIndex}:::")
         when(MainActivity.themeIndex){
@@ -861,6 +870,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 binding.playerCV.outlineAmbientShadowColor = swatch.rgb
                 binding.playerCV.outlineSpotShadowColor = swatch.rgb
                 binding.playerSongTitle.setTextColor(swatch.titleTextColor)
+                binding.playerSongArtistName.setTextColor(swatch.titleTextColor)
                 binding.startTimeSeekBar.setTextColor(swatch.titleTextColor)
                 binding.endTimeSeekbar.setTextColor(swatch.titleTextColor)
                 val blendedColor = blendColors(swatch.rgb, swatch.rgb, 1f)
