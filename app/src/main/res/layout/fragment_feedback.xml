@@ -11,23 +11,48 @@
         android:id="@+id/feedbackFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".ui.fragments.FeedbackFragment">
 
-        <TextView
-            android:id="@+id/feedbackTitleTv"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/feedbackToolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/fjalla_one"
-            android:text="Give Your Feedback"
-            android:textFontWeight="1000"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:background="?attr/themeColor"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/backBtn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/feedbackTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/fjalla_one"
+                android:text="Give Your Feedback"
+                android:textFontWeight="1000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/backBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/backBtn"
+                app:layout_constraintTop_toTopOf="@+id/backBtn"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/feedbackTopicTil"
@@ -38,7 +63,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/feedbackTitleTv">
+            app:layout_constraintTop_toBottomOf="@+id/feedbackToolbar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/feedbackTopicEt"
@@ -113,8 +138,9 @@
             android:textSize="16sp"
             app:cornerRadius="5dp"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="8dp"
+            android:paddingVertical="12dp"
             app:rippleColor="#40FFFFFF"
+            android:backgroundTint="?attr/themeColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/feedbackDescriptionTil"/>

@@ -71,6 +71,10 @@ class FavouritesFragment : Fragment() {
             val action = FavouritesFragmentDirections.actionFavouritesFragmentToPlayerFragment(0, "ShuffleFavourites", shuffleFavouriteList)
             findNavController().navigate(action)
         }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setupAdapter() {

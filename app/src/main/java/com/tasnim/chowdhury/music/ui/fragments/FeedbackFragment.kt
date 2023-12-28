@@ -66,6 +66,10 @@ class FeedbackFragment : Fragment() {
             feedbackMessage = "User Email: ${binding.feedbackEmailEt.text}\n\nUser Feedback: ${binding.feedbackDescriptionEt.text}"
             sendEmail(email, subject, feedbackMessage)
         }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun sendEmail(recipient: String, subject: String, message: String) {

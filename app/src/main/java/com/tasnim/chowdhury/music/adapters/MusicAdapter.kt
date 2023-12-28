@@ -61,9 +61,9 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
             if (selectionFragment) {
                 binding.root.setOnClickListener {
                     if (addSongToPlaylist(music)) {
-                        binding.musicListItem.backgroundTintList = ContextCompat.getColorStateList(context, R.color.palette1Maroon)
+                        binding.musicListItem.setCardBackgroundColor(ContextCompat.getColorStateList(context, R.color.palette1Grey))
                     } else {
-                        binding.musicListItem.backgroundTintList = null
+                        binding.musicListItem.setCardBackgroundColor(ContextCompat.getColorStateList(context, R.color.white))
                     }
                 }
             } else {

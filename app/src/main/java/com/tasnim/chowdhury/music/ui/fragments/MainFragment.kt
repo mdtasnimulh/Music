@@ -1,6 +1,7 @@
 package com.tasnim.chowdhury.music.ui.fragments
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -30,6 +32,7 @@ import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
@@ -46,6 +49,7 @@ class MainFragment : Fragment() {
     private var shuffledMusicList: MusicList = MusicList()
     private var storageList: MusicList = MusicList()
     private var sortValue = 0
+    private var isMenuOpen = false
 
     companion object {
         var search: Boolean = false
@@ -262,20 +266,125 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_mainFragment_to_playlistFragment)
         }
 
-        binding.feedbackBtn.setOnClickListener {
+        binding.feedbackMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_feedbackFragment)
         }
 
-        binding.aboutBtn.setOnClickListener {
+        binding.aboutMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
         }
 
-        binding.settingsBtn.setOnClickListener {
+        binding.settingsMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+        }
+
+        binding.exitMenuLl.setOnClickListener {
+            closeApp()
         }
 
         binding.playNextBtn.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_playNextFragment)
+        }
+
+        // Menu
+        binding.menuBtn.setOnClickListener {
+            if (!isMenuOpen) {
+                val initialX = 0f
+                val finalX = 0.75f * binding.mainCl.width
+                val initialMargin = 0
+                val finalMargin = 150
+                val duration = 500L
+
+                val animator = ValueAnimator.ofFloat(initialX, finalX)
+                animator.duration = duration
+                animator.addUpdateListener { animation ->
+                    val animatedValue = animation.animatedValue as Float
+                    val layoutParams = binding.mainCl.layoutParams as ViewGroup.MarginLayoutParams
+                    val hoverParams = binding.mainMenuLayoutHove.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.setMargins(0, initialMargin + ((finalMargin - initialMargin) * animation.animatedFraction).toInt(), 0, initialMargin + ((finalMargin - initialMargin) * animation.animatedFraction).toInt())
+                    hoverParams.setMargins(0, initialMargin + ((finalMargin - initialMargin) * animation.animatedFraction).toInt(), 0, initialMargin + ((finalMargin - initialMargin) * animation.animatedFraction).toInt())
+                    binding.mainCl.layoutParams = layoutParams
+                    binding.mainMenuLayoutHove.layoutParams = hoverParams
+                    binding.mainCl.translationX = animatedValue
+                    binding.mainMenuLayoutHove.translationX = animatedValue
+                    binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_close_icon))
+
+                    binding.mainMenuLayoutHove.visibility = View.VISIBLE
+                    binding.sidebarCl.visibility = View.VISIBLE
+                    binding.mainNestedSv.visibility = View.GONE
+                    if (PlayerFragment.musicService != null) {
+                        binding.nowPlayingView.root.visibility = View.GONE
+                    }
+                }
+
+                animator.start()
+            } else {
+                val initialX = 0.75f * binding.mainCl.width
+                val finalX = 0f
+                val initialMargin = 150
+                val finalMargin = 0
+                val duration = 500L
+
+                val animator = ValueAnimator.ofFloat(initialX, finalX)
+                animator.duration = duration
+                animator.addUpdateListener { animation ->
+                    val animatedValue = animation.animatedValue as Float
+                    val layoutParams = binding.mainCl.layoutParams as ViewGroup.MarginLayoutParams
+                    val hoverParams = binding.mainMenuLayoutHove.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.setMargins(0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt(), 0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt())
+                    hoverParams.setMargins(0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt(), 0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt())
+                    binding.mainCl.layoutParams = layoutParams
+                    binding.mainMenuLayoutHove.layoutParams = hoverParams
+                    binding.mainCl.translationX = animatedValue
+                    binding.mainMenuLayoutHove.translationX = animatedValue
+                    binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_open_icon))
+
+                    binding.mainMenuLayoutHove.visibility = View.GONE
+                    binding.sidebarCl.visibility = View.GONE
+                    binding.mainNestedSv.visibility = View.VISIBLE
+                    if (PlayerFragment.musicService != null) {
+                        binding.nowPlayingView.root.visibility = View.VISIBLE
+                    }
+                }
+
+                animator.start()
+            }
+
+            // Toggle the menu state
+            isMenuOpen = !isMenuOpen
+        }
+
+        binding.mainMenuLayoutHove.setOnClickListener {
+            isMenuOpen = false
+            val initialX = 0.75f * binding.mainCl.width
+            val finalX = 0f
+            val initialMargin = 150
+            val finalMargin = 0
+            val duration = 500L
+
+            val animator = ValueAnimator.ofFloat(initialX, finalX)
+            animator.duration = duration
+            animator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Float
+                val layoutParams = binding.mainCl.layoutParams as ViewGroup.MarginLayoutParams
+                val hoverParams = binding.mainMenuLayoutHove.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.setMargins(0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt(), 0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt())
+                hoverParams.setMargins(0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt(), 0, initialMargin - ((initialMargin - finalMargin) * animation.animatedFraction).toInt())
+                binding.mainCl.layoutParams = layoutParams
+                binding.mainMenuLayoutHove.layoutParams = hoverParams
+                binding.mainCl.translationX = animatedValue
+                binding.mainMenuLayoutHove.translationX = animatedValue
+                binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_open_icon))
+
+                binding.mainMenuLayoutHove.visibility = View.GONE
+                binding.sidebarCl.visibility = View.GONE
+                binding.mainNestedSv.visibility = View.VISIBLE
+                if (PlayerFragment.musicService != null) {
+                    binding.nowPlayingView.root.visibility = View.VISIBLE
+                }
+            }
+
+            animator.start()
         }
 
     }

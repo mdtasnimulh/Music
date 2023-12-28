@@ -12,7 +12,7 @@
             android:id="@+id/nowPlayingMainCl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_blue_dark">
+            android:background="?attr/themeColor">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/nowPlayingCoverImage"
@@ -32,10 +32,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:backgroundTint="@android:color/holo_red_light"
+                android:backgroundTint="@color/white"
                 app:icon="@drawable/play_next_icon"
                 app:iconSize="32dp"
-                app:iconTint="@color/white"
+                app:iconTint="?attr/themeColor"
+                app:shapeAppearanceOverlay="@style/playlistSubImage"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,14 +47,14 @@
                 android:layout_height="55dp"
                 android:layout_marginEnd="8dp"
                 android:elevation="16dp"
-                android:backgroundTint="@color/palette1Orange"
+                android:backgroundTint="@color/white"
                 android:contentDescription="@string/play_pause_button"
                 android:src="@drawable/pause_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/nowPlayingNextBtn"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/playlistSubImage"
-                app:tint="@color/white" />
+                app:tint="?attr/themeColor" />
 
             <TextView
                 android:id="@+id/nowPlayingTitle"
@@ -65,7 +66,7 @@
                 android:singleLine="true"
                 android:text="Song Name"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:marqueeRepeatLimit="marquee_forever"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -7,13 +7,14 @@
         android:id="@+id/selectSongsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".ui.fragments.SelectSongsFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/playlistToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#212121"
+            android:background="?attr/themeColor"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,8 +25,8 @@
                 android:id="@+id/selectSongBack"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:padding="4dp"
-                android:src="@drawable/ic_arrow_back_music"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +39,7 @@
                 android:fontFamily="@font/fjalla_one"
                 android:text="@string/select_songs"
                 android:textAlignment="center"
-                android:textColor="@color/palette1Orange"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toBottomOf="@+id/selectSongBack"

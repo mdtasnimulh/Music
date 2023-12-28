@@ -69,6 +69,10 @@ class PlayNextFragment : Fragment() {
                 }
             }
         }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     override fun onDestroyView() {

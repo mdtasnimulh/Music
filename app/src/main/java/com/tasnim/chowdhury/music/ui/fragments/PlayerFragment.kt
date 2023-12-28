@@ -87,6 +87,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
     private val rotationUpdateInterval = 16L
     private val blinkDuration = 400L
     private var colorChangeHandler: Handler? = null
+    private val skipValue = 5000
 
     companion object {
         var songPosition: Int = 0
@@ -484,6 +485,15 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             boosterBinding.verticalBar.setOnProgressChangeListener {
                 boosterBinding.progressText.text = "Audio Boos\n\n${it*10}%"
             }
+        }
+
+        binding.fiveSecForward.setOnClickListener {
+            musicService?.mediaPlayer?.seekTo(musicService?.mediaPlayer?.currentPosition?.plus(skipValue) ?: 0)
+            binding.seekBar.progress += skipValue
+        }
+        binding.fiveSecBackward.setOnClickListener {
+            musicService?.mediaPlayer?.seekTo(musicService?.mediaPlayer?.currentPosition?.minus(skipValue) ?: 0)
+            binding.seekBar.progress -= skipValue
         }
     }
 

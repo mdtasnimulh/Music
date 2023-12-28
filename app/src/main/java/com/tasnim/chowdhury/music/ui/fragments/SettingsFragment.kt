@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentSettingsBinding
@@ -123,6 +124,10 @@ class SettingsFragment : Fragment() {
                 }
             sortDialog.create()
             sortDialog.show()
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

@@ -70,6 +70,10 @@ class PlaylistFragment : Fragment() {
             val action = PlaylistFragmentDirections.actionPlaylistFragmentToPlaylistDetailsFragment(position)
             findNavController().navigate(action)
         }
+
+        binding.playerBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun createPlaylistDialog() {
