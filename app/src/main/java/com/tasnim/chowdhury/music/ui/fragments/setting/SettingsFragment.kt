@@ -1,6 +1,5 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.setting
 
-import android.app.Service
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
@@ -10,16 +9,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FragmentSettingsBinding
 import com.tasnim.chowdhury.music.ui.MainActivity
-import com.tasnim.chowdhury.music.utilities.closeApp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
 
 
 class SettingsFragment : Fragment() {

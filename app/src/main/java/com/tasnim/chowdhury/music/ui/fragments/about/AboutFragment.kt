@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.about
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.queue
 
 import android.os.Bundle
 import android.util.Log
@@ -55,7 +55,7 @@ class PlayNextFragment : Fragment() {
         val layoutManager = GridLayoutManager(requireContext(), 3)
         binding.playNextRv.layoutManager = layoutManager
 
-        Log.d("chkPlayNextList", "${playNextList}")
+        Log.d("chkPlayNextList", "$playNextList")
 
         favouriteAdapter.addAllFavourites(playNextList)
     }

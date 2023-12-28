@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.playlist
 
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.PlaylistAdapter

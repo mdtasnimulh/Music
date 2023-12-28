@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.playlist
 
 import android.content.Context
 import android.os.Bundle
@@ -86,7 +86,9 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistRV.setItemViewCacheSize(10)
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.layoutManager = LinearLayoutManager(requireContext())
-        adapter.addAll(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
+        //adapter.addAll(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
+        adapter.setMusic(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
+        adapter.notifyDataSetChanged()
     }
 
     private fun setupClicks() {

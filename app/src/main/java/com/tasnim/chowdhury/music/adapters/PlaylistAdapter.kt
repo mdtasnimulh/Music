@@ -12,8 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.PlaylistRvLayoutBinding
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
+import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.Playlist
 import com.tasnim.chowdhury.music.utilities.getImageArt
 

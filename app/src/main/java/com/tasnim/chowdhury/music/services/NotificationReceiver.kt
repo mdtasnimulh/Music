@@ -1,15 +1,12 @@
 package com.tasnim.chowdhury.music.services
 
-import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
-import com.tasnim.chowdhury.music.ui.fragments.MainFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants.EXIT
 import com.tasnim.chowdhury.music.utilities.Constants.NEXT
 import com.tasnim.chowdhury.music.utilities.Constants.PLAY
@@ -17,7 +14,6 @@ import com.tasnim.chowdhury.music.utilities.Constants.PREVIOUS
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.favouriteSongChecker
 import com.tasnim.chowdhury.music.utilities.setSongPosition
-import kotlin.system.exitProcess
 
 class NotificationReceiver: BroadcastReceiver() {
 

@@ -11,7 +11,7 @@
         android:id="@+id/playerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragments.PlayerFragment">
+        tools:context=".ui.fragments.player.PlayerFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/playerToolbar"

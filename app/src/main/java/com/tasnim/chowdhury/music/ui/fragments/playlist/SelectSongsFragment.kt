@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.playlist
 
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentSelectSongsBinding
 import com.tasnim.chowdhury.music.model.MusicList
-import com.tasnim.chowdhury.music.ui.fragments.MainFragment.Companion.mainMusicList
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment.Companion.mainMusicList
 
 class SelectSongsFragment : Fragment() {
 
@@ -42,7 +42,9 @@ class SelectSongsFragment : Fragment() {
         binding.selectSongsRv.setHasFixedSize(true)
         binding.selectSongsRv.setItemViewCacheSize(10)
         binding.selectSongsRv.layoutManager = LinearLayoutManager(requireContext())
-        adapter.addAll(mainMusicList)
+        //adapter.addAll(mainMusicList)
+        adapter.setMusic(mainMusicList)
+        adapter.notifyDataSetChanged()
     }
 
     private fun setupClicks() {
@@ -61,7 +63,9 @@ class SelectSongsFragment : Fragment() {
                 Log.d("chkSearchList", "BeforeSearch::${MainFragment.musicListSearch.size}::")
                 if (newText.isNullOrBlank()) {
                     MainFragment.search = false
-                    adapter.addAll(mainMusicList)
+                    //adapter.addAll(mainMusicList)
+                    adapter.setMusic(mainMusicList)
+                    adapter.notifyDataSetChanged()
                 }else {
                     val userInput = newText.lowercase()
                     for (song in mainMusicList) {
@@ -70,7 +74,9 @@ class SelectSongsFragment : Fragment() {
                         }
                     }
                     MainFragment.search = true
-                    adapter.addAll(MainFragment.musicListSearch)
+                    //adapter.addAll(MainFragment.musicListSearch)
+                    adapter.setMusic(MainFragment.musicListSearch)
+                    adapter.notifyDataSetChanged()
                 }
                 return true
             }

@@ -15,15 +15,13 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.MainActivity
-import com.tasnim.chowdhury.music.ui.fragments.MainFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.Constants
 import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_ID
 import com.tasnim.chowdhury.music.utilities.Constants.NOTIFICATION_CHANNEL_NAME

@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.player
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -55,6 +55,8 @@ import com.tasnim.chowdhury.music.databinding.FragmentPlayerBinding
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.services.MusicService
 import com.tasnim.chowdhury.music.ui.MainActivity
+import com.tasnim.chowdhury.music.ui.fragments.favourite.FavouritesFragment
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
 import com.tasnim.chowdhury.music.utilities.animateElevation
 import com.tasnim.chowdhury.music.utilities.animateMargins
 import com.tasnim.chowdhury.music.utilities.animateRotation
@@ -281,7 +283,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             "Storage" -> {
                 musicList = args.musicList
                 songPosition = args.position
-                Log.d("chkStorageMusic", "${musicList}:::\n${args.position}")
+                Log.d("chkStorageMusic", "$musicList:::\n${args.position}")
                 startService()
             }
             "MainAdapter" -> {

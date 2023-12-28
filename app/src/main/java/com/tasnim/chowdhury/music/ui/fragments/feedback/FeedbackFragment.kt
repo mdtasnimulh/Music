@@ -1,4 +1,4 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.feedback
 
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK

@@ -12,11 +12,9 @@ import com.google.gson.reflect.TypeToken
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.music.model.Music
-import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
+import com.tasnim.chowdhury.music.ui.fragments.favourite.FavouritesFragment
+import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.MusicPlaylist
-import com.tasnim.chowdhury.music.utilities.closeApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

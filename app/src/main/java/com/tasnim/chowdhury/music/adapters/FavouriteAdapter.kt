@@ -1,6 +1,5 @@
 package com.tasnim.chowdhury.music.adapters
 
-import android.app.Activity
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -14,10 +13,8 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.FavouriteItemBinding
 import com.tasnim.chowdhury.music.databinding.LongPressLayoutBinding
 import com.tasnim.chowdhury.music.model.Music
-import com.tasnim.chowdhury.music.ui.fragments.PlayNextFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
+import com.tasnim.chowdhury.music.ui.fragments.queue.PlayNextFragment
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.getImageArt
 
 class FavouriteAdapter(val tag: String): RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHolder>() {

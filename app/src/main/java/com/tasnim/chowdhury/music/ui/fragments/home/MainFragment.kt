@@ -1,9 +1,8 @@
-package com.tasnim.chowdhury.music.ui.fragments
+package com.tasnim.chowdhury.music.ui.fragments.home
 
 import android.Manifest
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -28,10 +27,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
-import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
-import com.tasnim.chowdhury.music.services.MusicService
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
@@ -201,7 +199,9 @@ class MainFragment : Fragment() {
         }
 
         binding.nowPlayingView.root.setOnClickListener {
-            val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(PlayerFragment.songPosition, "NowPlaying", mainMusicList)
+            val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(
+                PlayerFragment.songPosition, "NowPlaying", mainMusicList
+            )
             findNavController().navigate(nowPlayingAction)
         }
 
@@ -218,7 +218,9 @@ class MainFragment : Fragment() {
                     findNavController().navigate(action)
                 }
                 "NowPlaying" -> {
-                    val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(PlayerFragment.songPosition, "NowPlaying", mainMusicList)
+                    val nowPlayingAction = MainFragmentDirections.actionMainFragmentToPlayerFragment(
+                        PlayerFragment.songPosition, "NowPlaying", mainMusicList
+                    )
                     findNavController().navigate(nowPlayingAction)
                 }
             }
@@ -243,7 +245,9 @@ class MainFragment : Fragment() {
                 Log.d("chkSearchList", "BeforeSearch::${musicListSearch.size}::")
                 if (newText.isNullOrBlank()) {
                     search = false
-                    musicAdapter.addAll(mainMusicList)
+                    //musicAdapter.addAll(mainMusicList)
+                    musicAdapter.setMusic(mainMusicList)
+                    musicAdapter.notifyDataSetChanged()
                 }else {
                     val userInput = newText.lowercase()
                     for (song in mainMusicList) {
@@ -252,7 +256,9 @@ class MainFragment : Fragment() {
                         }
                     }
                     search = true
-                    musicAdapter.addAll(musicListSearch)
+                    //musicAdapter.addAll(musicListSearch)
+                    musicAdapter.setMusic(musicListSearch)
+                    musicAdapter.notifyDataSetChanged()
                 }
                 return true
             }
@@ -392,7 +398,9 @@ class MainFragment : Fragment() {
     private fun setObserver() {
         musicViewModel.apply {
             musicList.observe(viewLifecycleOwner) {
-                musicAdapter.addAll(it)
+                //musicAdapter.addAll(it)
+                musicAdapter.setMusic(it)
+                musicAdapter.notifyDataSetChanged()
                 mainMusicList.clear()
                 mainMusicList.addAll(it)
 

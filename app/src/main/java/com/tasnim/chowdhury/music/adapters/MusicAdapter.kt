@@ -12,22 +12,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.alpha
 import androidx.core.text.bold
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
+import com.tasnim.chowdhury.music.adapters.diffUtil.MusicCallBack
 import com.tasnim.chowdhury.music.databinding.DetailsViewBinding
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
-import com.tasnim.chowdhury.music.ui.fragments.MainFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayNextFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
+import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
+import com.tasnim.chowdhury.music.ui.fragments.queue.PlayNextFragment
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistDetailsFragment
+import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.getImageArt
 import kotlinx.coroutines.Dispatchers
@@ -121,7 +122,9 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                         addToNextBtn.setOnClickListener {
                             try {
                                 if (PlayNextFragment.playNextList.isEmpty()) {
-                                    PlayNextFragment.playNextList.add(PlayerFragment.musicList?.get(PlayerFragment.songPosition)!!)
+                                    PlayNextFragment.playNextList.add(
+                                        PlayerFragment.musicList?.get(
+                                            PlayerFragment.songPosition)!!)
                                     PlayerFragment.songPosition = 0
                                 }
                                 PlayNextFragment.playNextList.add(music)
@@ -188,6 +191,14 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
         musicList.addAll(list.distinctBy { it.id })
         Log.d("chkMusicListSize", "${list.size}")
         notifyDataSetChanged()
+    }
+
+    fun setMusic(newMusic: List<Music>) {
+        val diffCallBack = MusicCallBack(newMusic, newMusic)
+        val diffMusic = DiffUtil.calculateDiff(diffCallBack)
+        musicList.clear()
+        musicList.addAll(newMusic)
+        diffMusic.dispatchUpdatesTo(this)
     }
 
     fun addSongToPlaylist(song: Music): Boolean {

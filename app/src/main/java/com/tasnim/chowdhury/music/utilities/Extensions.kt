@@ -7,8 +7,8 @@ import android.media.MediaMetadataRetriever
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tasnim.chowdhury.music.model.Music
-import com.tasnim.chowdhury.music.ui.fragments.FavouritesFragment
-import com.tasnim.chowdhury.music.ui.fragments.PlayerFragment
+import com.tasnim.chowdhury.music.ui.fragments.favourite.FavouritesFragment
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
