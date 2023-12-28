@@ -134,17 +134,20 @@
             tools:itemCount="3"
             tools:listitem="@layout/music_list_item" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/shufflePlaylistBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:clickable="true"
+            android:layout_marginEnd="16dp"
+            android:text="Shuffle"
+            app:cornerRadius="7dp"
+            android:paddingVertical="12dp"
+            app:icon="@drawable/shuffle_icon"
+            android:backgroundTint="?attr/themeColor"
             android:contentDescription="@string/create_new_playlist"
             app:layout_constraintBottom_toTopOf="@+id/removeAllSongsBtn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_close" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/addSongBtn"

@@ -70,13 +70,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/favouriteToolbar" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/shuffleBtnF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:text="Shuffle"
+            app:cornerRadius="7dp"
+            app:icon="@drawable/shuffle_icon"
+            android:paddingVertical="12dp"
+            android:backgroundTint="?attr/themeColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
