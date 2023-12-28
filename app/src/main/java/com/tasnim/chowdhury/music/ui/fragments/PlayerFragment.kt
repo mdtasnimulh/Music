@@ -855,6 +855,13 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         binding.shareBtn.imageTintList = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
 
         binding.playPauseBtn.backgroundTintList = ContextCompat.getColorStateList(requireContext(), changeColor)
+
+        binding.playlistSubImageView.setBackgroundResource(R.drawable.sub_disk_bg)
+        binding.playlistSubImageView.backgroundTintList = ContextCompat.getColorStateList(requireContext(), changeColor)
+
+        binding.playerCV.strokeColor = changeColor
+        binding.playerCV.outlineAmbientShadowColor = changeColor
+        binding.playerCV.outlineSpotShadowColor = changeColor
     }
 
     private fun changeColorByPalette(image: Bitmap){

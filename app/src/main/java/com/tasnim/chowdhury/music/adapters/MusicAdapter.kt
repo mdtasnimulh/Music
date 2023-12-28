@@ -30,6 +30,9 @@ import com.tasnim.chowdhury.music.ui.fragments.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
 import com.tasnim.chowdhury.music.utilities.getImageArt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
     val selectionFragment: Boolean = false) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
@@ -44,17 +47,22 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
             binding.artistName.text = music.artist
             binding.songDuration.text = formatDuration(music.duration)
 
-            val imageArt = getImageArt(music.path)
-            val image = if (imageArt != null) {
-                BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
-            } else {
-                BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground)
-            }
+            GlobalScope.launch(Dispatchers.IO) {
+                val imageArt = getImageArt(music.path)
+                val image = if (imageArt != null) {
+                    BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
+                } else {
+                    BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground)
+                }
 
-            Glide.with(context)
-                .load(image)
-                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
-                .into(binding.songImage)
+                launch(Dispatchers.Main) {
+                    Glide.with(context)
+                        .load(image)
+                        .apply(RequestOptions().override(70, 75))
+                        .centerCrop().skipMemoryCache(false)
+                        .into(binding.songImage)
+                }
+            }
 
             Log.d("chkMusicListSize", "Position::$position")
 
