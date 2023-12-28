@@ -24,8 +24,6 @@
     <color name="palette1MediumBlack">#212121</color>
     <color name="palette1Grey">#757575</color>
 
-    <color name="ic_launcher_background">#2B3467</color>
-
     // default theme color
     <color name="seed">#0659BD</color>
     <color name="md_theme_light_primary">#0C5BBF</color>
