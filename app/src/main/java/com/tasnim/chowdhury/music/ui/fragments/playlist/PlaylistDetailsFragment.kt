@@ -57,10 +57,14 @@ class PlaylistDetailsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        val totalSongsStr = "Total Songs: ${adapter.itemCount}"
+        val createdByStr = "Created by: ${PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].createdBy}"
+        val createdOnStr = "Created on: ${PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].createdOn}"
+
         binding.playlistName.text = PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].name
-        binding.totalSongsTv.text = "Total Songs: ${adapter.itemCount}"
-        binding.createdByTv.text = "Created by: ${PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].createdBy}"
-        binding.createdOnTv.text = "Created on: ${PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].createdOn}"
+        binding.totalSongsTv.text = totalSongsStr
+        binding.createdByTv.text = createdByStr
+        binding.createdOnTv.text = createdOnStr
 
         if (adapter.itemCount > 0) {
             Glide.with(requireContext())
@@ -93,7 +97,7 @@ class PlaylistDetailsFragment : Fragment() {
 
     private fun setupClicks() {
         playlistDetailsSongs.addAll(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
-        adapter.musicItem = { position, tag, song ->
+        adapter.musicItem = { position, tag, _ ->
             when(tag) {
                 "PlaylistDetails" -> {
                     val action = PlaylistDetailsFragmentDirections.actionPlaylistDetailsFragmentToPlayerFragment(position, "PlaylistDetails", playlistDetailsSongs)

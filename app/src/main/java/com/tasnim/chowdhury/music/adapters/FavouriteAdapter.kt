@@ -25,14 +25,14 @@ class FavouriteAdapter(val tag: String): RecyclerView.Adapter<FavouriteAdapter.F
     inner class FavouriteViewHolder(val binding: FavouriteItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(position: Int, music: Music) {
             binding.favouriteItemTitle.text = music.title
-            val imageArt = getImageArt(music.path)
+            /*val imageArt = getImageArt(music.path)
             val image = if (imageArt != null) {
                 BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
             } else {
                 BitmapFactory.decodeResource(itemView.context.resources, R.drawable.ic_launcher_foreground)
-            }
+            }*/
             Glide.with(itemView.context)
-                .load(image)
+                .load(music.artUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                 .into(binding.favouriteItemCoverImage)
 

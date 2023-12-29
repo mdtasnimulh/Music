@@ -9,6 +9,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -48,7 +49,7 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
             binding.artistName.text = music.artist
             binding.songDuration.text = formatDuration(music.duration)
 
-            GlobalScope.launch(Dispatchers.IO) {
+            /*GlobalScope.launch(Dispatchers.IO) {
                 val imageArt = getImageArt(music.path)
                 val image = if (imageArt != null) {
                     BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
@@ -63,7 +64,12 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                         .centerCrop().skipMemoryCache(false)
                         .into(binding.songImage)
                 }
-            }
+            }*/
+            Glide.with(context)
+                .load(music.artUri)
+                .apply(RequestOptions().override(70, 75))
+                .centerCrop().skipMemoryCache(false)
+                .into(binding.songImage)
 
             Log.d("chkMusicListSize", "Position::$position")
 

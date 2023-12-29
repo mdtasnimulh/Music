@@ -13,6 +13,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -167,17 +168,17 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
         songDetailsLiveData.observe(viewLifecycleOwner) { (songTitle, artUri) ->
             if (songTitle!="" && artUri!=""){
-                val imageArt = getImageArt(artUri)
+                /*val imageArt = getImageArt(artUri)
                 val image = if (imageArt != null) {
                     BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
                 } else {
                     BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
-                }
+                }*/
                 /*Glide.with(requireContext())
                     .load(image)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.songCoverImage)*/
-                imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
+                imageAnimation(context = requireContext(), imageView = binding.songCoverImage, drawable = artUri)
                 binding.playerSongTitle.text = songTitle
             }
         }
@@ -511,7 +512,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             .load(image)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.songCoverImage)*/
-        imageAnimation(context = requireContext(), imageView = binding.songCoverImage, bitmap = image)
+        imageAnimation(context = requireContext(), imageView = binding.songCoverImage, drawable = args.musicList[songPosition].artUri)
         binding.playerSongTitle.text = args.musicList[songPosition].title
         binding.playerSongArtistName.text = args.musicList[songPosition].artist
 
@@ -813,7 +814,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         }
     }
 
-    private fun imageAnimation(context: Context, imageView: ImageView, bitmap: Bitmap) {
+    private fun imageAnimation(context: Context, imageView: ImageView, drawable: String) {
         val animOut = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
         val animIn = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
 
@@ -822,7 +823,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
 
             override fun onAnimationEnd(animation: Animation?) {
                 Glide.with(context)
-                    .load(bitmap)
+                    .load(drawable)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(imageView)
                 animIn.setAnimationListener(object : Animation.AnimationListener{

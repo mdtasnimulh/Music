@@ -49,19 +49,19 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
             }
 
             if (playlist.playlist.size > 0) {
-                val imageArt = getImageArt(playlist.playlist[0].path)
+                /*val imageArt = getImageArt(playlist.playlist[0].path)
                 val image = if (imageArt != null) {
                     BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
                 } else {
                     BitmapFactory.decodeResource(itemView.context.resources, R.drawable.ic_launcher_foreground)
-                }
+                }*/
                 Glide.with(itemView.context)
-                    .load(image)
+                    .load(playlist.playlist[0].artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumMainImage)
 
                 Glide.with(itemView.context)
-                    .load(image)
+                    .load(playlist.playlist[0].artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.playlistAlbumSubImage)
 

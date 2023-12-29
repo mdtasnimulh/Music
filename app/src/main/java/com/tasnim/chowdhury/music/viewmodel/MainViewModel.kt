@@ -27,23 +27,29 @@ class MainViewModel @Inject constructor(
     private val _dataLoading = MutableLiveData<Boolean>().apply { value = true }
     val dataLoading: LiveData<Boolean> = _dataLoading
 
+    // Flag to check if data has already been loaded
+    private var dataLoaded = false
+
     fun getAllSongs(sortList: ArrayList<String>, position: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val musicList = repository.getAllSongs(application, sortList, position)
-                withContext(Dispatchers.Main) {
-                    _dataLoading.value = false
-                    _musicList.value = musicList
+        if (!dataLoaded) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val musicList = repository.getAllSongs(application, sortList, position)
+                    withContext(Dispatchers.Main) {
+                        _dataLoading.value = false
+                        _musicList.value = musicList
+                    }
+                }catch (e: Exception){
+                    withContext(Dispatchers.Main){
+                        Log.d("chkException", "${e.message}")
+                        _dataLoading.value = false
+                        _musicList.value = arrayListOf()
+                    }
+                    Log.d("chkException", ":::${e.message}:::")
                 }
-            }catch (e: Exception){
-                withContext(Dispatchers.Main){
-                    Log.d("chkException", "${e.message}")
-                    _dataLoading.value = false
-                    _musicList.value = arrayListOf()
-                }
-                Log.d("chkException", ":::${e.message}:::")
             }
         }
+        dataLoaded = true
     }
 
 }

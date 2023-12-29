@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
@@ -168,6 +170,17 @@ class MainFragment : Fragment() {
         binding.musicListRv.setItemViewCacheSize(15)
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.musicListRv.layoutManager = layoutManager
+        /*
+        // Set up layout animation
+        val rvAnimation = LayoutAnimationController(
+            AnimationUtils.loadAnimation(requireContext(), R.anim.rv_item_anim)
+        )
+        rvAnimation.delay = 0.20f
+        rvAnimation.order = LayoutAnimationController.ORDER_NORMAL
+        // Set layout animation to RecyclerView
+        binding.musicListRv.layoutAnimation = rvAnimation
+        // Start layout animation
+        binding.musicListRv.startLayoutAnimation()*/
 
         if (sortOrder != sortValue) {
             sortOrder = sortValue
@@ -186,7 +199,8 @@ class MainFragment : Fragment() {
             setSongPosition(increment = true)
             PlayerFragment.musicService?.createMediaPlayer()
             val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
-            val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
+            //val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
+            val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
             val artist = PlayerFragment.musicList!![PlayerFragment.songPosition].artist
 
             PlayerFragment.songDetailsLiveData.postValue(Pair(songTitle, artUri))
@@ -417,14 +431,14 @@ class MainFragment : Fragment() {
 
         songDetailsNP.observe(viewLifecycleOwner) { (songTitle, artUri) ->
             if (songTitle!="" && artUri!=""){
-                val imageArt = getImageArt(artUri)
+                /*val imageArt = getImageArt(artUri)
                 val image = if (imageArt != null) {
                     BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
                 } else {
                     BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
-                }
+                }*/
                 Glide.with(requireContext())
-                    .load(image)
+                    .load(artUri)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
                     .into(binding.nowPlayingView.nowPlayingCoverImage)
 
@@ -434,7 +448,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setNowPlaying() {
-        val imageArt = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.path?.let {
+        /*val imageArt = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.path?.let {
             getImageArt(
                 it
             )
@@ -443,9 +457,9 @@ class MainFragment : Fragment() {
             BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
         } else {
             BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
-        }
+        }*/
         Glide.with(requireContext())
-            .load(image)
+            .load(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
             .into(binding.nowPlayingView.nowPlayingCoverImage)
 
