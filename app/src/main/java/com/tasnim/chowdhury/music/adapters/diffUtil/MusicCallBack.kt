@@ -13,10 +13,18 @@ class MusicCallBack(private val oldList: List<Music>, private val newList: List<
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id=== newList[newItemPosition].id
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].title===newList[newItemPosition].title && oldList[oldItemPosition].id===newList[newItemPosition].id
+        return when {
+            oldList[oldItemPosition].id != newList[newItemPosition].id -> {
+                false
+            }
+            oldList[oldItemPosition].title != newList[newItemPosition].title -> {
+                false
+            }
+            else -> true
+        }
     }
 }

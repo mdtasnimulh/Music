@@ -205,6 +205,16 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
         musicList.clear()
         musicList.addAll(newMusic)
         diffMusic.dispatchUpdatesTo(this)
+        /*if (musicList.isEmpty()) {
+            musicList.addAll(newMusic)
+            notifyDataSetChanged()
+        } else {
+            val diffCallBack = MusicCallBack(musicList, newMusic)
+            val diffMusic = DiffUtil.calculateDiff(diffCallBack)
+            musicList.clear()
+            musicList.addAll(newMusic)
+            diffMusic.dispatchUpdatesTo(this)
+        }*/
     }
 
     fun addSongToPlaylist(song: Music): Boolean {
