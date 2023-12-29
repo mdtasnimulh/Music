@@ -25,7 +25,7 @@ class AppSplashActivity : AppCompatActivity() {
             val intent = Intent(this@AppSplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1500)
+        }, 1000)
 
         binding.splashMotiveTV.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         binding.splashOwnerName.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
