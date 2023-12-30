@@ -49,6 +49,8 @@ class PlaylistFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         playlistAdapter.notifyDataSetChanged()
+
+        binding.playlistCount.text = playlistAdapter.itemCount.toString()
     }
 
     private fun setupAdapter() {

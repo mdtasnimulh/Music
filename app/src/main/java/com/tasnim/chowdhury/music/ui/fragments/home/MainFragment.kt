@@ -19,6 +19,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -34,6 +35,8 @@ import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 @AndroidEntryPoint
@@ -336,10 +339,13 @@ class MainFragment : Fragment() {
                     binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_close_icon))
 
                     binding.mainMenuLayoutHove.visibility = View.VISIBLE
-                    binding.sidebarCl.visibility = View.VISIBLE
-                    binding.mainItemCl.visibility = View.GONE
+                    binding.mainItemCl.visibility = View.VISIBLE
                     if (PlayerFragment.musicService != null) {
                         binding.nowPlayingView.root.visibility = View.GONE
+                    }
+                    lifecycleScope.launch {
+                        delay(350)
+                        binding.sidebarCl.visibility = View.VISIBLE
                     }
                 }
 
@@ -366,10 +372,13 @@ class MainFragment : Fragment() {
                     binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_open_icon))
 
                     binding.mainMenuLayoutHove.visibility = View.GONE
-                    binding.sidebarCl.visibility = View.GONE
                     binding.mainItemCl.visibility = View.VISIBLE
                     if (PlayerFragment.musicService != null) {
                         binding.nowPlayingView.root.visibility = View.VISIBLE
+                    }
+                    lifecycleScope.launch {
+                        delay(200)
+                        binding.sidebarCl.visibility = View.GONE
                     }
                 }
 
@@ -403,10 +412,13 @@ class MainFragment : Fragment() {
                 binding.menuBtn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.menu_open_icon))
 
                 binding.mainMenuLayoutHove.visibility = View.GONE
-                binding.sidebarCl.visibility = View.GONE
                 binding.mainItemCl.visibility = View.VISIBLE
                 if (PlayerFragment.musicService != null) {
                     binding.nowPlayingView.root.visibility = View.VISIBLE
+                }
+                lifecycleScope.launch {
+                    delay(200)
+                    binding.sidebarCl.visibility = View.GONE
                 }
             }
 
