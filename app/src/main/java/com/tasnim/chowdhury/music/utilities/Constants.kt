@@ -20,4 +20,6 @@ object Constants {
     const val PREVIOUS = "previous"
     const val EXIT = "exit"
 
+    const val MUSIC_DATABASE_NAME = "music_db"
+
 }

@@ -4,7 +4,6 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.content.Context
 import android.database.Cursor
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,8 +13,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
@@ -32,11 +29,12 @@ import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
 import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
+import com.tasnim.chowdhury.music.utilities.SortType
 import com.tasnim.chowdhury.music.utilities.closeApp
-import com.tasnim.chowdhury.music.utilities.getImageArt
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -45,7 +43,6 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var musicAdapter: MusicAdapter
     private val musicViewModel: MainViewModel by viewModels()
-    //private val mainMusicList = MusicList()
     private var shuffledMusicList: MusicList = MusicList()
     private var storageList: MusicList = MusicList()
     private var sortValue = 0
@@ -58,11 +55,6 @@ class MainFragment : Fragment() {
         val playPauseIconNP = MutableLiveData<Int>()
         val songDetailsNP = MutableLiveData<Pair<String, String>>()
         var sortOrder: Int = 0
-        val sortingList: ArrayList<String> = arrayListOf(
-            MediaStore.Audio.Media.DATE_ADDED + " DESC",
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.SIZE + " DESC"
-        )
     }
 
     private val requestAudioPermissionLauncher =
@@ -111,7 +103,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //startService()
         if (activity?.intent?.data?.scheme.contentEquals("content")) {
             storageList = MusicList()
             storageList.add(getMusicDetails(activity?.intent?.data!!))
@@ -151,6 +142,7 @@ class MainFragment : Fragment() {
     }
 
     private fun onPermissionGranted() {
+        getAllSongs(requireContext())
         initData()
         setupAdapter()
         setObserver()
@@ -184,9 +176,24 @@ class MainFragment : Fragment() {
 
         if (sortOrder != sortValue) {
             sortOrder = sortValue
-            musicViewModel.getAllSongs(sortingList, sortOrder)
-        }else {
-            musicViewModel.getAllSongs(sortingList, sortOrder)
+            //musicViewModel.getAllSongs(sortingList, sortOrder)
+            when(sortValue) {
+                0 -> {
+                    musicViewModel.sortMusic(SortType.DATE_DESC)
+                }
+                1 -> {
+                    musicViewModel.sortMusic(SortType.DATE_ASC)
+                }
+                2 -> {
+                    musicViewModel.sortMusic(SortType.TITLE)
+                }
+                3 -> {
+                    musicViewModel.sortMusic(SortType.SIZE_DESC)
+                }
+                4 -> {
+                    musicViewModel.sortMusic(SortType.SIZE_ASC)
+                }
+            }
         }
     }
 
@@ -259,9 +266,7 @@ class MainFragment : Fragment() {
                 Log.d("chkSearchList", "BeforeSearch::${musicListSearch.size}::")
                 if (newText.isNullOrBlank()) {
                     search = false
-                    //musicAdapter.addAll(mainMusicList)
-                    musicAdapter.setMusic(mainMusicList)
-                    musicAdapter.notifyDataSetChanged()
+                    musicAdapter.submitList(mainMusicList)
                 }else {
                     val userInput = newText.lowercase()
                     for (song in mainMusicList) {
@@ -270,9 +275,7 @@ class MainFragment : Fragment() {
                         }
                     }
                     search = true
-                    //musicAdapter.addAll(musicListSearch)
-                    musicAdapter.setMusic(musicListSearch)
-                    musicAdapter.notifyDataSetChanged()
+                    musicAdapter.submitList(musicListSearch)
                 }
                 return true
             }
@@ -288,14 +291,17 @@ class MainFragment : Fragment() {
 
         binding.feedbackMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_feedbackFragment)
+            isMenuOpen = false
         }
 
         binding.aboutMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_aboutFragment)
+            isMenuOpen = false
         }
 
         binding.settingsMenuLl.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+            isMenuOpen = false
         }
 
         binding.exitMenuLl.setOnClickListener {
@@ -331,7 +337,7 @@ class MainFragment : Fragment() {
 
                     binding.mainMenuLayoutHove.visibility = View.VISIBLE
                     binding.sidebarCl.visibility = View.VISIBLE
-                    binding.mainNestedSv.visibility = View.GONE
+                    binding.mainItemCl.visibility = View.GONE
                     if (PlayerFragment.musicService != null) {
                         binding.nowPlayingView.root.visibility = View.GONE
                     }
@@ -361,7 +367,7 @@ class MainFragment : Fragment() {
 
                     binding.mainMenuLayoutHove.visibility = View.GONE
                     binding.sidebarCl.visibility = View.GONE
-                    binding.mainNestedSv.visibility = View.VISIBLE
+                    binding.mainItemCl.visibility = View.VISIBLE
                     if (PlayerFragment.musicService != null) {
                         binding.nowPlayingView.root.visibility = View.VISIBLE
                     }
@@ -398,7 +404,7 @@ class MainFragment : Fragment() {
 
                 binding.mainMenuLayoutHove.visibility = View.GONE
                 binding.sidebarCl.visibility = View.GONE
-                binding.mainNestedSv.visibility = View.VISIBLE
+                binding.mainItemCl.visibility = View.VISIBLE
                 if (PlayerFragment.musicService != null) {
                     binding.nowPlayingView.root.visibility = View.VISIBLE
                 }
@@ -411,10 +417,8 @@ class MainFragment : Fragment() {
 
     private fun setObserver() {
         musicViewModel.apply {
-            musicList.observe(viewLifecycleOwner) {
-                //musicAdapter.addAll(it)
-                musicAdapter.setMusic(it)
-                musicAdapter.notifyDataSetChanged()
+            musics.observe(viewLifecycleOwner) {
+                musicAdapter.submitList(it)
                 mainMusicList.clear()
                 mainMusicList.addAll(it)
 
@@ -501,10 +505,70 @@ class MainFragment : Fragment() {
             val path = dataColumn?.let { cursor?.getString(it) }
             val duration = durationColumn?.let { cursor?.getLong(it) }!!
             return Music(id = "UnKnown", title = path.toString(), album = "UnKnown", artist = "UnKnown",
-                duration = duration, artUri = "UnKnown", path = path.toString(), albumId = "UnKnown")
+                duration = duration, artUri = "UnKnown", path = path.toString(), albumId = "UnKnown", dateAdded = "UnKnown", size = "UnKnown")
         } finally {
             cursor?.close()
         }
+    }
+
+    fun getAllSongs(context: Context): ArrayList<Music>{
+        val tempList = ArrayList<Music>()
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATE_ADDED,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.SIZE
+        )
+        val cursor = context.applicationContext.contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            null,
+            null,
+            null
+        )
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    val titleC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE) ?: 0)
+                    val idC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID) ?: 0)
+                    val albumC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM) ?: 0)
+                    val artistC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST) ?: 0)
+                    val pathC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA) ?: 0)
+                    val durationC = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION) ?: 0)
+                    val albumIdC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID) ?: 0).toString()
+                    val dateAddedC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED))
+                    val sizeC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+                    val music = Music(
+                        id = idC,
+                        title = titleC,
+                        album = albumC,
+                        artist = artistC,
+                        duration = durationC,
+                        path = pathC,
+                        artUri = artUriC,
+                        albumId = albumIdC,
+                        dateAdded = dateAddedC,
+                        size = sizeC
+                    )
+                    musicViewModel.insertMusic(music)
+                    val file = File(music.path)
+                    if (file.exists()) {
+                        tempList.add(music)
+                    }
+                } while (cursor.moveToNext())
+                cursor.close()
+            }
+        }
+        return tempList
     }
 
     /*private fun requestStoragePermission() {

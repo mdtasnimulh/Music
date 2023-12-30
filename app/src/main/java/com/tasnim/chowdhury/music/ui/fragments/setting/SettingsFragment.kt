@@ -93,9 +93,11 @@ class SettingsFragment : Fragment() {
 
         binding.sortBtn.setOnClickListener {
             val sortList = arrayOf(
-                "Recently Added",
+                "Date Added (Desc)",
+                "Date Added (Asc)",
                 "Song Title (Name)",
-                "File Size"
+                "File Size (Desc)",
+                "File Size (Asc)"
             )
             var currentSort = MainFragment.sortOrder
             val sortDialog = MaterialAlertDialogBuilder(requireContext())
@@ -108,11 +110,6 @@ class SettingsFragment : Fragment() {
                     sortEditor?.putInt("sortOrder", currentSort)
                     sortEditor?.apply()
                     dialog.dismiss()
-                    /*val i = activity?.packageManager?.getLaunchIntentForPackage(requireActivity().packageName)
-                    i?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    i?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    activity?.finishAffinity()
-                    startActivity(i!!)*/
                 }
                 .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()

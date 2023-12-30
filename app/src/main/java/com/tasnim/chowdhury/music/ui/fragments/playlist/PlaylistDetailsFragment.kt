@@ -17,6 +17,7 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentPlaylistDetailsBinding
 import com.tasnim.chowdhury.music.model.MusicList
+import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.checkPlaylist
 
 class PlaylistDetailsFragment : Fragment() {
@@ -90,9 +91,7 @@ class PlaylistDetailsFragment : Fragment() {
         binding.playlistRV.setItemViewCacheSize(10)
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.layoutManager = LinearLayoutManager(requireContext())
-        //adapter.addAll(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
-        adapter.setMusic(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
-        adapter.notifyDataSetChanged()
+        adapter.submitList(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist)
     }
 
     private fun setupClicks() {

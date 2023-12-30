@@ -3,7 +3,6 @@ package com.tasnim.chowdhury.music.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.ui.fragments.home.MainFragment
 import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
@@ -21,20 +20,16 @@ class NotificationReceiver: BroadcastReceiver() {
         when(intent?.action){
             PREVIOUS -> {
                 prevNextSong(increment = false, context = context!!)
-                Toast.makeText(context, "Previous", Toast.LENGTH_SHORT).show()
             }
             PLAY -> {
                 if (PlayerFragment.isPlaying){
                     pauseMusic()
-                    Toast.makeText(context, "pause", Toast.LENGTH_SHORT).show()
                 }else{
                     playMusic()
-                    Toast.makeText(context, "play", Toast.LENGTH_SHORT).show()
                 }
             }
             NEXT -> {
                 prevNextSong(increment = true, context!!)
-                Toast.makeText(context, "next", Toast.LENGTH_SHORT).show()
             }
             EXIT -> {
                 closeApp()

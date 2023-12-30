@@ -76,35 +76,4 @@ class MainActivity : AppCompatActivity() {
         Log.d("chkPlaylist", "${PlaylistFragment.musicPlaylist}")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        /*val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
-        val jsonString = GsonBuilder().create().toJson(FavouritesFragment.favouriteSongs)
-        editor.putString("FavouriteSongs", jsonString)
-        editor.apply()*/
-        /*val jsonStringPlaylist = GsonBuilder().create().toJson(PlaylistFragment.musicPlaylist)
-        editor?.putString("MusicPlaylist", jsonStringPlaylist)*/
-
-        /*if (!PlayerFragment.isPlaying && PlayerFragment.musicService != null){
-            closeApp()
-        }*/
-    }
-
-    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_view_menu, menu)
-        val searchView = menu?.findItem(R.id.searchView)?.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                Toast.makeText(this@MainActivity, "${newText.toString()}", Toast.LENGTH_SHORT).show()
-                return true
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
-    }*/
-
 }

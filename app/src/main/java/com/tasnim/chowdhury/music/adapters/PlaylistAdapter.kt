@@ -1,7 +1,6 @@
 package com.tasnim.chowdhury.music.adapters
 
 import android.animation.ObjectAnimator
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.databinding.PlaylistRvLayoutBinding
 import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.Playlist
-import com.tasnim.chowdhury.music.utilities.getImageArt
 
 class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 

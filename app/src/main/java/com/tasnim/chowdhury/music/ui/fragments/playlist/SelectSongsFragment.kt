@@ -42,9 +42,7 @@ class SelectSongsFragment : Fragment() {
         binding.selectSongsRv.setHasFixedSize(true)
         binding.selectSongsRv.setItemViewCacheSize(10)
         binding.selectSongsRv.layoutManager = LinearLayoutManager(requireContext())
-        //adapter.addAll(mainMusicList)
-        adapter.setMusic(mainMusicList)
-        adapter.notifyDataSetChanged()
+        adapter.submitList(mainMusicList)
     }
 
     private fun setupClicks() {
@@ -63,9 +61,7 @@ class SelectSongsFragment : Fragment() {
                 Log.d("chkSearchList", "BeforeSearch::${MainFragment.musicListSearch.size}::")
                 if (newText.isNullOrBlank()) {
                     MainFragment.search = false
-                    //adapter.addAll(mainMusicList)
-                    adapter.setMusic(mainMusicList)
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(mainMusicList)
                 }else {
                     val userInput = newText.lowercase()
                     for (song in mainMusicList) {
@@ -74,9 +70,7 @@ class SelectSongsFragment : Fragment() {
                         }
                     }
                     MainFragment.search = true
-                    //adapter.addAll(MainFragment.musicListSearch)
-                    adapter.setMusic(MainFragment.musicListSearch)
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(MainFragment.musicListSearch)
                 }
                 return true
             }

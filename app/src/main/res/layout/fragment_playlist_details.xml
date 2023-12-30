@@ -48,107 +48,102 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/playlistDetailsNSV"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/playlistDetailsMainCl"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/playlistToolbar"
             app:layout_constraintBottom_toTopOf="@+id/addSongBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/playlistName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/fjalla_one"
+                tools:text="Playlists Name"
+                android:paddingVertical="3dp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-                <TextView
-                    android:id="@+id/playlistName"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerViewCl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/playlistName">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/playlistCoverImage"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/fjalla_one"
-                    tools:text="Playlists Name"
-                    android:paddingVertical="5dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="normal"
+                    android:layout_height="150dp"
+                    android:src="@drawable/music_img"
+                    app:shapeAppearanceOverlay="@style/playlistMainImage"
+                    app:layout_constraintWidth_percent="0.40"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/headerViewCl"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/playlistDetailsLl"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp"
+                    app:layout_constraintStart_toEndOf="@+id/playlistCoverImage"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/playlistName">
+                    app:layout_constraintTop_toTopOf="@+id/playlistCoverImage"
+                    app:layout_constraintBottom_toBottomOf="@id/playlistCoverImage">
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/playlistCoverImage"
-                        android:layout_width="0dp"
-                        android:layout_height="150dp"
-                        android:src="@drawable/music_img"
-                        app:shapeAppearanceOverlay="@style/playlistMainImage"
-                        app:layout_constraintWidth_percent="0.40"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-
-                    <LinearLayout
-                        android:id="@+id/playlistDetailsLl"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/totalSongsTv"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp"
-                        app:layout_constraintStart_toEndOf="@+id/playlistCoverImage"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/playlistCoverImage"
-                        app:layout_constraintBottom_toBottomOf="@id/playlistCoverImage">
+                        tools:text="Total Songs: 05"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/totalSongsTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="Total Songs: 05"
-                            android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/createdOnTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        tools:text="Created On: 26 Dec 2023"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/createdOnTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
-                            tools:text="Created On: 26 Dec 2023"
-                            android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/createdByTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="By: Tasnimul Hasan"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/createdByTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="By: Tasnimul Hasan"
-                            android:textSize="16sp" />
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/playlistRV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/headerViewCl"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/music_list_item" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/playlistRV"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headerViewCl"
+                tools:itemCount="3"
+                tools:listitem="@layout/music_list_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/shufflePlaylistBtn"

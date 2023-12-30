@@ -21,9 +21,10 @@
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/musicListItemCl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@drawable/unselect_bg">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/songImage"
@@ -67,7 +68,7 @@
                 android:maxEms="15"
                 android:singleLine="true"
                 android:text="The Weekend"
-                android:textColor="@color/palette1Grey"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/songTitle"
                 app:layout_constraintStart_toStartOf="@+id/songTitle"

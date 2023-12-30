@@ -1,7 +1,6 @@
 package com.tasnim.chowdhury.music.adapters
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.SpannableStringBuilder
@@ -9,18 +8,17 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
-import com.tasnim.chowdhury.music.adapters.diffUtil.MusicCallBack
 import com.tasnim.chowdhury.music.databinding.DetailsViewBinding
 import com.tasnim.chowdhury.music.databinding.MusicListItemBinding
 import com.tasnim.chowdhury.music.model.Music
@@ -31,10 +29,6 @@ import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistDetailsFragment
 import com.tasnim.chowdhury.music.ui.fragments.playlist.PlaylistFragment
 import com.tasnim.chowdhury.music.utilities.formatDuration
-import com.tasnim.chowdhury.music.utilities.getImageArt
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
     val selectionFragment: Boolean = false) : RecyclerView.Adapter<MusicAdapter.MainViewHolder>() {
@@ -45,26 +39,17 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
     inner class MainViewHolder(private val binding: MusicListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int, music: Music) {
+            Log.d("chkMusicIsAvailable", "${music.title}")
             binding.songTitle.text = music.title
             binding.artistName.text = music.artist
             binding.songDuration.text = formatDuration(music.duration)
 
-            /*GlobalScope.launch(Dispatchers.IO) {
-                val imageArt = getImageArt(music.path)
+            /*val imageArt = getImageArt(music.path)
                 val image = if (imageArt != null) {
                     BitmapFactory.decodeByteArray(imageArt, 0, imageArt.size)
                 } else {
                     BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher_foreground)
-                }
-
-                launch(Dispatchers.Main) {
-                    Glide.with(context)
-                        .load(image)
-                        .apply(RequestOptions().override(70, 75))
-                        .centerCrop().skipMemoryCache(false)
-                        .into(binding.songImage)
-                }
-            }*/
+                }*/
             Glide.with(context)
                 .load(music.artUri)
                 .apply(RequestOptions().override(70, 75))
@@ -77,8 +62,10 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                 binding.root.setOnClickListener {
                     if (addSongToPlaylist(music)) {
                         binding.musicListItem.setCardBackgroundColor(ContextCompat.getColorStateList(context, R.color.palette1Grey))
+                        binding.musicListItemCl.setBackgroundResource(R.drawable.selection_bg)
                     } else {
                         binding.musicListItem.setCardBackgroundColor(ContextCompat.getColorStateList(context, R.color.white))
+                        binding.musicListItemCl.setBackgroundResource(R.drawable.unselect_bg)
                     }
                 }
             } else {
@@ -176,6 +163,20 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
         }
     }
 
+    private val diffCallBack = object : DiffUtil.ItemCallback<Music>() {
+        override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, diffCallBack)
+
+    fun submitList(list: List<Music>) = differ.submitList(list)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return MainViewHolder(
             MusicListItemBinding.inflate(
@@ -185,36 +186,12 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
     }
 
     override fun getItemCount(): Int {
-        return musicList.size
+        return differ.currentList.size
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.bind(position, musicList[position])
-    }
-
-    fun addAll(list: List<Music>) {
-        musicList.clear()
-        musicList.addAll(list.distinctBy { it.id })
-        Log.d("chkMusicListSize", "${list.size}")
-        notifyDataSetChanged()
-    }
-
-    fun setMusic(newMusic: List<Music>) {
-        val diffCallBack = MusicCallBack(newMusic, newMusic)
-        val diffMusic = DiffUtil.calculateDiff(diffCallBack)
-        musicList.clear()
-        musicList.addAll(newMusic)
-        diffMusic.dispatchUpdatesTo(this)
-        /*if (musicList.isEmpty()) {
-            musicList.addAll(newMusic)
-            notifyDataSetChanged()
-        } else {
-            val diffCallBack = MusicCallBack(musicList, newMusic)
-            val diffMusic = DiffUtil.calculateDiff(diffCallBack)
-            musicList.clear()
-            musicList.addAll(newMusic)
-            diffMusic.dispatchUpdatesTo(this)
-        }*/
+        val music = differ.currentList[position]
+        holder.bind(position, music)
     }
 
     fun addSongToPlaylist(song: Music): Boolean {

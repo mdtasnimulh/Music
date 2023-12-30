@@ -13,7 +13,6 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -156,7 +155,6 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
         endTimeLiveData.postValue(0L)
         initialProgressLiveData.postValue(0)
         progressMaxLiveData.postValue(0)
-        //animateDisk.postValue("")
     }
 
     private fun setUpObservers() {
