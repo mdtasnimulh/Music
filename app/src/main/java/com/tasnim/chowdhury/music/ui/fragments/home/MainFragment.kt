@@ -571,10 +571,10 @@ class MainFragment : Fragment() {
                         dateAdded = dateAddedC,
                         size = sizeC
                     )
-                    musicViewModel.insertMusic(music)
                     val file = File(music.path)
                     if (file.exists()) {
                         tempList.add(music)
+                        musicViewModel.insertMusic(music)
                     }
                 } while (cursor.moveToNext())
                 cursor.close()
