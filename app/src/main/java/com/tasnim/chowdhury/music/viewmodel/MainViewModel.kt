@@ -1,6 +1,7 @@
 package com.tasnim.chowdhury.music.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.tasnim.chowdhury.music.model.Music
@@ -96,6 +97,20 @@ class MainViewModel @Inject constructor(
 
     fun insertMusic(music: Music) = viewModelScope.launch {
         repository.insertMusic(music)
+    }
+
+    fun deleteMusic(position: Int, music: Music) = viewModelScope.launch {
+        try {
+            Log.d("FilePath", "Deleting file: ${music.path}")
+            repository.deleteMusic(music)
+
+            musics.value = musics.value?.toMutableList()?.apply {
+                removeAt(position)
+            }
+        } catch (e: Exception) {
+            Log.d("CatchException", ":::${e.message}:::")
+            e.printStackTrace()
+        }
     }
 
 }

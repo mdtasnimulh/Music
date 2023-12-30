@@ -32,10 +32,24 @@
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="16dp"
             android:text="Song Info"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addToNextBtn" />
+
+        <Button
+            android:id="@+id/deleteSongBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/palette1Red"
+            android:text="Delete Song"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/songInfoBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

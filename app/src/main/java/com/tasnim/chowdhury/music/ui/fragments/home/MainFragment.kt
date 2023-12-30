@@ -2,6 +2,8 @@ package com.tasnim.chowdhury.music.ui.fragments.home
 
 import android.Manifest
 import android.animation.ValueAnimator
+import android.app.Activity.RESULT_OK
+import android.app.RecoverableSecurityException
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -14,6 +16,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -24,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
@@ -35,8 +40,10 @@ import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @AndroidEntryPoint
@@ -50,6 +57,8 @@ class MainFragment : Fragment() {
     private var storageList: MusicList = MusicList()
     private var sortValue = 0
     private var isMenuOpen = false
+    private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
+    private var deletedMusicUri: Uri? = null
 
     companion object {
         var search: Boolean = false
@@ -116,6 +125,27 @@ class MainFragment : Fragment() {
         val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
         sortValue = sortEditor?.getInt("sortOrder", 0)!!
         requestAudioPermission()
+
+        intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                    lifecycleScope.launch {
+                        deleteMusicFromStorage(deletedMusicUri ?: return@launch)
+                    }
+                }
+                Toast.makeText(
+                    context,
+                    "Music deleted successfully!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Something went wrong! Music couldn't be deleted?",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     override fun onResume() {
@@ -195,6 +225,82 @@ class MainFragment : Fragment() {
                 }
                 4 -> {
                     musicViewModel.sortMusic(SortType.SIZE_ASC)
+                }
+            }
+        }
+
+        musicAdapter.deleteItem = { position, music ->
+            val deleteDialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Delete ${music.title}?")
+                .setMessage("Deleting item from here will also delete from your local storage. Are you sure?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    lifecycleScope.launch {
+                        val file = File(music.path)
+                        if (file.exists() && file.isFile) {
+                            deleteMusicFromStorage(Uri.parse(music.path))
+                            deletedMusicUri = Uri.parse(music.path)
+                            musicViewModel.deleteMusic(position, music)
+                        }
+                    }
+                    musicViewModel.deleteMusic(position, music)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            deleteDialog.create()
+            deleteDialog.show()
+        }
+    }
+
+    fun deleteFile(path: String) {
+        val file = File(path)
+
+        if (!file.exists()) return
+
+        if (file.isFile) {
+            file.delete()
+            return
+        }
+
+        val fileArr: Array<File>? = file.listFiles()
+
+        if (fileArr != null) {
+            for (subFile in fileArr) {
+                if (subFile.isDirectory) {
+                    deleteFile(subFile.absolutePath)
+                }
+
+                if (subFile.isFile) {
+                    subFile.delete()
+                }
+            }
+        }
+
+        file.delete()
+    }
+
+    private suspend fun deleteMusicFromStorage(musicUri: Uri) {
+        withContext(Dispatchers.IO) {
+            try {
+                requireContext().contentResolver.delete(musicUri, null, null)
+            } catch (e: SecurityException) {
+                val intentSender = when {
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                        MediaStore.createDeleteRequest(requireActivity().contentResolver, listOf(musicUri)).intentSender
+                    }
+                    Build.VERSION.SDK_INT == Build.VERSION_CODES.Q -> {
+                        val recoverableSecurityException = e as? RecoverableSecurityException
+                        recoverableSecurityException?.userAction?.actionIntent?.intentSender
+                    }
+                    else -> {
+                        null
+                    }
+                }
+                intentSender?.let { iSender ->
+                    intentSenderLauncher.launch(
+                        IntentSenderRequest.Builder(iSender).build()
+                    )
                 }
             }
         }

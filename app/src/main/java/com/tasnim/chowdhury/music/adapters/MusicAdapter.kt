@@ -35,6 +35,7 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
 
     private var musicList: ArrayList<Music> = arrayListOf()
     var musicItem: ((position: Int, tag: String, song: Music) -> Unit)? = null
+    var deleteItem: ((position: Int, music: Music) -> Unit)? = null
 
     inner class MainViewHolder(private val binding: MusicListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -111,6 +112,7 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
 
                         val addToNextBtn = view.findViewById<Button>(R.id.addToNextBtn)
                         val songInfoBtn = view.findViewById<Button>(R.id.songInfoBtn)
+                        val deleteSongBtn = view.findViewById<Button>(R.id.deleteSongBtn)
 
                         addToNextBtn.setOnClickListener {
                             try {
@@ -148,6 +150,11 @@ class MusicAdapter(val context: Context, val playlistDetails: Boolean = false,
                                 .bold { append("\n\nDuration: ") }.append(DateUtils.formatElapsedTime(music.duration/1000))
                                 .bold { append("\n\nLocation: ") }.append(music.path)
                             binder.detailsTV.text = str
+                        }
+
+                        deleteSongBtn.setOnClickListener {
+                            deleteItem?.invoke(adapterPosition, music)
+                            createDialog.dismiss()
                         }
 
                         return@setOnLongClickListener true
