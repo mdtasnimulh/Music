@@ -3,15 +3,17 @@ package com.tasnim.chowdhury.music.ui.fragments.home
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Activity.RESULT_OK
+import android.app.PendingIntent
 import android.app.RecoverableSecurityException
 import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -59,6 +62,8 @@ class MainFragment : Fragment() {
     private var isMenuOpen = false
     private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
     private var deletedMusicUri: Uri? = null
+    var mediaUri: Uri? = null
+    var mediaPath: String = ""
 
     companion object {
         var search: Boolean = false
@@ -234,14 +239,15 @@ class MainFragment : Fragment() {
                 .setTitle("Delete ${music.title}?")
                 .setMessage("Deleting item from here will also delete from your local storage. Are you sure?")
                 .setPositiveButton("Yes") { dialog, _ ->
-                    lifecycleScope.launch {
+                    /*lifecycleScope.launch {
                         val file = File(music.path)
                         if (file.exists() && file.isFile) {
                             deleteMusicFromStorage(Uri.parse(music.path))
                             deletedMusicUri = Uri.parse(music.path)
-                            musicViewModel.deleteMusic(position, music)
                         }
                     }
+                    musicViewModel.deleteMusic(position, music)*/
+                    deleteMediaFile(Uri.parse(music.path), music.path)
                     musicViewModel.deleteMusic(position, music)
                     dialog.dismiss()
                 }
@@ -305,6 +311,52 @@ class MainFragment : Fragment() {
             }
         }
     }
+//dsfasdfasd
+    private fun deleteMediaFile(uri: Uri, path: String) {
+        try {
+            val file = File(path)
+            if (file.exists()){
+                requireActivity().contentResolver.delete(Uri.parse(path), null, null)
+            }
+        } catch (e: SecurityException) {
+            var pendingIntent: PendingIntent? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val uris: ArrayList<Uri> = ArrayList()
+                uris.add(uri)
+                pendingIntent = MediaStore.createDeleteRequest(
+                    requireActivity().contentResolver, uris
+                )
+            }else {
+                val recoverableSecurityException = e as? RecoverableSecurityException
+                pendingIntent = recoverableSecurityException?.userAction?.actionIntent
+            }
+            if (pendingIntent != null) {
+                val intentSender: IntentSender = pendingIntent.intentSender
+                try {
+                    startIntentSenderForResult(intentSender, 100, null, 0, 0, 0, null)
+                    Toast.makeText(
+                        requireContext(),
+                        "Media Deleted Successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (ex: IntentSender.SendIntentException) {
+                    ex.printStackTrace()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 121) {
+            if (resultCode == RESULT_OK) {
+                mediaUri = data?.data
+                mediaPath = mediaUri?.path.toString()
+                Toast.makeText(requireContext(), "Media Loaded", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    //afasfdasf
 
     private fun setupClicks() {
         binding.nowPlayingView.nowPlayingPlayPauseBtn.setOnClickListener {
