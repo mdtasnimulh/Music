@@ -538,7 +538,11 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                 changeColorThemeWise(R.color.palette1Red)
             }
             7 -> {
-                changeColorByPalette(image)
+                if (image != null) {
+                    changeColorByPalette(image)
+                } else {
+                    changeColorThemeWise(R.color.navyBlue)
+                }
             }
         }
 
@@ -822,7 +826,7 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             override fun onAnimationEnd(animation: Animation?) {
                 Glide.with(context)
                     .load(drawable)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                     .into(imageView)
                 animIn.setAnimationListener(object : Animation.AnimationListener{
                     override fun onAnimationStart(p0: Animation?) {}
@@ -941,59 +945,61 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
             BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_foreground)
         }
 
-        Palette.from(image).generate { palette ->
-            val swatch = palette?.dominantSwatch
-            if (swatch != null) {
-                // Start continuous color change loop
-                colorChangeHandler = Handler(Looper.getMainLooper())
-                val delayBetweenColorChanges = blinkDuration * views.size
+        if (image != null) {
+            Palette.from(image).generate { palette ->
+                val swatch = palette?.dominantSwatch
+                if (swatch != null) {
+                    // Start continuous color change loop
+                    colorChangeHandler = Handler(Looper.getMainLooper())
+                    val delayBetweenColorChanges = blinkDuration * views.size
 
-                colorChangeHandler?.postDelayed(object : Runnable {
-                    override fun run() {
-                        views.forEachIndexed { index, view ->
-                            val delay = index * blinkDuration
+                    colorChangeHandler?.postDelayed(object : Runnable {
+                        override fun run() {
+                            views.forEachIndexed { index, view ->
+                                val delay = index * blinkDuration
 
-                            // Gradient transition to swatch.rgb
-                            val colorFrom = view.backgroundTintList?.defaultColor ?: 0
-                            val colorTo = swatch.rgb
+                                // Gradient transition to swatch.rgb
+                                val colorFrom = view.backgroundTintList?.defaultColor ?: 0
+                                val colorTo = swatch.rgb
 
-                            val colorAnimator = ValueAnimator.ofFloat(0f, 1f)
-                            colorAnimator.addUpdateListener { animator ->
-                                val ratio = animator.animatedValue as Float
-                                val blendedColor = blendColors(colorFrom, colorTo, ratio)
-                                view.backgroundTintList = ColorStateList.valueOf(blendedColor)
-                            }
-
-                            colorAnimator.apply {
-                                duration = blinkDuration // Adjust the duration as needed
-                                startDelay = delay
-                                interpolator = AccelerateDecelerateInterpolator()
-                                start()
-
-                                // Transition back to @color/palette1Grey
-                                val palette1Grey = ContextCompat.getColor(requireContext(), R.color.palette1Grey)
-                                val colorChangeToPalette1Grey = ValueAnimator.ofObject(
-                                    ArgbEvaluator(),
-                                    swatch.rgb,
-                                    palette1Grey
-                                )
-                                colorChangeToPalette1Grey.addUpdateListener { animator ->
-                                    view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                                val colorAnimator = ValueAnimator.ofFloat(0f, 1f)
+                                colorAnimator.addUpdateListener { animator ->
+                                    val ratio = animator.animatedValue as Float
+                                    val blendedColor = blendColors(colorFrom, colorTo, ratio)
+                                    view.backgroundTintList = ColorStateList.valueOf(blendedColor)
                                 }
 
-                                colorChangeToPalette1Grey.apply {
-                                    duration = blinkDuration / 2 // Adjust the duration as needed
-                                    startDelay = delay + blinkDuration // Ensure a delay between color changes
+                                colorAnimator.apply {
+                                    duration = blinkDuration // Adjust the duration as needed
+                                    startDelay = delay
                                     interpolator = AccelerateDecelerateInterpolator()
                                     start()
+
+                                    // Transition back to @color/palette1Grey
+                                    val palette1Grey = ContextCompat.getColor(requireContext(), R.color.palette1Grey)
+                                    val colorChangeToPalette1Grey = ValueAnimator.ofObject(
+                                        ArgbEvaluator(),
+                                        swatch.rgb,
+                                        palette1Grey
+                                    )
+                                    colorChangeToPalette1Grey.addUpdateListener { animator ->
+                                        view.backgroundTintList = ColorStateList.valueOf(animator.animatedValue as Int)
+                                    }
+
+                                    colorChangeToPalette1Grey.apply {
+                                        duration = blinkDuration / 2 // Adjust the duration as needed
+                                        startDelay = delay + blinkDuration // Ensure a delay between color changes
+                                        interpolator = AccelerateDecelerateInterpolator()
+                                        start()
+                                    }
                                 }
                             }
-                        }
 
-                        // Schedule the next color change loop
-                        colorChangeHandler?.postDelayed(this, delayBetweenColorChanges)
-                    }
-                }, 0)
+                            // Schedule the next color change loop
+                            colorChangeHandler?.postDelayed(this, delayBetweenColorChanges)
+                        }
+                    }, 0)
+                }
             }
         }
     }

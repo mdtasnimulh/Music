@@ -43,7 +43,7 @@
     </style>
     <!--image theme-->
     <style name="imageTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="themeColor">@color/md_theme_dark_error</item>
+        <item name="themeColor">@color/navyBlue</item>
         <item name="android:statusBarColor">?attr/themeColor</item>
         <item name="dialogBtnBackground">?attr/themeColor</item>
     </style>

@@ -33,7 +33,7 @@ class FavouriteAdapter(val tag: String): RecyclerView.Adapter<FavouriteAdapter.F
             }*/
             Glide.with(itemView.context)
                 .load(music.artUri)
-                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                 .into(binding.favouriteItemCoverImage)
 
             when(tag) {

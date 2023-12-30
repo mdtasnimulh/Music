@@ -70,7 +70,7 @@ class PlaylistDetailsFragment : Fragment() {
         if (adapter.itemCount > 0) {
             Glide.with(requireContext())
                 .load(PlaylistFragment.musicPlaylist.ref[currentPlaylistPosition].playlist[0].artUri)
-                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                 .into(binding.playlistCoverImage)
             binding.shufflePlaylistBtn.visibility = View.VISIBLE
         } else {

@@ -455,7 +455,7 @@ class MainFragment : Fragment() {
                 }*/
                 Glide.with(requireContext())
                     .load(artUri)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                     .into(binding.nowPlayingView.nowPlayingCoverImage)
 
                 binding.nowPlayingView.nowPlayingTitle.text = songTitle
@@ -476,7 +476,7 @@ class MainFragment : Fragment() {
         }*/
         Glide.with(requireContext())
             .load(PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.artUri)
-            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+            .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
             .into(binding.nowPlayingView.nowPlayingCoverImage)
 
         binding.nowPlayingView.nowPlayingTitle.text = PlayerFragment.musicList?.get(PlayerFragment.songPosition)?.title
@@ -548,13 +548,13 @@ class MainFragment : Fragment() {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    val titleC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE) ?: 0)
-                    val idC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID) ?: 0)
-                    val albumC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM) ?: 0)
-                    val artistC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST) ?: 0)
-                    val pathC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA) ?: 0)
-                    val durationC = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION) ?: 0)
-                    val albumIdC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID) ?: 0).toString()
+                    val titleC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
+                    val idC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+                    val albumC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
+                    val artistC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
+                    val pathC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
+                    val durationC = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
+                    val albumIdC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)).toString()
                     val dateAddedC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED))
                     val sizeC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
                     val uri = Uri.parse("content://media/external/audio/albumart")

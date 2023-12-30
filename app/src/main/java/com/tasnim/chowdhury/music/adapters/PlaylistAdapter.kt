@@ -55,12 +55,12 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder
                 }*/
                 Glide.with(itemView.context)
                     .load(playlist.playlist[0].artUri)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                     .into(binding.playlistAlbumMainImage)
 
                 Glide.with(itemView.context)
                     .load(playlist.playlist[0].artUri)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background).centerCrop())
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher).centerCrop())
                     .into(binding.playlistAlbumSubImage)
 
                 // Rotate the playlistAlbumSubImage

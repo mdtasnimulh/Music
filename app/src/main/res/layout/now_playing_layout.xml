@@ -21,7 +21,7 @@
                 android:layout_marginVertical="12dp"
                 android:layout_marginStart="12dp"
                 android:elevation="16dp"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/ic_launcher"
                 app:shapeAppearanceOverlay="@style/playlistMainImage"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
