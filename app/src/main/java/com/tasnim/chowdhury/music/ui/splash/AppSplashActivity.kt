@@ -16,8 +16,27 @@ class AppSplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAppSplashBinding
 
+    companion object{
+        var themeIndex: Int = 0
+        val currentTheme = arrayOf(
+            R.style.defaultTheme,
+            R.style.colorGreen,
+            R.style.colorOrange,
+            R.style.colorBlue,
+            R.style.colorBlack,
+            R.style.colorPurple,
+            R.style.colorRed,
+            R.style.imageTheme
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val themeEditor = getSharedPreferences("THEME", MODE_PRIVATE)
+        themeIndex = themeEditor.getInt("themeIndex", 0)
+        setTheme(currentTheme[themeIndex])
+
         binding = ActivityAppSplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
