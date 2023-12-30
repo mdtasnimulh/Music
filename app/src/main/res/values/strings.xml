@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Music</string>
+    <string name="app_name">Beat Bliss</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_motive_one">Explore Your Musics \n Easy And Fast Way</string>
-    <string name="owner_name_text">by Md. Tasnimul Hasan</string>
+    <string name="owner_name_text">Beat Bliss by Md. Tasnimul Hasan</string>
     <string name="test_minute">1 Minute Test</string>
     <string name="minutes_15">15 Minutes</string>
     <string name="minutes_20">20 Minutes</string>
@@ -25,4 +25,6 @@
     <string name="settings">Settings</string>
     <string name="play_next_note">Tip: Long Press On Any Video To Add It Into Play Next. &#128522; </string>
     <string name="play_pause_button">play pause button</string>
+    <string name="copyright_text">© Copyright 2024</string>
+    <string name="motive_description">Your one stop music solution</string>
 </resources>
