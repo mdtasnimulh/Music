@@ -544,6 +544,24 @@ class PlayerFragment : Fragment(), ServiceConnection, MediaPlayer.OnCompletionLi
                     changeColorThemeWise(R.color.navyBlue)
                 }
             }
+            8 -> {
+                changeColorThemeWise(R.color.oliveGreen)
+            }
+            9 -> {
+                changeColorThemeWise(R.color.limeGreen)
+            }
+            10 -> {
+                changeColorThemeWise(R.color.burntSienna)
+            }
+            11 -> {
+                changeColorThemeWise(R.color.redOrange)
+            }
+            12 -> {
+                changeColorThemeWise(R.color.blueGrotto)
+            }
+            13 -> {
+                changeColorThemeWise(R.color.roseRed)
+            }
         }
 
         if (isFavourite){

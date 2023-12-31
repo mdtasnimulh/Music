@@ -292,6 +292,7 @@
                         android:contentDescription="@string/play_pause_button"
                         android:elevation="25dp"
                         android:src="@drawable/pause_icon"
+                        app:backgroundTint="?attr/themeColor"
                         app:layout_constraintEnd_toEndOf="@+id/mediaControlInsideCl"
                         app:layout_constraintStart_toStartOf="@+id/mediaControlInsideCl"
                         app:layout_constraintTop_toTopOf="parent"
