@@ -3,6 +3,7 @@ package com.tasnim.chowdhury.music.ui.fragments.home
 import android.Manifest
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -14,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -31,7 +33,6 @@ import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.SortType
-import com.tasnim.chowdhury.music.utilities.checkPlaylist
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
@@ -61,32 +62,22 @@ class MainFragment : Fragment() {
         var sortOrder: Int = 0
     }
 
-    private val requestAudioPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                onPermissionGranted()
-                requestNotificationPermission()
-            } else {
-                Toast.makeText(requireContext(), "Audio Permission Denied", Toast.LENGTH_SHORT).show()
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            var allGranted = true
+            for (isGranted in permissions.values) {
+                if (!isGranted){
+                    allGranted = false
+                    break
+                }
             }
-        }
-    private val requestStoragePermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions: Map<String, Boolean> ->
-            if (permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true &&
-                permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true) {
+
+            if (allGranted) {
                 onPermissionGranted()
-                requestNotificationPermission()
+                Toast.makeText(requireContext(), "All Permissions Are Granted\nThank You.", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Storage Permission Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    private val requestNotificationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-
-            } else {
-
-                Toast.makeText(requireContext(), "Notification Permission Denied", Toast.LENGTH_SHORT).show()
+                requestANPermissions()
+                Toast.makeText(requireContext(), "Please Allow All Permission to use this app.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -116,7 +107,9 @@ class MainFragment : Fragment() {
 
         val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
         sortValue = sortEditor?.getInt("sortOrder", 0)!!
-        requestAudioPermission()
+
+        //requestAudioPermission()
+        requestANPermissions()
     }
 
     override fun onResume() {
@@ -128,20 +121,6 @@ class MainFragment : Fragment() {
             binding.nowPlayingView.nowPlayingTitle.isSelected = true
         } else {
             binding.nowPlayingView.root.visibility = View.GONE
-        }
-    }
-
-    private fun requestAudioPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestAudioPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
-        } else {
-            requestStoragePermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-        }
-    }
-
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -180,7 +159,6 @@ class MainFragment : Fragment() {
 
         if (sortOrder != sortValue) {
             sortOrder = sortValue
-            //musicViewModel.getAllSongs(sortingList, sortOrder)
             when(sortValue) {
                 0 -> {
                     musicViewModel.sortMusic(SortType.DATE_DESC)
@@ -210,7 +188,6 @@ class MainFragment : Fragment() {
             setSongPosition(increment = true)
             PlayerFragment.musicService?.createMediaPlayer()
             val songTitle = PlayerFragment.musicList!![PlayerFragment.songPosition].title
-            //val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].path
             val artUri = PlayerFragment.musicList!![PlayerFragment.songPosition].artUri
             val artist = PlayerFragment.musicList!![PlayerFragment.songPosition].artist
 
@@ -539,7 +516,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun getAllSongs(context: Context): ArrayList<Music>{
+    private fun getAllSongs(context: Context): ArrayList<Music>{
         val tempList = ArrayList<Music>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
@@ -599,40 +576,87 @@ class MainFragment : Fragment() {
         return tempList
     }
 
-    /*private fun requestStoragePermission() {
+    private fun requestANPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_AUDIO) !=
-                PackageManager.PERMISSION_GRANTED){
-                if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                        Manifest.permission.READ_MEDIA_AUDIO)) {
-                    ActivityCompat.requestPermissions(requireActivity(),
-                        arrayOf(Manifest.permission.READ_MEDIA_AUDIO),
-                        AUDIO_PERMISSION_REQUEST_CODE
-                    )
+            val permissions: ArrayList<String> = arrayListOf(
+                Manifest.permission.READ_MEDIA_AUDIO,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+            val permissionsToRequest: ArrayList<String> = ArrayList()
+            for (permission in permissions) {
+                if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+            if (permissionsToRequest.isEmpty()) {
+                // all permissions are already granted
+                onPermissionGranted()
+            } else {
+                val permissionsArray: Array<String> = permissionsToRequest.toTypedArray()
+                var shouldShowRational = false
+                for (permission in permissionsArray) {
+                    if (shouldShowRequestPermissionRationale(permission)) {
+                        shouldShowRational = true
+                        break
+                    }
+                }
+                if (shouldShowRational) {
+                    val dialog = AlertDialog.Builder(requireContext())
+                        .setMessage("Please allow all permission, other wise this app will not work!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes") { _, _ ->
+                            requestPermissionLauncher.launch(permissionsArray)
+                        }
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    dialog.create()
+                    dialog.show()
                 } else {
-                    ActivityCompat.requestPermissions(requireActivity(),
-                        arrayOf(Manifest.permission.READ_MEDIA_AUDIO),
-                        AUDIO_PERMISSION_REQUEST_CODE
-                    )
+                    requestPermissionLauncher.launch(permissionsArray)
                 }
             }
         } else {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED){
-                if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                    ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
-
+            val permissions: ArrayList<String> = arrayListOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+            val permissionsToRequest: ArrayList<String> = ArrayList()
+            for (permission in permissions) {
+                if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+            if (permissionsToRequest.isEmpty()) {
+                // all permissions are already granted
+                onPermissionGranted()
+            } else {
+                val permissionsArray: Array<String> = permissionsToRequest.toTypedArray()
+                var shouldShowRational = false
+                for (permission in permissionsArray) {
+                    if (shouldShowRequestPermissionRationale(permission)) {
+                        shouldShowRational = true
+                        break
+                    }
+                }
+                if (shouldShowRational) {
+                    val dialog = AlertDialog.Builder(requireContext())
+                        .setMessage("Please allow all permission, other wise this app will not work!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes") { _, _ ->
+                            requestPermissionLauncher.launch(permissionsArray)
+                        }
+                        .setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    dialog.create()
+                    dialog.show()
                 } else {
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
+                    requestPermissionLauncher.launch(permissionsArray)
                 }
             }
         }
-    }*/
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
