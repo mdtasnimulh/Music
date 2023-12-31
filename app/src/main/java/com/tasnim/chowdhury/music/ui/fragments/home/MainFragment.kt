@@ -428,14 +428,29 @@ class MainFragment : Fragment() {
 
     }
 
+    private fun checkMusicListTemp(musicListTemp: ArrayList<Music>): ArrayList<Music> {
+        val iterator = musicListTemp.iterator()
+        while (iterator.hasNext()) {
+            val music = iterator.next()
+            val file = File(music.path)
+            if (!file.exists()) {
+                iterator.remove()
+            }
+        }
+        return musicListTemp
+    }
+
     private fun setObserver() {
         musicViewModel.apply {
             musics.observe(viewLifecycleOwner) {
-                musicAdapter.submitList(it)
-                mainMusicList.clear()
-                mainMusicList.addAll(it)
+                val musicArrayList = ArrayList<Music>(it)
+                val checkedPlaylist = checkMusicListTemp(musicArrayList)
 
-                val totalSongText = "Total songs: ${it.size}"
+                musicAdapter.submitList(checkedPlaylist)
+                mainMusicList.clear()
+                mainMusicList.addAll(checkedPlaylist)
+
+                val totalSongText = "Total songs: ${checkedPlaylist.size}"
                 binding.totalSongValue.text = totalSongText
             }
         }
