@@ -2,12 +2,7 @@ package com.tasnim.chowdhury.music.ui.fragments.home
 
 import android.Manifest
 import android.animation.ValueAnimator
-import android.app.Activity.RESULT_OK
-import android.app.PendingIntent
-import android.app.RecoverableSecurityException
 import android.content.Context
-import android.content.Intent
-import android.content.IntentSender
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -18,8 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -31,7 +24,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tasnim.chowdhury.music.R
 import com.tasnim.chowdhury.music.adapters.MusicAdapter
 import com.tasnim.chowdhury.music.databinding.FragmentMainBinding
@@ -39,14 +31,13 @@ import com.tasnim.chowdhury.music.model.Music
 import com.tasnim.chowdhury.music.model.MusicList
 import com.tasnim.chowdhury.music.ui.fragments.player.PlayerFragment
 import com.tasnim.chowdhury.music.utilities.SortType
+import com.tasnim.chowdhury.music.utilities.checkPlaylist
 import com.tasnim.chowdhury.music.utilities.closeApp
 import com.tasnim.chowdhury.music.utilities.setSongPosition
 import com.tasnim.chowdhury.music.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 @AndroidEntryPoint
@@ -60,10 +51,6 @@ class MainFragment : Fragment() {
     private var storageList: MusicList = MusicList()
     private var sortValue = 0
     private var isMenuOpen = false
-    private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
-    private var deletedMusicUri: Uri? = null
-    var mediaUri: Uri? = null
-    var mediaPath: String = ""
 
     companion object {
         var search: Boolean = false
@@ -130,27 +117,6 @@ class MainFragment : Fragment() {
         val sortEditor = activity?.getSharedPreferences("SORT_ORDER", Context.MODE_PRIVATE)
         sortValue = sortEditor?.getInt("sortOrder", 0)!!
         requestAudioPermission()
-
-        intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                    lifecycleScope.launch {
-                        deleteMusicFromStorage(deletedMusicUri ?: return@launch)
-                    }
-                }
-                Toast.makeText(
-                    context,
-                    "Music deleted successfully!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Something went wrong! Music couldn't be deleted?",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
     }
 
     override fun onResume() {
@@ -233,130 +199,7 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-        musicAdapter.deleteItem = { position, music ->
-            val deleteDialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Delete ${music.title}?")
-                .setMessage("Deleting item from here will also delete from your local storage. Are you sure?")
-                .setPositiveButton("Yes") { dialog, _ ->
-                    /*lifecycleScope.launch {
-                        val file = File(music.path)
-                        if (file.exists() && file.isFile) {
-                            deleteMusicFromStorage(Uri.parse(music.path))
-                            deletedMusicUri = Uri.parse(music.path)
-                        }
-                    }
-                    musicViewModel.deleteMusic(position, music)*/
-                    deleteMediaFile(Uri.parse(music.path), music.path)
-                    musicViewModel.deleteMusic(position, music)
-                    dialog.dismiss()
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    dialog.dismiss()
-                }
-            deleteDialog.create()
-            deleteDialog.show()
-        }
     }
-
-    fun deleteFile(path: String) {
-        val file = File(path)
-
-        if (!file.exists()) return
-
-        if (file.isFile) {
-            file.delete()
-            return
-        }
-
-        val fileArr: Array<File>? = file.listFiles()
-
-        if (fileArr != null) {
-            for (subFile in fileArr) {
-                if (subFile.isDirectory) {
-                    deleteFile(subFile.absolutePath)
-                }
-
-                if (subFile.isFile) {
-                    subFile.delete()
-                }
-            }
-        }
-
-        file.delete()
-    }
-
-    private suspend fun deleteMusicFromStorage(musicUri: Uri) {
-        withContext(Dispatchers.IO) {
-            try {
-                requireContext().contentResolver.delete(musicUri, null, null)
-            } catch (e: SecurityException) {
-                val intentSender = when {
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
-                        MediaStore.createDeleteRequest(requireActivity().contentResolver, listOf(musicUri)).intentSender
-                    }
-                    Build.VERSION.SDK_INT == Build.VERSION_CODES.Q -> {
-                        val recoverableSecurityException = e as? RecoverableSecurityException
-                        recoverableSecurityException?.userAction?.actionIntent?.intentSender
-                    }
-                    else -> {
-                        null
-                    }
-                }
-                intentSender?.let { iSender ->
-                    intentSenderLauncher.launch(
-                        IntentSenderRequest.Builder(iSender).build()
-                    )
-                }
-            }
-        }
-    }
-//dsfasdfasd
-    private fun deleteMediaFile(uri: Uri, path: String) {
-        try {
-            val file = File(path)
-            if (file.exists()){
-                requireActivity().contentResolver.delete(Uri.parse(path), null, null)
-            }
-        } catch (e: SecurityException) {
-            var pendingIntent: PendingIntent? = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val uris: ArrayList<Uri> = ArrayList()
-                uris.add(uri)
-                pendingIntent = MediaStore.createDeleteRequest(
-                    requireActivity().contentResolver, uris
-                )
-            }else {
-                val recoverableSecurityException = e as? RecoverableSecurityException
-                pendingIntent = recoverableSecurityException?.userAction?.actionIntent
-            }
-            if (pendingIntent != null) {
-                val intentSender: IntentSender = pendingIntent.intentSender
-                try {
-                    startIntentSenderForResult(intentSender, 100, null, 0, 0, 0, null)
-                    Toast.makeText(
-                        requireContext(),
-                        "Media Deleted Successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (ex: IntentSender.SendIntentException) {
-                    ex.printStackTrace()
-                }
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 121) {
-            if (resultCode == RESULT_OK) {
-                mediaUri = data?.data
-                mediaPath = mediaUri?.path.toString()
-                Toast.makeText(requireContext(), "Media Loaded", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-    //afasfdasf
 
     private fun setupClicks() {
         binding.nowPlayingView.nowPlayingPlayPauseBtn.setOnClickListener {
