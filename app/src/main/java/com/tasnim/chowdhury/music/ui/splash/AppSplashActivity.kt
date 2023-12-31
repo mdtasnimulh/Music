@@ -26,7 +26,13 @@ class AppSplashActivity : AppCompatActivity() {
             R.style.colorBlack,
             R.style.colorPurple,
             R.style.colorRed,
-            R.style.imageTheme
+            R.style.imageTheme,
+            R.style.oliveGreenTheme,
+            R.style.limeGreenTheme,
+            R.style.burntSiennaTheme,
+            R.style.redOrangeTheme,
+            R.style.blueGrottoTheme,
+            R.style.roseRedTheme,
         )
     }
 

@@ -60,6 +60,24 @@ class SettingsFragment : Fragment() {
                 binding.musicImageColor.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.palette1Orange)
                 binding.musicImageColor.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             }
+            8 -> {
+                binding.colorOliveGreenDot.visibility = View.VISIBLE
+            }
+            9 -> {
+                binding.colorLimeGreenDot.visibility = View.VISIBLE
+            }
+            10 -> {
+                binding.colorBurntSiennaDot.visibility = View.VISIBLE
+            }
+            11 -> {
+                binding.colorRedOrangeDot.visibility = View.VISIBLE
+            }
+            12 -> {
+                binding.colorBlueGrottoDot.visibility = View.VISIBLE
+            }
+            13 -> {
+                binding.colorRoseRedDot.visibility = View.VISIBLE
+            }
         }
 
         setupClicks()
@@ -89,6 +107,24 @@ class SettingsFragment : Fragment() {
         }
         binding.musicImageColor.setOnClickListener {
             saveTheme(7)
+        }
+        binding.colorOliveGreen.setOnClickListener {
+            saveTheme(8)
+        }
+        binding.colorLimeGreen.setOnClickListener {
+            saveTheme(9)
+        }
+        binding.colorBurntSienna.setOnClickListener {
+            saveTheme(10)
+        }
+        binding.colorRedOrange.setOnClickListener {
+            saveTheme(11)
+        }
+        binding.colorBlueGrotto.setOnClickListener {
+            saveTheme(12)
+        }
+        binding.colorRoseRed.setOnClickListener {
+            saveTheme(13)
         }
 
         binding.sortBtn.setOnClickListener {

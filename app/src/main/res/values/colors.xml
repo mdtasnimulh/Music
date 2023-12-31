@@ -24,6 +24,12 @@
     <color name="palette1SeaGreen">#0C434C</color>
     <color name="palette1MediumBlack">#212121</color>
     <color name="palette1Grey">#757575</color>
+    <color name="oliveGreen">#3d550c</color>
+    <color name="limeGreen">#7a871e</color>
+    <color name="burntSienna">#481d01</color>
+    <color name="redOrange">#fc2e20</color>
+    <color name="blueGrotto">#54a2d2</color>
+    <color name="roseRed">#3b0918</color>
 
     // default theme color
     <color name="seed">#0659BD</color>

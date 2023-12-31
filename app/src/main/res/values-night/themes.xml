@@ -47,6 +47,42 @@
         <item name="android:statusBarColor">?attr/themeColor</item>
         <item name="dialogBtnBackground">?attr/themeColor</item>
     </style>
+    <!--Olive Green theme-->
+    <style name="oliveGreenTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/oliveGreen</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--Lime Green theme-->
+    <style name="limeGreenTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/limeGreen</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--Burnt Sienna theme-->
+    <style name="burntSiennaTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/burntSienna</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--Red Orange theme-->
+    <style name="redOrangeTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/redOrange</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--Blue Grotto theme-->
+    <style name="blueGrottoTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/blueGrotto</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
+    <!--Rose Red theme-->
+    <style name="roseRedTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="themeColor">@color/roseRed</item>
+        <item name="android:statusBarColor">?attr/themeColor</item>
+        <item name="dialogBtnBackground">?attr/themeColor</item>
+    </style>
 
     <style name="albumShape">
         <item name="cornerSize">5dp</item>
